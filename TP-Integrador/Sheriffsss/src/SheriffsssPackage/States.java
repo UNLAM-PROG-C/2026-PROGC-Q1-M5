@@ -56,10 +56,12 @@ enum CursorType {
 	}
 
 	public int getHotspotX(int imageWidth) {
-		return this.hotspotX >= 0 ? this.hotspotX : imageWidth / 2;
+		int x = this.hotspotX >= 0 ? this.hotspotX : imageWidth / 2;
+		return Math.min(x, imageWidth - 1);
 	}
 
 	public int getHotspotY(int imageHeight) {
-		return this.hotspotY >= 0 ? this.hotspotY : imageHeight / 2;
+		int y = this.hotspotY >= 0 ? this.hotspotY : imageHeight / 2;
+		return Math.min(y, imageHeight - 1);
 	}
 }
