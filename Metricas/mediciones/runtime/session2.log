@@ -1,0 +1,8 @@
+PID=85522 @ 13:25:18 (modo interpretado)
+>>> 04-menu-int @ 13:25:28
+  threads=32  cpu=105,6%  rss=176440KB
+>>> 05-partida-int @ 13:25:55
+  threads=38  cpu=201,6%  rss=80416KB
+>>> 06-tardia-int @ 13:26:21
+  threads=36  cpu=191,8%  rss=77820KB
+DONE @ 13:26:25
