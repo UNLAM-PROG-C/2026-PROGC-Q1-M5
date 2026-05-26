@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Metricas tools (no commit binarios pesados)
+Metricas/tools/
+
+# IntelliJ project files (local)
+.idea/
+
+# JVM crash logs
+hs_err_pid*.log
