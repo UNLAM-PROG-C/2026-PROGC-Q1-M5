@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.8.6" sequence="0" timestamp="1778947272416" analysisTimestamp="1778948364283" release="">
+  <Project projectName="">
+    <Jar>TP-Integrador/Sheriffsss/out</Jar>
+  </Project>
+  <BugInstance type="CT_CONSTRUCTOR_THROW" priority="2" rank="16" abbrev="CT" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.AssetManager">
+      <SourceLine classname="SheriffsssPackage.AssetManager" start="16" end="83" sourcefile="AssetManager.java" sourcepath="SheriffsssPackage/AssetManager.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.AssetManager" name="&lt;init&gt;" signature="()V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.AssetManager" start="19" end="21" startBytecode="0" endBytecode="72" sourcefile="AssetManager.java" sourcepath="SheriffsssPackage/AssetManager.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.AssetManager" start="20" end="20" startBytecode="29" endBytecode="29" sourcefile="AssetManager.java" sourcepath="SheriffsssPackage/AssetManager.java"/>
+    <SourceLine classname="SheriffsssPackage.AssetManager" start="20" end="20" startBytecode="29" endBytecode="29" sourcefile="AssetManager.java" sourcepath="SheriffsssPackage/AssetManager.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" rank="18" abbrev="UrF" category="PERFORMANCE">
+    <Class classname="SheriffsssPackage.AudioManager">
+      <SourceLine classname="SheriffsssPackage.AudioManager" start="17" end="385" sourcefile="AudioManager.java" sourcepath="SheriffsssPackage/AudioManager.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.AudioManager" name="loopingResourcePath" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.AudioManager" sourcefile="AudioManager.java" sourcepath="SheriffsssPackage/AudioManager.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.AudioManager" start="44" end="44" startBytecode="29" endBytecode="29" sourcefile="AudioManager.java" sourcepath="SheriffsssPackage/AudioManager.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" rank="18" abbrev="UrF" category="PERFORMANCE">
+    <Class classname="SheriffsssPackage.AudioManager">
+      <SourceLine classname="SheriffsssPackage.AudioManager" start="17" end="385" sourcefile="AudioManager.java" sourcepath="SheriffsssPackage/AudioManager.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.AudioManager" name="sfxLoopingResourcePath" signature="Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.AudioManager" sourcefile="AudioManager.java" sourcepath="SheriffsssPackage/AudioManager.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.AudioManager" start="125" end="125" startBytecode="43" endBytecode="43" sourcefile="AudioManager.java" sourcepath="SheriffsssPackage/AudioManager.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.DebugOptions">
+      <SourceLine classname="SheriffsssPackage.DebugOptions" start="6" end="288" sourcefile="DebugOptions.java" sourcepath="SheriffsssPackage/DebugOptions.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.DebugOptions" name="getBulletTrajectories" signature="()Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.DebugOptions" start="239" end="239" startBytecode="0" endBytecode="28" sourcefile="DebugOptions.java" sourcepath="SheriffsssPackage/DebugOptions.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.DebugOptions" name="bulletTrajectories" signature="Ljava/util/ArrayList;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.DebugOptions" sourcefile="DebugOptions.java" sourcepath="SheriffsssPackage/DebugOptions.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.DebugOptions" start="239" end="239" startBytecode="4" endBytecode="4" sourcefile="DebugOptions.java" sourcepath="SheriffsssPackage/DebugOptions.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Enemy">
+      <SourceLine classname="SheriffsssPackage.Enemy" start="9" end="345" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Enemy" name="damage" signature="(DLSheriffsssPackage/Player;)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Enemy" start="249" end="253" startBytecode="0" endBytecode="59" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Enemy" name="lastDamageSourcePlayer" signature="LSheriffsssPackage/Player;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Enemy" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+    </Field>
+    <LocalVariable name="?" register="3" pc="6" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.Enemy" start="250" end="250" startBytecode="6" endBytecode="6" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" rank="18" abbrev="UrF" category="PERFORMANCE">
+    <Class classname="SheriffsssPackage.Enemy">
+      <SourceLine classname="SheriffsssPackage.Enemy" start="9" end="345" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.Enemy" name="lastDamageSourcePlayer" signature="LSheriffsssPackage/Player;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Enemy" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Enemy" start="250" end="250" startBytecode="6" endBytecode="6" sourcefile="Enemy.java" sourcepath="SheriffsssPackage/Enemy.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.EnemySystem">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="8" end="352" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.EnemySystem" name="getCombatFloatingTexts" signature="()Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="343" end="343" startBytecode="0" endBytecode="28" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.EnemySystem" name="combatFloatingTexts" signature="Ljava/util/ArrayList;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.EnemySystem" start="343" end="343" startBytecode="4" endBytecode="4" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.EnemySystem">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="8" end="352" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.EnemySystem" name="getEnemies" signature="()Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="335" end="335" startBytecode="0" endBytecode="28" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.EnemySystem" name="enemies" signature="Ljava/util/ArrayList;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.EnemySystem" start="335" end="335" startBytecode="4" endBytecode="4" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.EnemySystem">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="8" end="352" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.EnemySystem" name="getFlameBurstEffects" signature="()Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="339" end="339" startBytecode="0" endBytecode="28" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.EnemySystem" name="flameBurstEffects" signature="Ljava/util/ArrayList;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.EnemySystem" start="339" end="339" startBytecode="4" endBytecode="4" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.EnemySystem">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="8" end="352" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.EnemySystem" name="getHitSounds" signature="()Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" start="347" end="347" startBytecode="0" endBytecode="28" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.EnemySystem" name="hitSounds" signature="Ljava/util/ArrayList;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.EnemySystem" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.EnemySystem" start="347" end="347" startBytecode="4" endBytecode="4" sourcefile="EnemySystem.java" sourcepath="SheriffsssPackage/EnemySystem.java"/>
+  </BugInstance>
+  <BugInstance type="DMI_RANDOM_USED_ONLY_ONCE" priority="1" rank="14" abbrev="DMI" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="createRandomTrainingWorldSeed" signature="()Ljava/lang/String;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="386" end="386" startBytecode="0" endBytecode="54" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Method classname="java.util.Random" name="nextLong" signature="()J" isStatic="false" role="METHOD_CALLED" classAnnotationNames="jdk.internal.util.random.RandomSupport$RandomGeneratorProperties">
+      <SourceLine classname="java.util.Random" start="592" end="592" startBytecode="0" endBytecode="60" sourcefile="Random.java" sourcepath="java/util/Random.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.Game" start="386" end="386" startBytecode="14" endBytecode="14" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="DM_EXIT" priority="2" rank="16" abbrev="Dm" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="shutdownApplication" signature="()V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1260" end="1262" startBytecode="0" endBytecode="40" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.Game" start="1261" end="1261" startBytecode="5" endBytecode="5" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getAudio" signature="()LSheriffsssPackage/AudioManager;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1416" end="1416" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="audio" signature="LSheriffsssPackage/AudioManager;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="1416" end="1416" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getDayNightCycle" signature="()LSheriffsssPackage/DayNightCycle;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1328" end="1328" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="dayNightCycle" signature="LSheriffsssPackage/DayNightCycle;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="1328" end="1328" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getDebugOptions" signature="()LSheriffsssPackage/DebugOptions;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1418" end="1418" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="debugOptions" signature="LSheriffsssPackage/DebugOptions;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="1418" end="1418" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getInput" signature="()LSheriffsssPackage/GameInput;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1417" end="1417" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="input" signature="LSheriffsssPackage/GameInput;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="1417" end="1417" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getMap" signature="()LSheriffsssPackage/GameMap;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1420" end="1420" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="map" signature="LSheriffsssPackage/GameMap;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="1420" end="1420" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getPlayer" signature="()LSheriffsssPackage/Player;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="1421" end="1421" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="player" signature="LSheriffsssPackage/Player;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="1421" end="1421" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="getTrainingMode" signature="()LSheriffsssPackage/TrainingMode;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="469" end="469" startBytecode="0" endBytecode="28" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="trainingMode" signature="LSheriffsssPackage/TrainingMode;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Game" start="469" end="469" startBytecode="4" endBytecode="4" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="setWindow" signature="(Ljavax/swing/JFrame;)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="134" end="143" startBytecode="0" endBytecode="68" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Game" name="window" signature="Ljavax/swing/JFrame;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Field>
+    <LocalVariable name="?" register="1" pc="2" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.Game" start="134" end="134" startBytecode="2" endBytecode="2" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="FL_FLOATS_AS_LOOP_COUNTERS" priority="2" rank="7" abbrev="FL" category="CORRECTNESS">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="run" signature="()V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="246" end="262" startBytecode="0" endBytecode="180" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.Game" start="255" end="255" startBytecode="48" endBytecode="48" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+  </BugInstance>
+  <BugInstance type="UPM_UNCALLED_PRIVATE_METHOD" priority="2" rank="18" abbrev="UPM" category="PERFORMANCE">
+    <Class classname="SheriffsssPackage.Game">
+      <SourceLine classname="SheriffsssPackage.Game" start="50" end="1482" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Game" name="equipTrainingWeapon" signature="(LSheriffsssPackage/ItemDefinition;)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Game" start="429" end="430" startBytecode="0" endBytecode="37" sourcefile="Game.java" sourcepath="SheriffsssPackage/Game.java"/>
+    </Method>
+  </BugInstance>
+  <BugInstance type="DM_DEFAULT_ENCODING" priority="1" rank="19" abbrev="Dm" category="I18N">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.GameConfig" name="loadDisplayPreferences" signature="()V" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="120" end="131" startBytecode="0" endBytecode="218" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Method>
+    <Method classname="java.io.FileReader" name="&lt;init&gt;" signature="(Ljava/io/File;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.FileReader" start="75" end="76" startBytecode="0" endBytecode="68" sourcefile="FileReader.java" sourcepath="java/io/FileReader.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="124" end="124" startBytecode="27" endBytecode="27" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="DM_DEFAULT_ENCODING" priority="1" rank="19" abbrev="Dm" category="I18N">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.GameConfig" name="saveDisplayPreferences" signature="()V" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="170" end="183" startBytecode="0" endBytecode="281" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Method>
+    <Method classname="java.io.FileWriter" name="&lt;init&gt;" signature="(Ljava/io/File;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.FileWriter" start="98" end="99" startBytecode="0" endBytecode="68" sourcefile="FileWriter.java" sourcepath="java/io/FileWriter.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="172" end="172" startBytecode="23" endBytecode="23" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_CENTER_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="66" end="66" startBytecode="121" endBytecode="121" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_CENTER_Y" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="67" end="67" startBytecode="129" endBytecode="129" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_HEIGHT" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="49" end="49" startBytecode="113" endBytecode="113" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_WIDTH" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="48" end="48" startBytecode="107" endBytecode="107" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SETTINGS_BUTTON_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="79" end="79" startBytecode="165" endBytecode="165" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SETTINGS_PANEL_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="70" end="70" startBytecode="153" endBytecode="153" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="MS_PKGPROTECT" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SETTINGS_SLIDER_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="74" end="74" startBytecode="159" endBytecode="159" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="DEATH_SPECTATE_BUTTON_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="89" end="89" startBytecode="175" endBytecode="175" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="DEATH_SPECTATE_BUTTON_Y" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="90" end="90" startBytecode="184" endBytecode="184" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="PLAYER_DRAW_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="68" end="68" startBytecode="138" endBytecode="138" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="PLAYER_DRAW_Y" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="69" end="69" startBytecode="147" endBytecode="147" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_CENTER_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="66" end="66" startBytecode="121" endBytecode="121" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_CENTER_Y" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="67" end="67" startBytecode="129" endBytecode="129" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_HEIGHT" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="49" end="49" startBytecode="113" endBytecode="113" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SCREEN_WIDTH" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="48" end="48" startBytecode="107" endBytecode="107" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SETTINGS_BUTTON_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="79" end="79" startBytecode="165" endBytecode="165" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SETTINGS_PANEL_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="70" end="70" startBytecode="153" endBytecode="153" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" priority="2" rank="16" abbrev="PA" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.GameConfig" name="SETTINGS_SLIDER_X" signature="I" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="74" end="74" startBytecode="159" endBytecode="159" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" priority="2" rank="16" abbrev="RV" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.GameConfig">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="19" end="245" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.GameConfig" name="ensureParentDirExists" signature="(Ljava/io/File;)V" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.GameConfig" start="186" end="190" startBytecode="0" endBytecode="71" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+    </Method>
+    <Method classname="java.io.File" name="mkdirs" signature="()Z" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.File" start="1405" end="1419" startBytecode="0" endBytecode="230" sourcefile="File.java" sourcepath="java/io/File.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.GameConfig" start="188" end="188" startBytecode="17" endBytecode="17" sourcefile="GameConfig.java" sourcepath="SheriffsssPackage/GameConfig.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.GameRenderer">
+      <SourceLine classname="SheriffsssPackage.GameRenderer" start="15" end="1257" sourcefile="GameRenderer.java" sourcepath="SheriffsssPackage/GameRenderer.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.GameRenderer" name="&lt;init&gt;" signature="(LSheriffsssPackage/AssetManager;LSheriffsssPackage/MenuRenderer;)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.GameRenderer" start="60" end="63" startBytecode="0" endBytecode="908" sourcefile="GameRenderer.java" sourcepath="SheriffsssPackage/GameRenderer.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.GameRenderer" name="menuRenderer" signature="LSheriffsssPackage/MenuRenderer;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.GameRenderer" sourcefile="GameRenderer.java" sourcepath="SheriffsssPackage/GameRenderer.java"/>
+    </Field>
+    <LocalVariable name="?" register="2" pc="709" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.GameRenderer" start="62" end="62" startBytecode="709" endBytecode="709" sourcefile="GameRenderer.java" sourcepath="SheriffsssPackage/GameRenderer.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Player">
+      <SourceLine classname="SheriffsssPackage.Player" start="14" end="215" sourcefile="Player.java" sourcepath="SheriffsssPackage/Player.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Player" name="getEquipment" signature="()LSheriffsssPackage/Equipment;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Player" start="62" end="62" startBytecode="0" endBytecode="28" sourcefile="Player.java" sourcepath="SheriffsssPackage/Player.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Player" name="equipment" signature="LSheriffsssPackage/Equipment;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Player" sourcefile="Player.java" sourcepath="SheriffsssPackage/Player.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.Player" start="62" end="62" startBytecode="4" endBytecode="4" sourcefile="Player.java" sourcepath="SheriffsssPackage/Player.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="18" abbrev="UrF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="lastInputFrame" signature="I" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="10" end="10" startBytecode="11" endBytecode="11" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="18" abbrev="UrF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="toolUseDurationTicks" signature="I" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="7" end="7" startBytecode="6" endBytecode="6" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="respawnDeathCount" signature="I" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="respawnTicksRemaining" signature="I" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="toolAnimationDefinition" signature="LSheriffsssPackage/ItemDefinition;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="toolAnimationTicksRemaining" signature="I" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="toolTargetObject" signature="LSheriffsssPackage/MapObject;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="toolUseTicks" signature="I" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD" priority="2" rank="17" abbrev="UuF" category="STYLE">
+    <Class classname="SheriffsssPackage.PlayerRuntimeState">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" start="3" end="10" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Class>
+    <Field classname="SheriffsssPackage.PlayerRuntimeState" name="usingTool" signature="Z" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.PlayerRuntimeState" sourcefile="PlayerRuntimeState.java" sourcepath="SheriffsssPackage/PlayerRuntimeState.java"/>
+    </Field>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.Projectile">
+      <SourceLine classname="SheriffsssPackage.Projectile" start="12" end="177" sourcefile="Projectile.java" sourcepath="SheriffsssPackage/Projectile.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.Projectile" name="&lt;init&gt;" signature="(LSheriffsssPackage/ProjectileType;LSheriffsssPackage/Player;LSheriffsssPackage/ItemDefinition;DDDDDDI)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Projectile" start="34" end="46" startBytecode="0" endBytecode="165" sourcefile="Projectile.java" sourcepath="SheriffsssPackage/Projectile.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.Projectile" name="owner" signature="LSheriffsssPackage/Player;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.Projectile" sourcefile="Projectile.java" sourcepath="SheriffsssPackage/Projectile.java"/>
+    </Field>
+    <LocalVariable name="?" register="2" pc="24" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.Projectile" start="36" end="36" startBytecode="24" endBytecode="24" sourcefile="Projectile.java" sourcepath="SheriffsssPackage/Projectile.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.ProjectileSystem">
+      <SourceLine classname="SheriffsssPackage.ProjectileSystem" start="6" end="70" sourcefile="ProjectileSystem.java" sourcepath="SheriffsssPackage/ProjectileSystem.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.ProjectileSystem" name="getProjectiles" signature="()Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.ProjectileSystem" start="66" end="66" startBytecode="0" endBytecode="28" sourcefile="ProjectileSystem.java" sourcepath="SheriffsssPackage/ProjectileSystem.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.ProjectileSystem" name="projectiles" signature="Ljava/util/ArrayList;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.ProjectileSystem" sourcefile="ProjectileSystem.java" sourcepath="SheriffsssPackage/ProjectileSystem.java"/>
+    </Field>
+    <SourceLine classname="SheriffsssPackage.ProjectileSystem" start="66" end="66" startBytecode="4" endBytecode="4" sourcefile="ProjectileSystem.java" sourcepath="SheriffsssPackage/ProjectileSystem.java"/>
+  </BugInstance>
+  <BugInstance type="DM_DEFAULT_ENCODING" priority="1" rank="19" abbrev="Dm" category="I18N">
+    <Class classname="SheriffsssPackage.TrainingMode">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="62" end="1091" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.TrainingMode" name="loadControls" signature="()V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="1013" end="1024" startBytecode="0" endBytecode="225" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Method>
+    <Method classname="java.io.FileReader" name="&lt;init&gt;" signature="(Ljava/io/File;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.FileReader" start="75" end="76" startBytecode="0" endBytecode="68" sourcefile="FileReader.java" sourcepath="java/io/FileReader.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.TrainingMode" start="1017" end="1017" startBytecode="28" endBytecode="28" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+  </BugInstance>
+  <BugInstance type="DM_DEFAULT_ENCODING" priority="1" rank="19" abbrev="Dm" category="I18N">
+    <Class classname="SheriffsssPackage.TrainingMode">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="62" end="1091" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.TrainingMode" name="saveControls" signature="()V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="1046" end="1053" startBytecode="0" endBytecode="222" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Method>
+    <Method classname="java.io.FileWriter" name="&lt;init&gt;" signature="(Ljava/io/File;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.FileWriter" start="98" end="99" startBytecode="0" endBytecode="68" sourcefile="FileWriter.java" sourcepath="java/io/FileWriter.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.TrainingMode" start="1048" end="1048" startBytecode="24" endBytecode="24" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.TrainingMode">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="62" end="1091" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.TrainingMode" name="&lt;init&gt;" signature="(LSheriffsssPackage/Game;LSheriffsssPackage/EnemySystem;I)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="200" end="208" startBytecode="0" endBytecode="156" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.TrainingMode" name="enemySystem" signature="LSheriffsssPackage/EnemySystem;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Field>
+    <LocalVariable name="?" register="2" pc="34" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.TrainingMode" start="202" end="202" startBytecode="34" endBytecode="34" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.TrainingMode">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="62" end="1091" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.TrainingMode" name="&lt;init&gt;" signature="(LSheriffsssPackage/Game;LSheriffsssPackage/EnemySystem;I)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="200" end="208" startBytecode="0" endBytecode="156" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.TrainingMode" name="game" signature="LSheriffsssPackage/Game;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Field>
+    <LocalVariable name="?" register="1" pc="29" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.TrainingMode" start="201" end="201" startBytecode="29" endBytecode="29" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+  </BugInstance>
+  <BugInstance type="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" priority="2" rank="16" abbrev="RV" category="BAD_PRACTICE">
+    <Class classname="SheriffsssPackage.TrainingMode">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="62" end="1091" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.TrainingMode" name="ensureParentDirExists" signature="(Ljava/io/File;)V" isStatic="true">
+      <SourceLine classname="SheriffsssPackage.TrainingMode" start="1056" end="1060" startBytecode="0" endBytecode="71" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+    </Method>
+    <Method classname="java.io.File" name="mkdirs" signature="()Z" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.io.File" start="1405" end="1419" startBytecode="0" endBytecode="230" sourcefile="File.java" sourcepath="java/io/File.java"/>
+    </Method>
+    <SourceLine classname="SheriffsssPackage.TrainingMode" start="1058" end="1058" startBytecode="17" endBytecode="17" sourcefile="TrainingMode.java" sourcepath="SheriffsssPackage/TrainingMode.java"/>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE">
+    <Class classname="SheriffsssPackage.TutorialThread">
+      <SourceLine classname="SheriffsssPackage.TutorialThread" start="25" end="80" sourcefile="TutorialThread.java" sourcepath="SheriffsssPackage/TutorialThread.java"/>
+    </Class>
+    <Method classname="SheriffsssPackage.TutorialThread" name="&lt;init&gt;" signature="(Ljava/util/List;)V" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TutorialThread" start="29" end="32" startBytecode="0" endBytecode="84" sourcefile="TutorialThread.java" sourcepath="SheriffsssPackage/TutorialThread.java"/>
+    </Method>
+    <Field classname="SheriffsssPackage.TutorialThread" name="steps" signature="Ljava/util/List;" isStatic="false">
+      <SourceLine classname="SheriffsssPackage.TutorialThread" sourcefile="TutorialThread.java" sourcepath="SheriffsssPackage/TutorialThread.java"/>
+    </Field>
+    <LocalVariable name="?" register="1" pc="37" role="LOCAL_VARIABLE_UNKNOWN"/>
+    <SourceLine classname="SheriffsssPackage.TutorialThread" start="31" end="31" startBytecode="37" endBytecode="37" sourcefile="TutorialThread.java" sourcepath="SheriffsssPackage/TutorialThread.java"/>
+  </BugInstance>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Sat, 16 May 2026 13:01:12 -0300" total_classes="59" referenced_classes="462" total_bugs="62" total_size="6724" num_packages="1" java_version="20.0.1" vm_version="20.0.1+9-FR" cpu_seconds="28.88" clock_seconds="13.42" peak_mbytes="264.11" alloc_mbytes="2048.00" gc_seconds="0.33" priority_2="57" priority_1="5">
+    <PackageStats package="SheriffsssPackage" total_bugs="62" total_types="59" total_size="6724" priority_2="57" priority_1="5">
+      <ClassStats class="SheriffsssPackage.AssetManager" sourceFile="AssetManager.java" interface="false" size="55" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.AudioManager" sourceFile="AudioManager.java" interface="false" size="290" bugs="2" priority_2="2"/>
+      <ClassStats class="SheriffsssPackage.AudioManager$1" sourceFile="AudioManager.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Camera" sourceFile="Camera.java" interface="false" size="33" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.CombatFloatingText" sourceFile="CombatFloatingText.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.CursorType" sourceFile="States.java" interface="false" size="39" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.DayNightCycle" sourceFile="DayNightCycle.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.DayPhase" sourceFile="DayPhase.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Debuff" sourceFile="Debuff.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Debuff$1" sourceFile="Debuff.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.DebugBulletTrajectory" sourceFile="DebugBulletTrajectory.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.DebugOptions" sourceFile="DebugOptions.java" interface="false" size="196" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.Enemy" sourceFile="Enemy.java" interface="false" size="258" bugs="2" priority_2="2"/>
+      <ClassStats class="SheriffsssPackage.EnemyBehavior" sourceFile="EnemyBehavior.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.EnemyDensity" sourceFile="EnemyDensity.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.EnemyHitSound" sourceFile="EnemyHitSound.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.EnemySystem" sourceFile="EnemySystem.java" interface="false" size="266" bugs="4" priority_2="4"/>
+      <ClassStats class="SheriffsssPackage.EnemyType" sourceFile="EnemyType.java" interface="false" size="96" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Equipment" sourceFile="Equipment.java" interface="false" size="71" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Equipment$1" sourceFile="Equipment.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Facing" sourceFile="States.java" interface="false" size="30" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.FlameBurstEffect" sourceFile="FlameBurstEffect.java" interface="false" size="38" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Game" sourceFile="Game.java" interface="false" size="1177" bugs="12" priority_2="11" priority_1="1"/>
+      <ClassStats class="SheriffsssPackage.Game$1" sourceFile="Game.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Game$2" sourceFile="Game.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Game$3" sourceFile="Game.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Game$4" sourceFile="Game.java" interface="false" size="6" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Game$5" sourceFile="Game.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.GameConfig" sourceFile="GameConfig.java" interface="false" size="200" bugs="21" priority_2="19" priority_1="2"/>
+      <ClassStats class="SheriffsssPackage.GameInput" sourceFile="GameInput.java" interface="false" size="255" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.GameMap" sourceFile="GameMap.java" interface="false" size="103" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.GameRenderer" sourceFile="GameRenderer.java" interface="false" size="1031" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.GameTheme" sourceFile="GameTheme.java" interface="false" size="29" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.ItemDefinition" sourceFile="ItemDefinition.java" interface="false" size="224" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.ItemDefinitionDrawConfig" sourceFile="ItemDefinitionDrawConfig.java" interface="false" size="110" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Main" sourceFile="Main.java" interface="false" size="21" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Main$1" sourceFile="Main.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.MapObject" sourceFile="MapObject.java" interface="false" size="36" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.MapObjectType" sourceFile="MapObjectType.java" interface="false" size="73" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.MenuRenderer" sourceFile="MenuRenderer.java" interface="false" size="164" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.Player" sourceFile="Player.java" interface="false" size="190" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.PlayerRuntimeState" sourceFile="PlayerRuntimeState.java" interface="false" size="15" bugs="9" priority_2="9"/>
+      <ClassStats class="SheriffsssPackage.Projectile" sourceFile="Projectile.java" interface="false" size="125" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.ProjectileStatModifiers" sourceFile="ProjectileStatModifiers.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.ProjectileSystem" sourceFile="ProjectileSystem.java" interface="false" size="46" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.ProjectileType" sourceFile="ProjectileType.java" interface="false" size="61" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.ProjectileWeaponStats" sourceFile="ProjectileWeaponStats.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.State" sourceFile="States.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TextRenderer" sourceFile="TextRenderer.java" interface="false" size="54" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TextRenderer$Style" sourceFile="TextRenderer.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TileType" sourceFile="TileType.java" interface="false" size="42" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TrainingControls" sourceFile="TrainingControls.java" interface="false" size="31" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TrainingMode" sourceFile="TrainingMode.java" interface="false" size="802" bugs="5" priority_2="3" priority_1="2"/>
+      <ClassStats class="SheriffsssPackage.TrainingMode$TutorialPhase" sourceFile="TrainingMode.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TutorialEventType" sourceFile="TutorialEventType.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TutorialStep" sourceFile="TutorialStep.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.TutorialThread" sourceFile="TutorialThread.java" interface="false" size="42" bugs="1" priority_2="1"/>
+      <ClassStats class="SheriffsssPackage.WeaponType" sourceFile="WeaponType.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="SheriffsssPackage.WorldLighting" sourceFile="WorldLighting.java" interface="false" size="95" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1163" invocations="1946" avgMicrosecondsPerInvocation="597" maxMicrosecondsPerInvocation="46797" standardDeviationMicrosecondsPerInvocation="2025"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="672" invocations="462" avgMicrosecondsPerInvocation="1455" maxMicrosecondsPerInvocation="47239" standardDeviationMicrosecondsPerInvocation="3844"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="630" invocations="1037" avgMicrosecondsPerInvocation="607" maxMicrosecondsPerInvocation="127703" standardDeviationMicrosecondsPerInvocation="4346"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="619" invocations="1016" avgMicrosecondsPerInvocation="609" maxMicrosecondsPerInvocation="50694" standardDeviationMicrosecondsPerInvocation="2218"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="598" invocations="1022" avgMicrosecondsPerInvocation="585" maxMicrosecondsPerInvocation="113071" standardDeviationMicrosecondsPerInvocation="4368"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="553" invocations="462" avgMicrosecondsPerInvocation="1198" maxMicrosecondsPerInvocation="32001" standardDeviationMicrosecondsPerInvocation="2671"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="489" invocations="1941" avgMicrosecondsPerInvocation="252" maxMicrosecondsPerInvocation="26639" standardDeviationMicrosecondsPerInvocation="1028"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="406" invocations="1015" avgMicrosecondsPerInvocation="400" maxMicrosecondsPerInvocation="14887" standardDeviationMicrosecondsPerInvocation="1108"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="405" invocations="1016" avgMicrosecondsPerInvocation="399" maxMicrosecondsPerInvocation="19423" standardDeviationMicrosecondsPerInvocation="1278"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="359" invocations="1016" avgMicrosecondsPerInvocation="353" maxMicrosecondsPerInvocation="14192" standardDeviationMicrosecondsPerInvocation="919"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="350" invocations="1953" avgMicrosecondsPerInvocation="179" maxMicrosecondsPerInvocation="10909" standardDeviationMicrosecondsPerInvocation="460"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="339" invocations="678" avgMicrosecondsPerInvocation="500" maxMicrosecondsPerInvocation="40668" standardDeviationMicrosecondsPerInvocation="2241"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.UnreadFields" totalMilliseconds="277" invocations="59" avgMicrosecondsPerInvocation="4696" maxMicrosecondsPerInvocation="41525" standardDeviationMicrosecondsPerInvocation="6540"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="270" invocations="562" avgMicrosecondsPerInvocation="480" maxMicrosecondsPerInvocation="19566" standardDeviationMicrosecondsPerInvocation="1666"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="215" invocations="1016" avgMicrosecondsPerInvocation="212" maxMicrosecondsPerInvocation="45031" standardDeviationMicrosecondsPerInvocation="1578"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="183" invocations="1876" avgMicrosecondsPerInvocation="97" maxMicrosecondsPerInvocation="19554" standardDeviationMicrosecondsPerInvocation="570"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DumbMethods" totalMilliseconds="156" invocations="59" avgMicrosecondsPerInvocation="2660" maxMicrosecondsPerInvocation="25077" standardDeviationMicrosecondsPerInvocation="4678"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueRangeAnalysisFactory" totalMilliseconds="153" invocations="1016" avgMicrosecondsPerInvocation="151" maxMicrosecondsPerInvocation="15004" standardDeviationMicrosecondsPerInvocation="764"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="151" invocations="462" avgMicrosecondsPerInvocation="328" maxMicrosecondsPerInvocation="6999" standardDeviationMicrosecondsPerInvocation="687"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ConstantDataflowFactory" totalMilliseconds="144" invocations="1016" avgMicrosecondsPerInvocation="142" maxMicrosecondsPerInvocation="24361" standardDeviationMicrosecondsPerInvocation="900"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindInconsistentSync2" totalMilliseconds="124" invocations="59" avgMicrosecondsPerInvocation="2108" maxMicrosecondsPerInvocation="31654" standardDeviationMicrosecondsPerInvocation="4412"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindUselessObjects" totalMilliseconds="124" invocations="59" avgMicrosecondsPerInvocation="2103" maxMicrosecondsPerInvocation="41502" standardDeviationMicrosecondsPerInvocation="5649"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ConstructorThrow" totalMilliseconds="121" invocations="59" avgMicrosecondsPerInvocation="2063" maxMicrosecondsPerInvocation="25988" standardDeviationMicrosecondsPerInvocation="4574"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="116" invocations="462" avgMicrosecondsPerInvocation="252" maxMicrosecondsPerInvocation="9503" standardDeviationMicrosecondsPerInvocation="751"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.TypeQualifierNullnessAnnotationDatabase" totalMilliseconds="115" invocations="10898" avgMicrosecondsPerInvocation="10" maxMicrosecondsPerInvocation="4440" standardDeviationMicrosecondsPerInvocation="101"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindReturnRef" totalMilliseconds="109" invocations="59" avgMicrosecondsPerInvocation="1859" maxMicrosecondsPerInvocation="21229" standardDeviationMicrosecondsPerInvocation="3700"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="105" invocations="462" avgMicrosecondsPerInvocation="227" maxMicrosecondsPerInvocation="5968" standardDeviationMicrosecondsPerInvocation="534"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="98" invocations="462" avgMicrosecondsPerInvocation="213" maxMicrosecondsPerInvocation="7738" standardDeviationMicrosecondsPerInvocation="627"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ExplicitSerialization" totalMilliseconds="96" invocations="462" avgMicrosecondsPerInvocation="208" maxMicrosecondsPerInvocation="17655" standardDeviationMicrosecondsPerInvocation="1385"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison" totalMilliseconds="95" invocations="59" avgMicrosecondsPerInvocation="1624" maxMicrosecondsPerInvocation="43792" standardDeviationMicrosecondsPerInvocation="5661"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindDeadLocalStores" totalMilliseconds="93" invocations="59" avgMicrosecondsPerInvocation="1586" maxMicrosecondsPerInvocation="14731" standardDeviationMicrosecondsPerInvocation="2721"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CheckRelaxingNullnessAnnotation" totalMilliseconds="88" invocations="59" avgMicrosecondsPerInvocation="1501" maxMicrosecondsPerInvocation="12586" standardDeviationMicrosecondsPerInvocation="2397"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>
