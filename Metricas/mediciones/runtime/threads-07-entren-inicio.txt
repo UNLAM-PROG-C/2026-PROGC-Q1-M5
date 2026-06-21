@@ -1,0 +1,230 @@
+85739:
+2026-05-16 13:27:59
+Full thread dump OpenJDK 64-Bit Server VM (20.0.1+9-FR interpreted mode, sharing):
+
+Threads class SMR info:
+_java_thread_list=0x00006000007681a0, length=18, elements={
+0x00007f9aa4009200, 0x00007f9aa30d0800, 0x00007f9aa30d1800, 0x00007f9aa500ec00,
+0x00007f9aa30d1e00, 0x00007f9aa5008600, 0x00007f9aa30c6800, 0x00007f9aa400e600,
+0x00007f9aa3110400, 0x00007f9aa402a000, 0x00007f9aa4842000, 0x00007f9aa31d5600,
+0x00007f9aa4024e00, 0x00007f9aa50b7e00, 0x00007f9aa4079a00, 0x00007f9aa408ac00,
+0x00007f9aa5076800, 0x00007f9aa4893000
+}
+
+"Reference Handler" #8 [31951] daemon prio=10 os_prio=31 cpu=0,77ms elapsed=12,07s tid=0x00007f9aa4009200 nid=31951 waiting on condition  [0x000000030991e000]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.ref.Reference.waitForReferencePendingList(java.base@20.0.1/Native Method)
+	at java.lang.ref.Reference.processPendingReferences(java.base@20.0.1/Reference.java:246)
+	at java.lang.ref.Reference$ReferenceHandler.run(java.base@20.0.1/Reference.java:208)
+
+"Finalizer" #9 [24835] daemon prio=8 os_prio=31 cpu=2,04ms elapsed=12,07s tid=0x00007f9aa30d0800 nid=24835 in Object.wait()  [0x0000000309a21000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait0(java.base@20.0.1/Native Method)
+	- waiting on <0x000000078330c400> (a java.lang.ref.NativeReferenceQueue$Lock)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:366)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:339)
+	at java.lang.ref.NativeReferenceQueue.await(java.base@20.0.1/NativeReferenceQueue.java:48)
+	at java.lang.ref.ReferenceQueue.remove0(java.base@20.0.1/ReferenceQueue.java:158)
+	at java.lang.ref.NativeReferenceQueue.remove(java.base@20.0.1/NativeReferenceQueue.java:89)
+	- locked <0x000000078330c400> (a java.lang.ref.NativeReferenceQueue$Lock)
+	at java.lang.ref.Finalizer$FinalizerThread.run(java.base@20.0.1/Finalizer.java:173)
+
+"Signal Dispatcher" #10 [30723] daemon prio=9 os_prio=31 cpu=0,82ms elapsed=12,07s tid=0x00007f9aa30d1800 nid=30723 waiting on condition  [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Service Thread" #11 [26115] daemon prio=9 os_prio=31 cpu=0,44ms elapsed=12,07s tid=0x00007f9aa500ec00 nid=26115 runnable  [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Monitor Deflation Thread" #12 [26627] daemon prio=9 os_prio=31 cpu=0,32ms elapsed=12,07s tid=0x00007f9aa30d1e00 nid=26627 runnable  [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Notification Thread" #13 [26907] daemon prio=9 os_prio=31 cpu=0,04ms elapsed=12,06s tid=0x00007f9aa5008600 nid=26907 runnable  [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Common-Cleaner" #15 [29715] daemon prio=8 os_prio=31 cpu=0,89ms elapsed=12,05s tid=0x00007f9aa30c6800 nid=29715 waiting on condition  [0x000000030a033000]
+   java.lang.Thread.State: TIMED_WAITING (parking)
+	at jdk.internal.misc.Unsafe.park(java.base@20.0.1/Native Method)
+	- parking to wait for  <0x00000007833000f0> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.parkNanos(java.base@20.0.1/LockSupport.java:269)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(java.base@20.0.1/AbstractQueuedSynchronizer.java:1847)
+	at java.lang.ref.ReferenceQueue.await(java.base@20.0.1/ReferenceQueue.java:71)
+	at java.lang.ref.ReferenceQueue.remove0(java.base@20.0.1/ReferenceQueue.java:143)
+	at java.lang.ref.ReferenceQueue.remove(java.base@20.0.1/ReferenceQueue.java:218)
+	at jdk.internal.ref.CleanerImpl.run(java.base@20.0.1/CleanerImpl.java:140)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+	at jdk.internal.misc.InnocuousThread.run(java.base@20.0.1/InnocuousThread.java:186)
+
+"AppKit Thread" #16 [259] daemon prio=5 os_prio=31 cpu=2057,84ms elapsed=11,84s tid=0x00007f9aa400e600 nid=259 runnable  [0x0000000308f71000]
+   java.lang.Thread.State: RUNNABLE
+	at sun.java2d.metal.MTLLayer.blitTexture(java.desktop@20.0.1/Native Method)
+	at sun.java2d.metal.MTLLayer.lambda$drawInMTLContext$4(java.desktop@20.0.1/MTLLayer.java:122)
+	at sun.java2d.metal.MTLLayer$$Lambda$129/0x00000008010e67a8.run(java.desktop@20.0.1/Unknown Source)
+	at sun.lwawt.macosx.CFRetainedResource.execute(java.desktop@20.0.1/CFRetainedResource.java:134)
+	at sun.java2d.metal.MTLLayer.drawInMTLContext(java.desktop@20.0.1/MTLLayer.java:122)
+
+"AWT-Shutdown" #17 [48647] prio=5 os_prio=31 cpu=1,43ms elapsed=11,35s tid=0x00007f9aa3110400 nid=48647 in Object.wait()  [0x000000030a241000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait0(java.base@20.0.1/Native Method)
+	- waiting on <0x0000000783330e40> (a java.lang.Object)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:366)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:339)
+	at sun.awt.AWTAutoShutdown.run(java.desktop@20.0.1/AWTAutoShutdown.java:291)
+	- locked <0x0000000783330e40> (a java.lang.Object)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"Java2D Queue Flusher" #18 [71695] daemon prio=10 os_prio=31 cpu=204,43ms elapsed=9,99s tid=0x00007f9aa402a000 nid=71695 in Object.wait()  [0x000000030a3ca000]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+	at java.lang.Object.wait0(java.base@20.0.1/Native Method)
+	- waiting on <0x0000000783324b20> (a sun.java2d.metal.MTLRenderQueue$QueueFlusher)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:366)
+	at sun.java2d.metal.MTLRenderQueue$QueueFlusher.run(java.desktop@20.0.1/MTLRenderQueue.java:210)
+	- locked <0x0000000783324b20> (a sun.java2d.metal.MTLRenderQueue$QueueFlusher)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"Java2D Disposer" #19 [82195] daemon prio=10 os_prio=31 cpu=2,00ms elapsed=9,97s tid=0x00007f9aa4842000 nid=82195 waiting on condition  [0x000000030a4cd000]
+   java.lang.Thread.State: WAITING (parking)
+	at jdk.internal.misc.Unsafe.park(java.base@20.0.1/Native Method)
+	- parking to wait for  <0x000000078333d260> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+	at java.util.concurrent.locks.LockSupport.park(java.base@20.0.1/LockSupport.java:371)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(java.base@20.0.1/AbstractQueuedSynchronizer.java:519)
+	at java.util.concurrent.ForkJoinPool.unmanagedBlock(java.base@20.0.1/ForkJoinPool.java:3780)
+	at java.util.concurrent.ForkJoinPool.managedBlock(java.base@20.0.1/ForkJoinPool.java:3725)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(java.base@20.0.1/AbstractQueuedSynchronizer.java:1707)
+	at java.lang.ref.ReferenceQueue.await(java.base@20.0.1/ReferenceQueue.java:67)
+	at java.lang.ref.ReferenceQueue.remove0(java.base@20.0.1/ReferenceQueue.java:158)
+	at java.lang.ref.ReferenceQueue.remove(java.base@20.0.1/ReferenceQueue.java:234)
+	at sun.java2d.Disposer.run(java.desktop@20.0.1/Disposer.java:145)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"AWT-EventQueue-0" #22 [130827] prio=6 os_prio=31 cpu=2243,35ms elapsed=9,47s tid=0x00007f9aa31d5600 nid=130827 waiting on condition  [0x000000030a5cf000]
+   java.lang.Thread.State: WAITING (parking)
+	at jdk.internal.misc.Unsafe.park(java.base@20.0.1/Native Method)
+	- parking to wait for  <0x0000000781513158> (a java.util.concurrent.locks.ReentrantLock$NonfairSync)
+	at java.util.concurrent.locks.LockSupport.park(java.base@20.0.1/LockSupport.java:221)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(java.base@20.0.1/AbstractQueuedSynchronizer.java:754)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquire(java.base@20.0.1/AbstractQueuedSynchronizer.java:990)
+	at java.util.concurrent.locks.ReentrantLock$Sync.lock(java.base@20.0.1/ReentrantLock.java:153)
+	at java.util.concurrent.locks.ReentrantLock.lock(java.base@20.0.1/ReentrantLock.java:322)
+	at sun.awt.SunToolkit.awtLock(java.desktop@20.0.1/SunToolkit.java:238)
+	at sun.java2d.pipe.RenderQueue.lock(java.desktop@20.0.1/RenderQueue.java:112)
+	at sun.java2d.pipe.BufferedRenderPipe.fillParallelogram(java.desktop@20.0.1/BufferedRenderPipe.java:417)
+	at sun.java2d.pipe.PixelToParallelogramConverter.fillRectangle(java.desktop@20.0.1/PixelToParallelogramConverter.java:322)
+	at sun.java2d.pipe.PixelToParallelogramConverter.fillRect(java.desktop@20.0.1/PixelToParallelogramConverter.java:115)
+	at sun.java2d.SunGraphics2D.fillRect(java.desktop@20.0.1/SunGraphics2D.java:2426)
+	at SheriffsssPackage.GameRenderer.drawLightingOverlay(GameRenderer.java:172)
+	at SheriffsssPackage.GameRenderer.renderWorld(GameRenderer.java:134)
+	at SheriffsssPackage.GameRenderer.render(GameRenderer.java:70)
+	at SheriffsssPackage.Game.paintComponent(Game.java:149)
+	at javax.swing.JComponent.paint(java.desktop@20.0.1/JComponent.java:1128)
+	at javax.swing.JComponent.paintToOffscreen(java.desktop@20.0.1/JComponent.java:5318)
+	at javax.swing.RepaintManager$PaintManager.paintDoubleBufferedImpl(java.desktop@20.0.1/RepaintManager.java:1656)
+	at javax.swing.RepaintManager$PaintManager.paintDoubleBuffered(java.desktop@20.0.1/RepaintManager.java:1631)
+	at javax.swing.RepaintManager$PaintManager.paint(java.desktop@20.0.1/RepaintManager.java:1569)
+	at javax.swing.RepaintManager.paint(java.desktop@20.0.1/RepaintManager.java:1336)
+	at javax.swing.JComponent._paintImmediately(java.desktop@20.0.1/JComponent.java:5266)
+	at javax.swing.JComponent.paintImmediately(java.desktop@20.0.1/JComponent.java:5076)
+	at javax.swing.RepaintManager$4.run(java.desktop@20.0.1/RepaintManager.java:878)
+	at javax.swing.RepaintManager$4.run(java.desktop@20.0.1/RepaintManager.java:861)
+	at java.security.AccessController.executePrivileged(java.base@20.0.1/AccessController.java:778)
+	at java.security.AccessController.doPrivileged(java.base@20.0.1/AccessController.java:400)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(java.base@20.0.1/ProtectionDomain.java:87)
+	at javax.swing.RepaintManager.paintDirtyRegions(java.desktop@20.0.1/RepaintManager.java:861)
+	at javax.swing.RepaintManager.paintDirtyRegions(java.desktop@20.0.1/RepaintManager.java:834)
+	at javax.swing.RepaintManager.prePaintDirtyRegions(java.desktop@20.0.1/RepaintManager.java:784)
+	at javax.swing.RepaintManager$ProcessingRunnable.run(java.desktop@20.0.1/RepaintManager.java:1897)
+	at java.awt.event.InvocationEvent.dispatch(java.desktop@20.0.1/InvocationEvent.java:318)
+	at java.awt.EventQueue.dispatchEventImpl(java.desktop@20.0.1/EventQueue.java:773)
+	at java.awt.EventQueue$4.run(java.desktop@20.0.1/EventQueue.java:720)
+	at java.awt.EventQueue$4.run(java.desktop@20.0.1/EventQueue.java:714)
+	at java.security.AccessController.executePrivileged(java.base@20.0.1/AccessController.java:778)
+	at java.security.AccessController.doPrivileged(java.base@20.0.1/AccessController.java:400)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(java.base@20.0.1/ProtectionDomain.java:87)
+	at java.awt.EventQueue.dispatchEvent(java.desktop@20.0.1/EventQueue.java:742)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(java.desktop@20.0.1/EventDispatchThread.java:203)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(java.desktop@20.0.1/EventDispatchThread.java:124)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(java.desktop@20.0.1/EventDispatchThread.java:113)
+	at java.awt.EventDispatchThread.pumpEvents(java.desktop@20.0.1/EventDispatchThread.java:109)
+	at java.awt.EventDispatchThread.pumpEvents(java.desktop@20.0.1/EventDispatchThread.java:101)
+	at java.awt.EventDispatchThread.run(java.desktop@20.0.1/EventDispatchThread.java:90)
+
+"SheriffsssGameLoop" #23 [92163] prio=5 os_prio=31 cpu=8079,39ms elapsed=9,21s tid=0x00007f9aa4024e00 nid=92163 runnable  [0x000000030a756000]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.System.nanoTime(java.base@20.0.1/Native Method)
+	at SheriffsssPackage.Game.run(Game.java:251)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"DestroyJavaVM" #24 [10755] prio=5 os_prio=31 cpu=561,44ms elapsed=9,20s tid=0x00007f9aa50b7e00 nid=10755 waiting on condition  [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Java Sound Event Dispatcher" #25 [174107] daemon prio=5 os_prio=31 cpu=0,15ms elapsed=8,82s tid=0x00007f9aa4079a00 nid=174107 in Object.wait()  [0x000000030a95f000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait0(java.base@20.0.1/Native Method)
+	- waiting on <0x0000000783300220> (a com.sun.media.sound.EventDispatcher)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:366)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:339)
+	at com.sun.media.sound.EventDispatcher.dispatchEvents(java.desktop@20.0.1/EventDispatcher.java:173)
+	- locked <0x0000000783300220> (a com.sun.media.sound.EventDispatcher)
+	at com.sun.media.sound.EventDispatcher.run(java.desktop@20.0.1/EventDispatcher.java:212)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"Direct Clip" #26 [168483] daemon prio=6 os_prio=31 cpu=76,02ms elapsed=8,59s tid=0x00007f9aa408ac00 nid=168483 in Object.wait()  [0x000000030abf5000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait0(java.base@20.0.1/Native Method)
+	- waiting on <0x0000000783324c20> (a java.lang.Object)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:366)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:339)
+	at com.sun.media.sound.DirectAudioDevice$DirectClip.run(java.desktop@20.0.1/DirectAudioDevice.java:1291)
+	- locked <0x0000000783324c20> (a java.lang.Object)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"Direct Clip" #35 [164915] daemon prio=6 os_prio=31 cpu=10,95ms elapsed=2,57s tid=0x00007f9aa5076800 nid=164915 in Object.wait()  [0x000000030b513000]
+   java.lang.Thread.State: TIMED_WAITING (on object monitor)
+	at java.lang.Object.wait0(java.base@20.0.1/Native Method)
+	- waiting on <0x00000007848687e8> (a java.lang.Object)
+	at java.lang.Object.wait(java.base@20.0.1/Object.java:366)
+	at com.sun.media.sound.DirectAudioDevice$DirectDL.write(java.desktop@20.0.1/DirectAudioDevice.java:732)
+	- locked <0x00000007848687e8> (a java.lang.Object)
+	at com.sun.media.sound.DirectAudioDevice$DirectClip.run(java.desktop@20.0.1/DirectAudioDevice.java:1312)
+	at java.lang.Thread.runWith(java.base@20.0.1/Thread.java:1636)
+	at java.lang.Thread.run(java.base@20.0.1/Thread.java:1623)
+
+"Attach Listener" #36 [168227] daemon prio=9 os_prio=31 cpu=1,04ms elapsed=0,11s tid=0x00007f9aa4893000 nid=168227 waiting on condition  [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"VM Thread" os_prio=31 cpu=3,83ms elapsed=12,14s tid=0x00007f9aa2f0e900 nid=21763 runnable  
+
+"GC Thread#0" os_prio=31 cpu=7,97ms elapsed=12,18s tid=0x00007f9aa2f09830 nid=16643 runnable  
+
+"GC Thread#1" os_prio=31 cpu=7,52ms elapsed=6,79s tid=0x00007f9aa3826540 nid=163647 runnable  
+
+"GC Thread#2" os_prio=31 cpu=7,50ms elapsed=6,79s tid=0x00007f9aa3a2fdb0 nid=163939 runnable  
+
+"GC Thread#3" os_prio=31 cpu=7,05ms elapsed=6,79s tid=0x00007f9aa3a7de00 nid=140803 runnable  
+
+"GC Thread#4" os_prio=31 cpu=7,37ms elapsed=6,79s tid=0x00007f9aa3a81130 nid=163075 runnable  
+
+"GC Thread#5" os_prio=31 cpu=7,44ms elapsed=6,79s tid=0x00007f9aa3a216d0 nid=162819 runnable  
+
+"GC Thread#6" os_prio=31 cpu=7,34ms elapsed=6,79s tid=0x00007f9aa3a17790 nid=162563 runnable  
+
+"GC Thread#7" os_prio=31 cpu=7,41ms elapsed=6,79s tid=0x00007f9aa3a80240 nid=141827 runnable  
+
+"G1 Main Marker" os_prio=31 cpu=0,09ms elapsed=12,18s tid=0x00007f9aa2f09ef0 nid=21251 runnable  
+
+"G1 Conc#0" os_prio=31 cpu=0,02ms elapsed=12,18s tid=0x00007f9aa2f0a790 nid=20739 runnable  
+
+"G1 Refine#0" os_prio=31 cpu=0,06ms elapsed=12,18s tid=0x00007f9aa3904590 nid=17411 runnable  
+
+"G1 Service" os_prio=31 cpu=0,58ms elapsed=12,18s tid=0x00007f9aa3a04600 nid=17667 runnable  
+
+"VM Periodic Task Thread" os_prio=31 cpu=3,92ms elapsed=12,06s tid=0x00007f9aa2f14460 nid=27139 waiting on condition  
+
+JNI global refs: 116, weak refs: 74
+

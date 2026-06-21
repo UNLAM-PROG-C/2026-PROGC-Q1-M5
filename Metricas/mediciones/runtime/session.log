@@ -1,0 +1,9 @@
+PID=85380 @ 13:23:26
+>>> 01-menu @ 13:23:34
+  threads=38
+>>> 02-partida @ 13:24:04
+  threads=0
+>>> 03-partida-tardia @ 13:24:31
+  threads=0
+Cerrando @ 13:24:35
+DONE @ 13:24:35

@@ -1,0 +1,3 @@
+ps: nlwp: keyword not found
+  PID  %CPU %MEM    RSS      VSZ ELAPSED STAT
+85380 282,1  2,7 227244 74452412   00:08 RN  

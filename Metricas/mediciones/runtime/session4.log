@@ -1,0 +1,8 @@
+PID=85905 @ 13:30:34 (JIT, rapido)
+>>> 10-jit-t5 @ 13:30:39
+  threads=34  cpu=121,3%  rss=144900KB
+>>> 11-jit-t10 @ 13:30:47
+  threads=37  cpu=264,2%  rss=245016KB
+>>> 12-jit-t14 @ 13:30:52
+  threads=38  cpu=225,2%  rss=186036KB
+DONE @ 13:30:54
