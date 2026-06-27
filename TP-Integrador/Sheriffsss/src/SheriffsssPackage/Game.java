@@ -346,6 +346,10 @@ public class Game extends JPanel implements Runnable {
 			shutdownApplication();
 			return;
 		}
+		if (this.menuRenderer.isPlayButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+			startFullGame();
+			return;
+		}
 		if (this.menuRenderer.isTrainingButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
 			startTraining(true);
 			return;
@@ -491,6 +495,84 @@ public class Game extends JPanel implements Runnable {
 		this.input.clearMovement();
 	}
 
+	private static final int FULL_GAME_MAP_TILES = 200;
+	private static final String FULL_GAME_PLAYER_NAME = "Sheriff";
+	private static final int FULL_GAME_TREE_W = 2;
+	private static final int FULL_GAME_TREE_H = 3;
+	private static final MapObjectType[] FULL_GAME_TREE_TYPES = {
+		MapObjectType.TRAINING_BORDER_TREE_1,
+		MapObjectType.TRAINING_BORDER_TREE_2,
+		MapObjectType.TRAINING_BORDER_TREE_3,
+		MapObjectType.TRAINING_BORDER_TREE_4
+	};
+
+	private void startFullGame() {
+		stopTrainingIfActive();
+		this.debugOptions.resetAll();
+		long seed = System.nanoTime() ^ System.currentTimeMillis();
+		int seedHash = Long.hashCode(seed);
+		this.enemySystem.clear();
+		this.enemySystem.reset(seedHash);
+		this.enemySystem.setAutoSpawnEnabled(true);
+		this.map = buildFullGameMap(new Random(seed));
+		int spawnTile = FULL_GAME_MAP_TILES / 2;
+		int spawnX = spawnTile * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
+		int spawnY = spawnTile * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
+		this.player = new Player(FULL_GAME_PLAYER_NAME, spawnX, spawnY, this.assets);
+		this.localRuntimeState = new PlayerRuntimeState();
+		this.player.getEquipment().resetToWeapon(ItemDefinition.ALTA_PISTOLA_PRIMERA);
+		this.projectileSystem.clear();
+		resetLocalToolAnimation();
+		this.toolTargetObject = null;
+		this.dayNightCycle.reset();
+		resetDeathSpectatorState();
+		this.trainingActive = false;
+		this.state = State.PLAYING;
+		this.input.consumeEscapePressed();
+		this.input.clearPrimaryAction();
+	}
+
+	private GameMap buildFullGameMap(Random r) {
+		GameMap map = new GameMap(FULL_GAME_MAP_TILES, FULL_GAME_MAP_TILES);
+		map.clear(TileType.SAND);
+		double vegetationProp = GameConfig.TRAINING_WILDERNESS_PROP_PER_TILE;
+		for (int tileY = 0; tileY < FULL_GAME_MAP_TILES; tileY++) {
+			for (int tileX = 0; tileX < FULL_GAME_MAP_TILES; tileX++) {
+				if (r.nextDouble() < vegetationProp) {
+					if (r.nextBoolean()) {
+						if (map.canPlaceObject(tileX, tileY)) {
+							map.placeSingleObject(MapObjectType.DRY_BUSH, tileX, tileY, false, false);
+						}
+					} else {
+						placeFullGameTree(map, r, tileX, tileY);
+					}
+				}
+			}
+		}
+		map.rebuildMinimap();
+		return map;
+	}
+
+	private void placeFullGameTree(GameMap map, Random r, int tileX, int tileY) {
+		if (tileX + FULL_GAME_TREE_W > FULL_GAME_MAP_TILES || tileY + FULL_GAME_TREE_H > FULL_GAME_MAP_TILES) {
+			return;
+		}
+		for (int tx = tileX; tx < tileX + FULL_GAME_TREE_W; tx++) {
+			for (int ty = tileY; ty < tileY + FULL_GAME_TREE_H; ty++) {
+				if (map.getObject(tx, ty) != null) {
+					return;
+				}
+			}
+		}
+		MapObjectType type = FULL_GAME_TREE_TYPES[r.nextInt(FULL_GAME_TREE_TYPES.length)];
+		int cells = FULL_GAME_TREE_W * FULL_GAME_TREE_H;
+		boolean[] solid = new boolean[cells];
+		boolean[] above = new boolean[cells];
+		java.util.Arrays.fill(solid, true);
+		java.util.Arrays.fill(above, true);
+		map.placeObjectRect(type, tileX, tileY, solid, above);
+	}
+
 	private void updatePlaying() {
 		if (isTrainingSessionFinished()) {
 			clearToolTarget();
@@ -588,11 +670,6 @@ public class Game extends JPanel implements Runnable {
 			}
 		}
 		boolean primaryActive = isPrimaryGameplayHeld() || this.primaryGameplayPressedThisFrame;
-		if (!this.trainingActive) {
-			clearToolTarget();
-			resetLocalToolAnimation();
-			return;
-		}
 		if (!primaryActive) {
 			clearToolTarget();
 			return;
@@ -608,7 +685,7 @@ public class Game extends JPanel implements Runnable {
 	}
 
 	private boolean handleEquipmentClick(int mouseX, int mouseY) {
-		if (this.player == null || !this.trainingActive) {
+		if (this.player == null) {
 			return false;
 		}
 		Equipment equipment = this.player.getEquipment();
@@ -1478,7 +1555,8 @@ public class Game extends JPanel implements Runnable {
 		if (this.menuRenderer.isExitButtonHovered(mouseX, mouseY)) {
 			return true;
 		}
-		return this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)
+		return this.menuRenderer.isPlayButtonHovered(mouseX, mouseY)
+			|| this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)
 			|| this.menuRenderer.isTrainingSettingsButtonHovered(mouseX, mouseY);
 	}
 
