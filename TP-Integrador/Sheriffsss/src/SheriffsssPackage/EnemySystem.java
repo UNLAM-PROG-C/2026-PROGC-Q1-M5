@@ -20,19 +20,23 @@ public class EnemySystem {
 	private final ArrayList<FlameBurstEffect> flameBurstEffects = new ArrayList<FlameBurstEffect>();
 	private final ArrayList<CombatFloatingText> combatFloatingTexts = new ArrayList<CombatFloatingText>();
 	private final ArrayList<EnemyHitSound> hitSounds = new ArrayList<EnemyHitSound>();
+	private final ArrayList<EnemyType> pendingKillRewards = new ArrayList<EnemyType>();
 	private Random spawnRandom = new Random(0L);
 	private Random combatRandom = new Random(0L);
 	private int spawnCooldownTicks;
 	private boolean autoSpawnEnabled = true;
+	private int playerLevel = 1;
 
 	public void reset(int seedHash) {
 		this.enemies.clear();
 		this.flameBurstEffects.clear();
 		this.combatFloatingTexts.clear();
 		this.hitSounds.clear();
+		this.pendingKillRewards.clear();
 		this.spawnRandom = new Random(seedHash ^ 0x4F1BBCDC);
 		this.combatRandom = new Random(seedHash ^ 0xC2B2AE35);
-		this.spawnCooldownTicks = 90;
+		this.spawnCooldownTicks = 20;
+		this.playerLevel = 1;
 	}
 
 	public void clear() {
@@ -40,7 +44,13 @@ public class EnemySystem {
 		this.flameBurstEffects.clear();
 		this.combatFloatingTexts.clear();
 		this.hitSounds.clear();
+		this.pendingKillRewards.clear();
 		this.spawnCooldownTicks = 0;
+		this.playerLevel = 1;
+	}
+
+	public void setPlayerLevel(int level) {
+		this.playerLevel = Math.max(1, level);
 	}
 
 	public void update(GameMap map, Player player, DayNightCycle cycle) {
@@ -48,6 +58,7 @@ public class EnemySystem {
 		for (int i = this.enemies.size() - 1; i >= 0; i--) {
 			Enemy enemy = this.enemies.get(i);
 			if (enemy.isDead()) {
+				this.pendingKillRewards.add(enemy.getType());
 				this.enemies.remove(i);
 				continue;
 			}
@@ -57,6 +68,7 @@ public class EnemySystem {
 			}
 			enemy.update(map, player);
 			if (enemy.isDead()) {
+				this.pendingKillRewards.add(enemy.getType());
 				this.enemies.remove(i);
 			}
 		}
@@ -219,8 +231,28 @@ public class EnemySystem {
 			if (!enemy.isDead()) {
 				continue;
 			}
+			this.pendingKillRewards.add(enemy.getType());
 			this.enemies.remove(i);
 		}
+	}
+
+	public List<EnemyType> drainKillRewards() {
+		if (this.pendingKillRewards.isEmpty()) {
+			return java.util.Collections.emptyList();
+		}
+		List<EnemyType> rewards = new ArrayList<EnemyType>(this.pendingKillRewards);
+		this.pendingKillRewards.clear();
+		return rewards;
+	}
+
+	public void spawnBurst(GameMap map, Player player, int count) {
+		for (int i = 0; i < count; i++) {
+			spawnNearPlayer(map, player, 1);
+		}
+	}
+
+	public void spawnSpecific(GameMap map, Player player, EnemyType type) {
+		attemptPlaceEnemy(map, player, type, 1);
 	}
 
 	private void updateSpawns(GameMap map, Player player, DayNightCycle cycle, int dayCount) {
@@ -244,9 +276,9 @@ public class EnemySystem {
 
 	private int nextSpawnCooldown(DayNightCycle cycle, int dayCount) {
 		double dayScale = 1.0 + Math.max(0, dayCount - 1) * 0.22;
-		int baseTicks = cycle.getPhase() == DayPhase.NIGHT ? 78 : 330;
-		int jitter = cycle.getPhase() == DayPhase.NIGHT ? this.spawnRandom.nextInt(35) : this.spawnRandom.nextInt(120);
-		return Math.max(24, (int) ((baseTicks + jitter) / dayScale));
+		int baseTicks = cycle.getPhase() == DayPhase.NIGHT ? 50 : 120;
+		int jitter = cycle.getPhase() == DayPhase.NIGHT ? this.spawnRandom.nextInt(30) : this.spawnRandom.nextInt(80);
+		return Math.max(15, (int) ((baseTicks + jitter) / dayScale));
 	}
 
 	private void spawnNearPlayer(GameMap map, Player player, int dayCount) {
@@ -254,6 +286,10 @@ public class EnemySystem {
 		if (type == null) {
 			return;
 		}
+		attemptPlaceEnemy(map, player, type, dayCount);
+	}
+
+	private void attemptPlaceEnemy(GameMap map, Player player, EnemyType type, int dayCount) {
 		int playerTileX = map.worldToTileX(player.getX());
 		int playerTileY = map.worldToTileY(player.getFeetWorldY());
 		for (int attempt = 0; attempt < 18; attempt++) {
@@ -273,7 +309,7 @@ public class EnemySystem {
 			int worldX = tileX * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
 			int worldY = tileY * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
 			if (map.isWalkableAtWorld(worldX, worldY)) {
-				this.enemies.add(new Enemy(type, worldX, worldY, dayCount));
+				this.enemies.add(new Enemy(type, worldX, worldY, this.playerLevel));
 				return;
 			}
 		}

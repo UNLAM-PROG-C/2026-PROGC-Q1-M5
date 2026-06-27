@@ -10,6 +10,14 @@ public class DayNightCycle {
 	private int dayCount = 1;
 	private int tickOfDay;
 
+	public void tick() {
+		this.tickOfDay++;
+		if (this.tickOfDay >= TICKS_PER_DAY) {
+			this.tickOfDay = 0;
+			this.dayCount++;
+		}
+	}
+
 	public void reset() {
 		this.dayCount = 1;
 		this.tickOfDay = 0;

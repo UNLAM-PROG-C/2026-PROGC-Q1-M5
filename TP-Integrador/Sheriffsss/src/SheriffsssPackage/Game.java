@@ -92,6 +92,33 @@ public class Game extends JPanel implements Runnable {
 	private int lastViewportWidth = GameConfig.BASE_SCREEN_WIDTH;
 	private int lastViewportHeight = GameConfig.BASE_SCREEN_HEIGHT;
 	private volatile boolean shuttingDown;
+	private final ArrayList<int[]> healthPickups = new ArrayList<>();
+	private final Random pickupRandom = new Random();
+	private int healthPickupCooldown = 0;
+	private static final int HEALTH_PICKUP_INTERVAL = GameConfig.TARGET_FPS * 60;
+	private static final int HEALTH_PICKUP_MAX = 2;
+	private static final int HEALTH_PICKUP_HEAL = 25;
+	private static final int HEALTH_PICKUP_COLLECT_RADIUS = 22;
+	private int score = 0;
+	private int level = 1;
+	private int lastBossTriggerLevel = 0;
+	// Score thresholds to trigger a boss spawn (index = current level, boss unlocks next level)
+	private static final int[] BOSS_SCORE_TRIGGERS = { 40, 150, 350, 650, 1100, 1800, 2800, 4200, 6000 };
+	// Weapons unlocked on level-up (index = new level reached), ordered weakest→strongest dmg/shot
+	private static final ItemDefinition[] LEVEL_WEAPONS = {
+		null,                                  // level 1: starter BRONZE_REVOLVER
+		ItemDefinition.LUGER,                  // level 2: 15.0 dmg/shot
+		ItemDefinition.REINFORCED_REVOLVER,    // level 3: 15.5 dmg/shot
+		ItemDefinition.ALTA_PISTOLA_PLATEADA,  // level 4: 30.0 dmg/shot
+		ItemDefinition.ALTA_PISTOLA_PRIMERA,   // level 5: 35.0 dmg/shot
+		ItemDefinition.NAIL_GUN,               // level 6: cadencia altisima (ultimo)
+		null,                                  // level 7: sin arma nueva, x3.8 stats
+		null,                                  // level 8: sin arma nueva, x5.0 stats
+		null,                                  // level 9: sin arma nueva, x6.6 stats
+		null,                                  // level 10 (MAX): x8.7 stats
+	};
+	private static final int DEATH_BTN_W = 260;
+	private static final int DEATH_BTN_H = 52;
 
 	public Game() {
 		GameConfig.loadDisplayPreferences();
@@ -282,6 +309,8 @@ public class Game extends JPanel implements Runnable {
 			updatePlaying();
 		} else if (this.state == State.SETTINGS) {
 			updateSettings();
+		} else if (this.state == State.DEAD && !this.trainingActive) {
+			updateDead();
 		}
 		if (this.trainingActive && this.trainingMode != null
 			&& (this.state == State.PLAYING || this.state == State.DEAD)
@@ -338,12 +367,68 @@ public class Game extends JPanel implements Runnable {
 		}
 	}
 
+	private void updateHealthPickups() {
+		int px = this.player.getX();
+		int py = this.player.getFeetWorldY();
+		for (int i = this.healthPickups.size() - 1; i >= 0; i--) {
+			int[] p = this.healthPickups.get(i);
+			int dx = p[0] - px;
+			int dy = p[1] - py;
+			if (dx * dx + dy * dy <= HEALTH_PICKUP_COLLECT_RADIUS * HEALTH_PICKUP_COLLECT_RADIUS) {
+				this.player.heal(HEALTH_PICKUP_HEAL);
+				this.healthPickups.remove(i);
+				this.infoMessages[3] = "+" + HEALTH_PICKUP_HEAL + " HP";
+				this.infoMessageTicks[3] = GameConfig.TARGET_FPS * 2;
+			}
+		}
+		if (this.healthPickups.size() >= HEALTH_PICKUP_MAX) {
+			return;
+		}
+		if (this.healthPickupCooldown > 0) {
+			this.healthPickupCooldown--;
+			return;
+		}
+		int playerTileX = this.map.worldToTileX(px);
+		int playerTileY = this.map.worldToTileY(py);
+		for (int attempt = 0; attempt < 25; attempt++) {
+			int offX = this.pickupRandom.nextInt(22) - 11;
+			int offY = this.pickupRandom.nextInt(22) - 11;
+			if (Math.abs(offX) < 4 && Math.abs(offY) < 4) {
+				continue;
+			}
+			int wx = (playerTileX + offX) * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
+			int wy = (playerTileY + offY) * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
+			if (this.map.isWalkableAtWorld(wx, wy)) {
+				this.healthPickups.add(new int[]{wx, wy});
+				this.healthPickupCooldown = HEALTH_PICKUP_INTERVAL;
+				break;
+			}
+		}
+	}
+
+	private void updateDead() {
+		if (!this.input.consumePrimaryClick()) {
+			return;
+		}
+		int mx = this.input.getMouseX();
+		int my = this.input.getMouseY();
+		int btnX = getDeathMenuButtonX();
+		int btnY = getDeathMenuButtonY();
+		if (mx >= btnX && mx <= btnX + DEATH_BTN_W && my >= btnY && my <= btnY + DEATH_BTN_H) {
+			returnToMenu();
+		}
+	}
+
 	private void updateMenu() {
 		if (!this.input.consumePrimaryClick()) {
 			return;
 		}
 		if (this.menuRenderer.isExitButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
 			shutdownApplication();
+			return;
+		}
+		if (this.menuRenderer.isPlayButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+			startFullGame();
 			return;
 		}
 		if (this.menuRenderer.isTrainingButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
@@ -491,6 +576,101 @@ public class Game extends JPanel implements Runnable {
 		this.input.clearMovement();
 	}
 
+	private static final int FULL_GAME_MAP_TILES = 200;
+	private static final String FULL_GAME_PLAYER_NAME = "Sheriff";
+	private static final int FULL_GAME_TREE_W = 2;
+	private static final int FULL_GAME_TREE_H = 3;
+	private static final MapObjectType[] FULL_GAME_TREE_TYPES = {
+		MapObjectType.TRAINING_BORDER_TREE_1,
+		MapObjectType.TRAINING_BORDER_TREE_2,
+		MapObjectType.TRAINING_BORDER_TREE_3,
+		MapObjectType.TRAINING_BORDER_TREE_4
+	};
+
+	private void startFullGame() {
+		stopTrainingIfActive();
+		this.debugOptions.resetAll();
+		long seed = System.nanoTime() ^ System.currentTimeMillis();
+		int seedHash = Long.hashCode(seed);
+		this.enemySystem.clear();
+		this.enemySystem.reset(seedHash);
+		this.enemySystem.setAutoSpawnEnabled(true);
+		this.map = buildFullGameMap(new Random(seed));
+		int spawnTile = FULL_GAME_MAP_TILES / 2;
+		int spawnX = spawnTile * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
+		int spawnY = spawnTile * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
+		this.player = new Player(FULL_GAME_PLAYER_NAME, spawnX, spawnY, this.assets);
+		this.localRuntimeState = new PlayerRuntimeState();
+		this.player.getEquipment().resetToWeapon(ItemDefinition.BRONZE_REVOLVER);
+		this.projectileSystem.clear();
+		resetLocalToolAnimation();
+		this.toolTargetObject = null;
+		this.dayNightCycle.reset();
+		resetDeathSpectatorState();
+		this.score = 0;
+		this.level = 1;
+		this.lastBossTriggerLevel = 0;
+		this.healthPickups.clear();
+		this.healthPickupCooldown = HEALTH_PICKUP_INTERVAL / 2;
+		this.trainingActive = false;
+		this.state = State.PLAYING;
+		this.input.consumeEscapePressed();
+		this.input.clearPrimaryAction();
+		this.enemySystem.spawnBurst(this.map, this.player, 8);
+	}
+
+	private static final int FULL_GAME_SPAWN_CLEAR_RADIUS = 5;
+	private static final double FULL_GAME_VEGETATION_PROP = 0.03;
+
+	private GameMap buildFullGameMap(Random r) {
+		GameMap map = new GameMap(FULL_GAME_MAP_TILES, FULL_GAME_MAP_TILES);
+		map.clear(TileType.SAND);
+		double vegetationProp = FULL_GAME_VEGETATION_PROP;
+		int centerTile = FULL_GAME_MAP_TILES / 2;
+		for (int tileY = 0; tileY < FULL_GAME_MAP_TILES; tileY++) {
+			for (int tileX = 0; tileX < FULL_GAME_MAP_TILES; tileX++) {
+				if (Math.abs(tileX - centerTile) <= FULL_GAME_SPAWN_CLEAR_RADIUS
+						&& Math.abs(tileY - centerTile) <= FULL_GAME_SPAWN_CLEAR_RADIUS) {
+					continue;
+				}
+				if (r.nextDouble() < vegetationProp) {
+					if (r.nextBoolean()) {
+						if (map.canPlaceObject(tileX, tileY)) {
+							map.placeSingleObject(MapObjectType.DRY_BUSH, tileX, tileY, false, false);
+						}
+					} else {
+						placeFullGameTree(map, r, tileX, tileY);
+					}
+				}
+			}
+		}
+		map.rebuildMinimap();
+		return map;
+	}
+
+	private void placeFullGameTree(GameMap map, Random r, int tileX, int tileY) {
+		if (tileX + FULL_GAME_TREE_W > FULL_GAME_MAP_TILES || tileY + FULL_GAME_TREE_H > FULL_GAME_MAP_TILES) {
+			return;
+		}
+		for (int tx = tileX; tx < tileX + FULL_GAME_TREE_W; tx++) {
+			for (int ty = tileY; ty < tileY + FULL_GAME_TREE_H; ty++) {
+				if (map.getObject(tx, ty) != null) {
+					return;
+				}
+			}
+		}
+		MapObjectType type = FULL_GAME_TREE_TYPES[r.nextInt(FULL_GAME_TREE_TYPES.length)];
+		int cells = FULL_GAME_TREE_W * FULL_GAME_TREE_H;
+		boolean[] solid = new boolean[cells];
+		boolean[] above = new boolean[cells];
+		java.util.Arrays.fill(above, true);
+		// Only the trunk row (bottom) is solid; enemies can walk under the canopy
+		for (int i = 0; i < cells; i++) {
+			solid[i] = (i >= cells - FULL_GAME_TREE_W);
+		}
+		map.placeObjectRect(type, tileX, tileY, solid, above);
+	}
+
 	private void updatePlaying() {
 		if (isTrainingSessionFinished()) {
 			clearToolTarget();
@@ -562,14 +742,21 @@ public class Game extends JPanel implements Runnable {
 		if (this.shotFacingLockTicks <= 0) {
 			this.player.updateFacing(moveX, moveY);
 		}
+		this.dayNightCycle.tick();
 		this.enemySystem.update(this.map, this.player, this.dayNightCycle);
 
 		if (this.player.getCurrentHP() <= 0.0) {
 			this.player.die();
 			this.state = State.DEAD;
+			if (!this.trainingActive) {
+				this.deathOverlayActive = true;
+			}
 			this.audio.stopLoop();
 			this.audio.playOnce(DEATH_SOUND, 0f);
 			return;
+		}
+		if (!this.trainingActive) {
+			updateHealthPickups();
 		}
 		updateToolUse();
 		updateProjectiles();
@@ -588,11 +775,6 @@ public class Game extends JPanel implements Runnable {
 			}
 		}
 		boolean primaryActive = isPrimaryGameplayHeld() || this.primaryGameplayPressedThisFrame;
-		if (!this.trainingActive) {
-			clearToolTarget();
-			resetLocalToolAnimation();
-			return;
-		}
 		if (!primaryActive) {
 			clearToolTarget();
 			return;
@@ -608,7 +790,7 @@ public class Game extends JPanel implements Runnable {
 	}
 
 	private boolean handleEquipmentClick(int mouseX, int mouseY) {
-		if (this.player == null || !this.trainingActive) {
+		if (this.player == null) {
 			return false;
 		}
 		Equipment equipment = this.player.getEquipment();
@@ -997,6 +1179,68 @@ public class Game extends JPanel implements Runnable {
 		}
 		playEnemyHitSounds();
 		this.enemySystem.collectDeadEnemies();
+		if (!this.trainingActive) {
+			awardKillScore();
+		}
+	}
+
+	private void awardKillScore() {
+		java.util.List<EnemyType> kills = this.enemySystem.drainKillRewards();
+		if (kills.isEmpty()) {
+			return;
+		}
+		boolean bossKilled = false;
+		for (int i = 0; i < kills.size(); i++) {
+			EnemyType type = kills.get(i);
+			if (type == EnemyType.JEFE_RATA) {
+				bossKilled = true;
+			} else {
+				this.score += type.getScoreReward();
+			}
+		}
+		if (bossKilled) {
+			triggerLevelUp();
+		}
+		checkBossSpawn();
+	}
+
+	private void triggerLevelUp() {
+		if (this.level >= LEVEL_WEAPONS.length) {
+			return;
+		}
+		this.level++;
+		this.lastBossTriggerLevel = this.level - 1;
+		this.enemySystem.setPlayerLevel(this.level);
+		int weaponIndex = this.level - 1;
+		if (weaponIndex < LEVEL_WEAPONS.length && LEVEL_WEAPONS[weaponIndex] != null && this.player != null) {
+			ItemDefinition weapon = LEVEL_WEAPONS[weaponIndex];
+			this.player.getEquipment().unlockWeapon(weapon);
+			this.infoMessages[0] = "NIVEL " + this.level + "! Nueva arma: " + weapon.getDisplayName() + " [TAB]";
+			this.infoMessageTicks[0] = GameConfig.TARGET_FPS * 6;
+		} else {
+			this.infoMessages[0] = "NIVEL " + this.level + "! Enemigos mucho mas fuertes!";
+			this.infoMessageTicks[0] = GameConfig.TARGET_FPS * 5;
+		}
+		int burst = 4 + this.level * 2;
+		this.enemySystem.spawnBurst(this.map, this.player, burst);
+		this.infoMessages[1] = "Oleada! " + burst + " enemigos mas fuertes!";
+		this.infoMessageTicks[1] = GameConfig.TARGET_FPS * 4;
+	}
+
+	private void checkBossSpawn() {
+		if (this.player == null || this.level > BOSS_SCORE_TRIGGERS.length) {
+			return;
+		}
+		int triggerIndex = this.level - 1;
+		if (triggerIndex >= BOSS_SCORE_TRIGGERS.length) {
+			return;
+		}
+		if (this.score >= BOSS_SCORE_TRIGGERS[triggerIndex] && this.lastBossTriggerLevel < this.level) {
+			this.lastBossTriggerLevel = this.level;
+			this.enemySystem.spawnSpecific(this.map, this.player, EnemyType.JEFE_RATA);
+			this.infoMessages[2] = "*** JEFE APROXIMANDOSE! ***";
+			this.infoMessageTicks[2] = GameConfig.TARGET_FPS * 5;
+		}
 	}
 
 	private void playEnemyHitSounds() {
@@ -1219,6 +1463,7 @@ public class Game extends JPanel implements Runnable {
 		this.activeMusicPath = null;
 		this.enemySystem.clear();
 		this.projectileSystem.clear();
+		this.healthPickups.clear();
 		this.map = null;
 		this.player = null;
 		resetLocalToolAnimation();
@@ -1471,6 +1716,18 @@ public class Game extends JPanel implements Runnable {
 	public int getSettingsOverlayOffsetY() { return settingsOverlayOffsetY(); }
 	public double getWindowResolutionSliderValue() { return this.pendingWindowResolutionIndex / (double) Math.max(1, GameConfig.getWindowResolutionCount() - 1); }
 	public String getWindowResolutionLabel() { return GameConfig.getWindowResolutionLabel(this.pendingWindowResolutionIndex); }
+	public int getScore() { return this.score; }
+	public int getLevel() { return this.level; }
+	public int getMaxLevel() { return LEVEL_WEAPONS.length; }
+	public int getBossTriggerScore() {
+		int idx = this.level - 1;
+		return idx < BOSS_SCORE_TRIGGERS.length ? BOSS_SCORE_TRIGGERS[idx] : -1;
+	}
+	public java.util.List<int[]> getHealthPickups() { return this.healthPickups; }
+	public int getDeathMenuButtonX() { return GameConfig.SCREEN_CENTER_X - DEATH_BTN_W / 2; }
+	public int getDeathMenuButtonY() { return GameConfig.SCREEN_CENTER_Y + 110; }
+	public int getDeathMenuButtonW() { return DEATH_BTN_W; }
+	public int getDeathMenuButtonH() { return DEATH_BTN_H; }
 
 	private boolean isRootMenuButtonHovered() {
 		int mouseX = this.input.getMouseX();
@@ -1478,7 +1735,8 @@ public class Game extends JPanel implements Runnable {
 		if (this.menuRenderer.isExitButtonHovered(mouseX, mouseY)) {
 			return true;
 		}
-		return this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)
+		return this.menuRenderer.isPlayButtonHovered(mouseX, mouseY)
+			|| this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)
 			|| this.menuRenderer.isTrainingSettingsButtonHovered(mouseX, mouseY);
 	}
 

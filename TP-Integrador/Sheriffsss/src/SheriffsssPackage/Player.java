@@ -180,6 +180,10 @@ public class Player {
 		}
 	}
 
+	public void heal(double amount) {
+		this.currentHP = Math.min(this.maxHP, this.currentHP + amount);
+	}
+
 	public void die() {
 		this.currentHP = 0.0;
 		this.dead = true;

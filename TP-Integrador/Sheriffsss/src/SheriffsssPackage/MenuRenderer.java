@@ -25,12 +25,16 @@ public class MenuRenderer {
 		"sprites/sheriffsss-title/frame_003.png"
 	};
 	private static final int ROOT_BUTTON_X = (GameConfig.BASE_SCREEN_WIDTH - ROOT_MENU_BTN_W) / 2;
+	private static final int PLAY_BUTTON_X = ROOT_BUTTON_X;
+	private static final int PLAY_BUTTON_Y = ROOT_MENU_FIRST_Y;
+	private static final int PLAY_BUTTON_WIDTH = ROOT_MENU_BTN_W;
+	private static final int PLAY_BUTTON_HEIGHT = ROOT_MENU_BTN_H;
 	private static final int TRAINING_BUTTON_X = ROOT_BUTTON_X;
-	private static final int TRAINING_BUTTON_Y = ROOT_MENU_FIRST_Y;
+	private static final int TRAINING_BUTTON_Y = PLAY_BUTTON_Y + ROOT_MENU_BTN_H + ROOT_MENU_BTN_GAP;
 	private static final int TRAINING_BUTTON_WIDTH = ROOT_MENU_BTN_W;
 	private static final int TRAINING_BUTTON_HEIGHT = ROOT_MENU_BTN_H;
 	private static final int TRAINING_SETTINGS_BUTTON_X = ROOT_BUTTON_X;
-	private static final int TRAINING_SETTINGS_BUTTON_Y = ROOT_MENU_FIRST_Y + ROOT_MENU_BTN_H + ROOT_MENU_BTN_GAP;
+	private static final int TRAINING_SETTINGS_BUTTON_Y = TRAINING_BUTTON_Y + ROOT_MENU_BTN_H + ROOT_MENU_BTN_GAP;
 	private static final int TRAINING_SETTINGS_BUTTON_WIDTH = ROOT_MENU_BTN_W;
 	private static final int TRAINING_SETTINGS_BUTTON_HEIGHT = ROOT_MENU_BTN_H;
 	private static final int TRAINING_EXIT_BUTTON_X = ROOT_BUTTON_X;
@@ -73,6 +77,10 @@ public class MenuRenderer {
 		g2.setTransform(previousTransform);
 	}
 
+	public boolean isPlayButtonHovered(int mouseX, int mouseY) {
+		return contains(mouseX, mouseY, PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
+	}
+
 	public boolean isTrainingButtonHovered(int mouseX, int mouseY) {
 		return contains(mouseX, mouseY, TRAINING_BUTTON_X, TRAINING_BUTTON_Y, TRAINING_BUTTON_WIDTH, TRAINING_BUTTON_HEIGHT);
 	}
@@ -99,6 +107,7 @@ public class MenuRenderer {
 	}
 
 	private void drawTrainingOnlyRootMenu(Graphics2D g2, Game game) {
+		drawMenuButton(g2, "PLAY", PLAY_BUTTON_X, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT, isPlayButtonHovered(game.getInput().getMouseX(), game.getInput().getMouseY()), true);
 		drawMenuButton(g2, "TRAINING", TRAINING_BUTTON_X, TRAINING_BUTTON_Y, TRAINING_BUTTON_WIDTH, TRAINING_BUTTON_HEIGHT, isTrainingButtonHovered(game.getInput().getMouseX(), game.getInput().getMouseY()), true);
 		drawMenuButton(g2, "SETTINGS", TRAINING_SETTINGS_BUTTON_X, TRAINING_SETTINGS_BUTTON_Y, TRAINING_SETTINGS_BUTTON_WIDTH, TRAINING_SETTINGS_BUTTON_HEIGHT, isTrainingSettingsButtonHovered(game.getInput().getMouseX(), game.getInput().getMouseY()), true);
 		drawMenuButton(g2, "EXIT", TRAINING_EXIT_BUTTON_X, TRAINING_EXIT_BUTTON_Y, TRAINING_EXIT_BUTTON_WIDTH, TRAINING_EXIT_BUTTON_HEIGHT, isExitButtonHovered(game.getInput().getMouseX(), game.getInput().getMouseY()), true);
