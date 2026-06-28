@@ -25,6 +25,7 @@ public class EnemySystem {
   private final ArrayList<CombatFloatingText> combatFloatingTexts = new ArrayList<CombatFloatingText>();
   private final ArrayList<EnemyHitSound> hitSounds = new ArrayList<EnemyHitSound>();
   private final ArrayList<EnemyType> pendingKillRewards = new ArrayList<EnemyType>();
+  private final ArrayList<Enemy> collectedDeadEnemies = new ArrayList<Enemy>();
   private final EnemyFactory enemyFactory = new EnemyFactory();
   private Random spawnRandom = new Random(0L);
   private Random combatRandom = new Random(0L);
@@ -38,6 +39,7 @@ public class EnemySystem {
     this.combatFloatingTexts.clear();
     this.hitSounds.clear();
     this.pendingKillRewards.clear();
+    this.collectedDeadEnemies.clear();
     this.spawnRandom = new Random(seedHash ^ 0x4F1BBCDC);
     this.combatRandom = new Random(seedHash ^ 0xC2B2AE35);
     this.spawnCooldownTicks = 20;
@@ -50,6 +52,7 @@ public class EnemySystem {
     this.combatFloatingTexts.clear();
     this.hitSounds.clear();
     this.pendingKillRewards.clear();
+    this.collectedDeadEnemies.clear();
     this.spawnCooldownTicks = 0;
     this.playerLevel = 1;
   }
@@ -58,6 +61,10 @@ public class EnemySystem {
     if (enemy != null && this.enemies.size() < MAX_ENEMIES) {
       this.enemies.add(enemy);
     }
+  }
+
+  public boolean removeEnemy(Enemy enemy) {
+    return this.enemies.remove(enemy);
   }
 
   public int enemyCount() {
@@ -260,14 +267,24 @@ public class EnemySystem {
   }
 
   public void collectDeadEnemies() {
+    this.collectedDeadEnemies.clear();
     for (int i = this.enemies.size() - 1; i >= 0; i--) {
       Enemy enemy = this.enemies.get(i);
       if (!enemy.isDead()) {
         continue;
       }
+      this.collectedDeadEnemies.add(enemy);
       this.pendingKillRewards.add(enemy.getType());
       this.enemies.remove(i);
     }
+  }
+
+  public List<Enemy> getCollectedDeadEnemies() {
+    return this.collectedDeadEnemies;
+  }
+
+  public void clearCollectedDeadEnemies() {
+    this.collectedDeadEnemies.clear();
   }
 
   public List<EnemyType> drainKillRewards() {

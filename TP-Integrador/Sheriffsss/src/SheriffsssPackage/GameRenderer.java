@@ -18,6 +18,8 @@ import SheriffsssPackage.render.TrainingHudSnapshot;
 import SheriffsssPackage.render.TrainingHudView;
 
 public class GameRenderer {
+  private static final Composite TRAINING_DIANA_BLINK_COMPOSITE =
+    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TrainingMode.TARGET_BLINK_ALPHA);
   private static final TextRenderer.Style MENU_TEXT_STYLE = TextRenderer.Style.OUTLINED;
 
   private final AssetManager assets;
@@ -360,8 +362,15 @@ public class GameRenderer {
       int sourceY = row * type.getFrameHeight();
       int drawX = screenX - drawWidth / 2;
       int drawY = screenY - drawHeight / 2;
-      drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
-      drawEnemyHealthBar(g2, enemy, screenX, drawY - 8);
+      if (shouldDimTrainingDianaBlink(enemy)) {
+        Composite previousComposite = g2.getComposite();
+        g2.setComposite(TRAINING_DIANA_BLINK_COMPOSITE);
+        drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
+        g2.setComposite(previousComposite);
+      } else {
+        drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
+      }
+      drawEnemyHealthBar(g2, game, enemy, screenX, drawY - 8);
       if (enemy.hasDebuff(Debuff.BURN)) {
         drawBurningParticles(g2, enemy, screenX, drawY, drawWidth, drawHeight);
       }
@@ -455,14 +464,34 @@ public class GameRenderer {
     return type.getAnimationRow(enemy.getFacing());
   }
 
+  private boolean shouldDimTrainingDianaBlink(Enemy enemy) {
+    if (enemy.getType() != EnemyType.DIANA || enemy.getMaxHP() <= 0.0) {
+      return false;
+    }
+    double hpRatio = enemy.getCurrentHP() / enemy.getMaxHP();
+    int phaseTicks;
+    if (hpRatio <= TrainingMode.TARGET_BLINK_FAST_HP_RATIO) {
+      phaseTicks = TrainingMode.TARGET_BLINK_FAST_PHASE_TICKS;
+    } else if (hpRatio <= TrainingMode.TARGET_BLINK_SLOW_HP_RATIO) {
+      phaseTicks = TrainingMode.TARGET_BLINK_SLOW_PHASE_TICKS;
+    } else {
+      return false;
+    }
+    return (enemy.getAnimationTicks() / phaseTicks) % 2 == 0;
+  }
+
   private void drawEnemySprite(Graphics2D g2, BufferedImage sheet, Enemy enemy, int drawX, int drawY, int drawWidth, int drawHeight, int sourceX, int sourceY) {
     EnemyType type = enemy.getType();
     g2.drawImage(sheet, drawX, drawY, drawX + drawWidth, drawY + drawHeight,
       sourceX, sourceY, sourceX + type.getFrameWidth(), sourceY + type.getFrameHeight(), null);
   }
 
-  private void drawEnemyHealthBar(Graphics2D g2, Enemy enemy, int centerX, int y) {
-    if (enemy.getCurrentHP() >= enemy.getMaxHP()) {
+  private void drawEnemyHealthBar(Graphics2D g2, GameView game, Enemy enemy, int centerX, int y) {
+    if (enemy.getType() == EnemyType.DIANA) {
+      if (game.getDebugOptions() == null || !game.getDebugOptions().shouldShowTargetHealthBars()) {
+        return;
+      }
+    } else if (enemy.getCurrentHP() >= enemy.getMaxHP()) {
       return;
     }
     int barWidth = 34;
@@ -475,6 +504,15 @@ public class GameRenderer {
     g2.fillRect(x, y, barWidth, barHeight);
     g2.setColor(Color.GREEN);
     g2.fillRect(x, y, (int) (barWidth * hpRatio), barHeight);
+    String healthText = formatHealthValue(enemy.getCurrentHP()) + "/" + formatHealthValue(enemy.getMaxHP());
+    TextRenderer.draw(g2, this.debugFont, healthText, Color.WHITE,
+      TextRenderer.centeredX(g2, this.debugFont, healthText, centerX), y - 4, true);
+  }
+
+  private String formatHealthValue(double health) {
+    return Math.abs(health - Math.round(health)) < 0.001
+      ? Integer.toString((int) Math.round(health))
+      : String.format(java.util.Locale.US, "%.1f", health);
   }
 
   private boolean isHeldItemRendered(GameView game, Player player) {
@@ -1042,6 +1080,7 @@ public class GameRenderer {
     drawDebugSwitch(g2, debug, 10, "Forzar precision 100%");
     drawDebugSwitch(g2, debug, 11, "Perimetro fallo training");
     drawDebugSwitch(g2, debug, DebugOptions.UNLOCK_ALL_WEAPONS_ROW, "Desbloquear todas las armas");
+    drawDebugSwitch(g2, debug, DebugOptions.SHOW_TARGET_HEALTH_BARS_ROW, "Barras vida dianas");
     drawDebugTrajectorySlider(g2, debug);
     g2.setStroke(previousStroke);
   }

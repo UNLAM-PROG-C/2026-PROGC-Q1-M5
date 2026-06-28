@@ -46,8 +46,16 @@ public final class TrainingMode {
   private static final int BORDER_TREE_HEIGHT_TILES = 3;
   private static final int DECORATION_COUNT = 16;
   private static final int RANDOM_SPAWN_ATTEMPTS = 80;
-  private static final int TARGET_LIFETIME_TICKS = GameConfig.TARGET_FPS * 4;
-  private static final int TARGET_SPAWN_INTERVAL_TICKS = GameConfig.TARGET_FPS * 1;
+  public static final int TARGET_LIFETIME_SECONDS = 4;
+  public static final int TARGET_LIFETIME_TICKS = GameConfig.TARGET_FPS * TARGET_LIFETIME_SECONDS;
+  public static final int TARGET_DECAY_INTERVAL_TICKS = GameConfig.TARGET_FPS;
+  public static final double TARGET_DECAY_DAMAGE = 1.0;
+  public static final int TARGET_SPAWN_INTERVAL_TICKS = GameConfig.TARGET_FPS;
+  public static final double TARGET_BLINK_SLOW_HP_RATIO = 0.50;
+  public static final double TARGET_BLINK_FAST_HP_RATIO = 0.25;
+  public static final int TARGET_BLINK_SLOW_PHASE_TICKS = Math.max(1, GameConfig.TARGET_FPS / 4);
+  public static final int TARGET_BLINK_FAST_PHASE_TICKS = Math.max(1, GameConfig.TARGET_FPS / 8);
+  public static final float TARGET_BLINK_ALPHA = 0.15f;
   private static final int TARGET_HINT_MIN_TICKS = GameConfig.TARGET_FPS * 3;
   private static final int TIMER_NOTICE_TICKS = GameConfig.TARGET_FPS * 5;
   private static final int SESSION_DURATION_TICKS = GameConfig.TARGET_FPS * 60;
@@ -406,6 +414,8 @@ public final class TrainingMode {
     updateProjectileFailures(projectileSystem);
     updateSessionTimer(projectileSystem);
     int replacementCount = awardScoreForDestroyedTargets();
+    replacementCount += damageTargetsOverTime();
+    replacementCount += removeDeadTargets();
     replacementCount += removeExpiredTargets();
     syncEnemyCountToControls(replacementCount);
   }
@@ -590,20 +600,31 @@ public final class TrainingMode {
   }
 
   private int awardScoreForDestroyedTargets() {
-    int currentEnemies = this.enemySystem.getEnemies().size();
-    if (currentEnemies < this.lastEnemyCount) {
-      int destroyedCount = this.lastEnemyCount - currentEnemies;
+    int destroyedCount = playerDestroyedTargetCount();
+    if (destroyedCount > 0) {
       this.aciertos += destroyedCount;
       playHitMilestoneSounds();
       updateDisplayedTrainingStats();
       if (this.tutorialPhase == TutorialPhase.TARGETS) {
         this.targetHintHit = true;
       }
-      this.lastEnemyCount = currentEnemies;
-      return destroyedCount;
     }
-    this.lastEnemyCount = currentEnemies;
-    return 0;
+    this.lastEnemyCount = this.enemySystem.enemyCount();
+    return destroyedCount;
+  }
+
+  private int playerDestroyedTargetCount() {
+    int count = 0;
+    Player player = this.game == null ? null : this.game.getPlayer();
+    java.util.List<Enemy> deadEnemies = this.enemySystem.getCollectedDeadEnemies();
+    for (int i = 0; i < deadEnemies.size(); i++) {
+      Enemy enemy = deadEnemies.get(i);
+      if (player != null && enemy.getType() == EnemyType.DIANA && enemy.getLastDamageSourcePlayer() == player) {
+        count++;
+      }
+    }
+    this.enemySystem.clearCollectedDeadEnemies();
+    return count;
   }
 
   private void playHitMilestoneSounds() {
@@ -620,6 +641,36 @@ public final class TrainingMode {
     int removedCount = this.enemySystem.removeByTypeAndMinimumAnimationTicks(EnemyType.DIANA, TARGET_LIFETIME_TICKS);
     if (removedCount > 0) {
       this.lastEnemyCount = Math.max(0, this.lastEnemyCount - removedCount);
+    }
+    return removedCount;
+  }
+
+  private int damageTargetsOverTime() {
+    if (!this.targetLifetimeRunning) {
+      return 0;
+    }
+    java.util.List<Enemy> enemies = this.enemySystem.getEnemies();
+    for (int i = 0; i < enemies.size(); i++) {
+      Enemy enemy = enemies.get(i);
+      if (enemy.getType() == EnemyType.DIANA
+          && !enemy.isDead()
+          && enemy.getAnimationTicks() > 0
+          && enemy.getAnimationTicks() % TARGET_DECAY_INTERVAL_TICKS == 0) {
+        enemy.damage(TARGET_DECAY_DAMAGE);
+      }
+    }
+    return 0;
+  }
+
+  private int removeDeadTargets() {
+    java.util.List<Enemy> enemies = this.enemySystem.getEnemies();
+    int removedCount = 0;
+    for (int i = enemies.size() - 1; i >= 0; i--) {
+      Enemy enemy = enemies.get(i);
+      if (enemy.getType() == EnemyType.DIANA && enemy.isDead()) {
+        this.enemySystem.removeEnemy(enemy);
+        removedCount++;
+      }
     }
     return removedCount;
   }
@@ -763,7 +814,7 @@ public final class TrainingMode {
     if (debug != null && debug.shouldForceTrainingPerfectAccuracy()) {
       return this.aciertos;
     }
-    return this.aciertos + this.fallos;
+    return this.shotsFired;
   }
 
   private static boolean isWorldInsideTrainingPerimeter(int worldX, int worldY) {

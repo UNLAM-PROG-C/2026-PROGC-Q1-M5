@@ -11,12 +11,13 @@ public class DebugOptions {
 	public static final int PANEL_PADDING = 14;
 	public static final int ROW_HEIGHT = 34;
 	public static final int UNLOCK_ALL_WEAPONS_ROW = 12;
+	public static final int SHOW_TARGET_HEALTH_BARS_ROW = 13;
 	public static final int SWITCH_SIZE = 18;
 	public static final int SWITCH_X = PANEL_X + PANEL_PADDING;
 	public static final int TEXT_X = SWITCH_X + SWITCH_SIZE + 12;
 	public static final int FIRST_ROW_Y = PANEL_Y + 48;
 	public static final int TITLE_BASELINE_Y = PANEL_Y + 28;
-	public static final int TRAJECTORY_SLIDER_Y = FIRST_ROW_Y + ROW_HEIGHT * (UNLOCK_ALL_WEAPONS_ROW + 1) + 14;
+	public static final int TRAJECTORY_SLIDER_Y = FIRST_ROW_Y + ROW_HEIGHT * (SHOW_TARGET_HEALTH_BARS_ROW + 1) + 14;
 	public static final int TRAJECTORY_SLIDER_X = TEXT_X;
 	public static final int TRAJECTORY_SLIDER_WIDTH = 180;
 	public static final int TRAJECTORY_SLIDER_HEIGHT = 8;
@@ -35,6 +36,7 @@ public class DebugOptions {
 	private boolean drawBulletTrajectories;
 	private boolean forceTrainingPerfectAccuracy;
 	private boolean drawTrainingFailurePerimeter;
+	private boolean showTargetHealthBars;
 	private boolean unlockAllWeaponsRequested;
 	private boolean allWeaponsUnlocked;
 	private int bulletTrajectoryLimit = 5;
@@ -54,7 +56,7 @@ public class DebugOptions {
 			return true;
 		}
 		int row = (mouseY - FIRST_ROW_Y) / ROW_HEIGHT;
-		if (row < 0 || row > UNLOCK_ALL_WEAPONS_ROW) {
+		if (row < 0 || row > SHOW_TARGET_HEALTH_BARS_ROW) {
 			return true;
 		}
 		int rowTop = FIRST_ROW_Y + row * ROW_HEIGHT;
@@ -84,6 +86,7 @@ public class DebugOptions {
 		this.drawBulletTrajectories = false;
 		this.forceTrainingPerfectAccuracy = false;
 		this.drawTrainingFailurePerimeter = false;
+		this.showTargetHealthBars = false;
 		this.unlockAllWeaponsRequested = false;
 		this.allWeaponsUnlocked = false;
 		this.bulletTrajectoryLimit = 5;
@@ -115,6 +118,8 @@ public class DebugOptions {
 			this.forceTrainingPerfectAccuracy = !this.forceTrainingPerfectAccuracy;
 		} else if (row == 11) {
 			this.drawTrainingFailurePerimeter = !this.drawTrainingFailurePerimeter;
+		} else if (row == SHOW_TARGET_HEALTH_BARS_ROW) {
+			this.showTargetHealthBars = !this.showTargetHealthBars;
 		}
 	}
 
@@ -207,6 +212,10 @@ public class DebugOptions {
 		return this.drawTrainingFailurePerimeter;
 	}
 
+	public boolean shouldShowTargetHealthBars() {
+		return this.showTargetHealthBars;
+	}
+
 	public boolean shouldUnlockAllWeapons() {
 		return this.allWeaponsUnlocked;
 	}
@@ -224,6 +233,7 @@ public class DebugOptions {
 			|| this.drawBulletTrajectories
 			|| this.forceTrainingPerfectAccuracy
 			|| this.drawTrainingFailurePerimeter
+			|| this.showTargetHealthBars
 			|| this.allWeaponsUnlocked;
 	}
 
@@ -284,6 +294,9 @@ public class DebugOptions {
 		}
 		if (row == UNLOCK_ALL_WEAPONS_ROW) {
 			return this.allWeaponsUnlocked;
+		}
+		if (row == SHOW_TARGET_HEALTH_BARS_ROW) {
+			return this.showTargetHealthBars;
 		}
 		return false;
 	}
