@@ -11,8 +11,8 @@ public final class MusicController {
 
   private String activeMusicPath;
 
-  public void update(AudioManager audio, State state, Player player, boolean deathOverlayActive) {
-    String desiredMusicPath = desiredMusicPath(state, player, deathOverlayActive);
+  public void update(AudioManager audio, State state, Player player) {
+    String desiredMusicPath = desiredMusicPath(state, player);
     if (desiredMusicPath == null) {
       stop(audio);
       return;
@@ -40,10 +40,7 @@ public final class MusicController {
     this.activeMusicPath = desiredMusicPath;
   }
 
-  private String desiredMusicPath(State state, Player player, boolean deathOverlayActive) {
-    if (deathOverlayActive) {
-      return null;
-    }
+  private String desiredMusicPath(State state, Player player) {
     if (state == State.MENU || state == State.MENU_SETTINGS) {
       return MENU_MUSIC;
     }

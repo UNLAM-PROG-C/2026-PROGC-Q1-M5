@@ -52,7 +52,6 @@ public final class TrainingSessionBuilder {
     int trainingSeedHash = hashString(trainingWorldSeed);
     context.enemySystem().clear();
     context.enemySystem().reset(trainingSeedHash);
-    context.enemySystem().setAutoSpawnEnabled(false);
     session.setActiveLevel(new TrainingLevel());
     session.setTrainingMode(new TrainingMode(owner, context.enemySystem(), trainingSeedHash));
     session.setMap(session.trainingMode().buildArena());
@@ -83,7 +82,6 @@ public final class TrainingSessionBuilder {
   private void clearMenuStateForTraining(GameContext context, GameSession session) {
     context.dayNightCycle().reset();
     context.dayNightCycle().setDayProgress(TRAINING_DAY_PROGRESS);
-    session.setDeathOverlayActive(false);
   }
 
   private int hashString(String value) {

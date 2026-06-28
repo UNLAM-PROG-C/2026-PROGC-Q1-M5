@@ -6,10 +6,6 @@ import SheriffsssPackage.EnemyType;
 import SheriffsssPackage.TrainingMode;
 
 public final class EnemyFactory {
-  public Enemy createWorldEnemy(EnemyType type, int worldX, int worldY, int playerLevel) {
-    return new Enemy(type, worldX, worldY, playerLevel);
-  }
-
   public Enemy createTrainingTarget(int worldX, int worldY, int dayCount) {
     Enemy enemy = new Enemy(
       EnemyType.DIANA,

@@ -13,11 +13,8 @@ import javax.swing.SwingUtilities;
 import SheriffsssPackage.context.GameContext;
 import SheriffsssPackage.level.LevelType;
 import SheriffsssPackage.render.EquipmentHudView;
-import SheriffsssPackage.render.ScoreHudView;
 import SheriffsssPackage.render.TrainingHudView;
 import SheriffsssPackage.session.GameSession;
-import SheriffsssPackage.system.GameEvents;
-import SheriffsssPackage.system.HealthPickupSystem;
 import SheriffsssPackage.system.MusicController;
 import SheriffsssPackage.system.PlayerMovementSystem;
 import SheriffsssPackage.system.ShotFeedback;
@@ -31,7 +28,6 @@ import SheriffsssPackage.ui.EquipmentMenuLayout;
 
 public class Game extends JPanel implements Runnable, GameView {
   private static final long serialVersionUID = 1L;
-  private static final String DEATH_SOUND = "sounds/OminousChatter.wav";
   private static final String DEFAULT_WEAPON_ATTACK_SOUND = "sounds/Shot.wav";
   private static final float WEAPON_GAIN_DB = 0f;
   private static final float ENEMY_HIT_GAIN_DB = 0f;
@@ -47,9 +43,7 @@ public class Game extends JPanel implements Runnable, GameView {
   private final DebugOptions debugOptions = new DebugOptions();
   private final GameSession session = new GameSession();
   private final GameContext context;
-  private final GameEvents gameEvents = new GameEvents();
   private final TrainingSessionBuilder trainingSessionBuilder = new TrainingSessionBuilder();
-  private final FullGameSessionBuilder fullGameSessionBuilder = new FullGameSessionBuilder();
   private final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem();
   private final String[] infoMessages = new String[INFO_MESSAGE_SLOTS];
   private final int[] infoMessageTicks = new int[INFO_MESSAGE_SLOTS];
@@ -72,7 +66,6 @@ public class Game extends JPanel implements Runnable, GameView {
   private int lastViewportWidth = GameConfig.BASE_SCREEN_WIDTH;
   private int lastViewportHeight = GameConfig.BASE_SCREEN_HEIGHT;
   private volatile boolean shuttingDown;
-  private final HealthPickupSystem healthPickupSystem = new HealthPickupSystem();
   private final ShotFeedback shotFeedback = new ShotFeedback();
   private final WeaponUseSystem weaponUseSystem = new WeaponUseSystem();
   private final MusicController musicController = new MusicController();
@@ -82,28 +75,7 @@ public class Game extends JPanel implements Runnable, GameView {
   private final EquipmentMenuController equipmentMenuController =
     new EquipmentMenuController(this.equipmentMenuLayout);
   private final EquipmentHudView equipmentHudView = new EquipmentHudView();
-  private final ScoreHudView scoreHudView = new ScoreHudView();
   private final TrainingHudView trainingHudView = new TrainingHudView();
-  private int score = 0;
-  private int level = 1;
-  private int lastBossTriggerLevel = 0;
-  // Score thresholds to trigger a boss spawn (index = current level, boss unlocks next level)
-  private static final int[] BOSS_SCORE_TRIGGERS = { 40, 150, 350, 650, 1100, 1800, 2800, 4200, 6000 };
-  // Weapons unlocked on level-up (index = new level reached), ordered weakestâ†’strongest dmg/shot
-  private static final ItemDefinition[] LEVEL_WEAPONS = {
-    null,                                  // level 1: starter BRONZE_REVOLVER
-    ItemDefinition.LUGER,                  // level 2: 15.0 dmg/shot
-    ItemDefinition.REINFORCED_REVOLVER,    // level 3: 15.5 dmg/shot
-    ItemDefinition.ALTA_PISTOLA_PLATEADA,  // level 4: 30.0 dmg/shot
-    ItemDefinition.ALTA_PISTOLA_PRIMERA,   // level 5: 35.0 dmg/shot
-    ItemDefinition.NAIL_GUN,               // level 6: cadencia altisima (ultimo)
-    null,                                  // level 7: sin arma nueva, x3.8 stats
-    null,                                  // level 8: sin arma nueva, x5.0 stats
-    null,                                  // level 9: sin arma nueva, x6.6 stats
-    null,                                  // level 10 (MAX): x8.7 stats
-  };
-  private static final int DEATH_BTN_W = 260;
-  private static final int DEATH_BTN_H = 52;
 
   public Game() {
     GameConfig.loadDisplayPreferences();
@@ -272,11 +244,9 @@ public class Game extends JPanel implements Runnable, GameView {
     syncViewportSize();
     updateFullscreenToggle();
     updateDebugMenuInput();
-    this.gameEvents.clearFrameEvents();
     if (this.state != State.PLAYING
         || this.session.player() == null
-        || this.session.player().isDead()
-        || this.session.isDeathOverlayActive()) {
+        || this.session.player().isDead()) {
       this.input.consumeZoomWheelSteps();
       this.input.consumeZoomKeySteps();
     }
@@ -289,11 +259,9 @@ public class Game extends JPanel implements Runnable, GameView {
       updatePlaying();
     } else if (this.state == State.SETTINGS) {
       updateSettings();
-    } else if (this.state == State.DEAD && !isTrainingLevelActive()) {
-      updateDead();
     }
     if (isTrainingLevelActive() && this.session.trainingMode() != null
-      && (this.state == State.PLAYING || this.state == State.DEAD)
+      && this.state == State.PLAYING
       && this.session.player() != null) {
       this.session.trainingMode().update(this.session.player(), this.input, this.projectileSystem);
     }
@@ -349,40 +317,12 @@ public class Game extends JPanel implements Runnable, GameView {
     }
   }
 
-  private void updateHealthPickups() {
-    if (this.healthPickupSystem.update(this.session.map(), this.session.player())) {
-      showHealthPickupMessage();
-    }
-  }
-
-  private void showHealthPickupMessage() {
-    this.infoMessages[3] = "+" + this.healthPickupSystem.healAmount() + " HP";
-    this.infoMessageTicks[3] = GameConfig.TARGET_FPS * 2;
-  }
-
-  private void updateDead() {
-    if (!this.input.consumePrimaryClick()) {
-      return;
-    }
-    int mx = this.input.getMouseX();
-    int my = this.input.getMouseY();
-    int btnX = getDeathMenuButtonX();
-    int btnY = getDeathMenuButtonY();
-    if (mx >= btnX && mx <= btnX + DEATH_BTN_W && my >= btnY && my <= btnY + DEATH_BTN_H) {
-      returnToMenu();
-    }
-  }
-
   private void updateMenu() {
     if (!this.input.consumePrimaryClick()) {
       return;
     }
     if (this.menuRenderer.isExitButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
       shutdownApplication();
-      return;
-    }
-    if (this.menuRenderer.isPlayButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
-      startFullGame();
       return;
     }
     if (this.menuRenderer.isTrainingButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
@@ -416,26 +356,12 @@ public class Game extends JPanel implements Runnable, GameView {
     this.toolTargetObject = null;
   }
 
-  private void equipTrainingWeapon(ItemDefinition weapon) {
-    equipTrainingWeapon(this.session.player(), weapon);
-  }
-
-  private void equipTrainingWeapon(Player targetPlayer, ItemDefinition weapon) {
-    if (targetPlayer == null || weapon == null || weapon.getWeaponType() != WeaponType.ARMA_DE_FUEGO) {
-      return;
-    }
-    Equipment equipment = targetPlayer.getEquipment();
-    equipment.unlockWeapon(weapon);
-    equipment.equipWeapon(weapon);
-  }
-
   private void stopTrainingIfActive() {
     if (this.session.trainingMode() != null) {
       this.session.trainingMode().shutdown();
       this.session.setTrainingMode(null);
     }
     this.session.setActiveLevel(null);
-    this.enemySystem.setAutoSpawnEnabled(true);
   }
 
   private boolean isTrainingSessionFinished() {
@@ -461,23 +387,8 @@ public class Game extends JPanel implements Runnable, GameView {
     this.session.setPlayer(null);
     this.session.setMap(null);
     this.projectileSystem.clear();
-    this.session.setDeathOverlayActive(false);
     this.state = State.MENU;
     this.input.clearMovement();
-  }
-
-  private void startFullGame() {
-    stopTrainingIfActive();
-    this.fullGameSessionBuilder.build(this.context, this.session, this.healthPickupSystem);
-    resetLocalToolAnimation();
-    this.toolTargetObject = null;
-    resetDeathSpectatorState();
-    this.score = 0;
-    this.level = 1;
-    this.lastBossTriggerLevel = 0;
-    this.state = State.PLAYING;
-    this.input.consumeEscapePressed();
-    this.input.clearPrimaryAction();
   }
 
   private void updatePlaying() {
@@ -531,32 +442,16 @@ public class Game extends JPanel implements Runnable, GameView {
       moveY,
       this.shotFeedback.canUpdateFacing());
     this.dayNightCycle.tick();
-    this.enemySystem.update(this.session.map(), this.session.player(), this.dayNightCycle);
+    this.enemySystem.update(this.session.map(), this.session.player());
 
     if (this.session.player().getCurrentHP() <= 0.0) {
       this.session.player().die();
-      this.gameEvents.recordPlayerDied();
-      handlePlayerDeathEvent();
+      returnToMenu();
       return;
-    }
-    if (!isTrainingLevelActive()) {
-      updateHealthPickups();
     }
     updateToolUse();
     updateProjectiles();
     this.primaryGameplayPressedThisFrame = false;
-  }
-
-  private void handlePlayerDeathEvent() {
-    if (!this.gameEvents.consumePlayerDied()) {
-      return;
-    }
-    this.state = State.DEAD;
-    if (!isTrainingLevelActive()) {
-      this.session.setDeathOverlayActive(true);
-    }
-    this.audio.stopLoop();
-    this.audio.playOnce(DEATH_SOUND, 0f);
   }
 
   private void updateToolUse() {
@@ -647,10 +542,7 @@ public class Game extends JPanel implements Runnable, GameView {
         result.aimWorldY());
     }
     playProjectileWeaponEffects(result);
-    this.gameEvents.recordShotFired();
-    if (isTrainingLevelActive()
-        && this.session.trainingMode() != null
-        && this.gameEvents.consumeShotFired()) {
+    if (isTrainingLevelActive() && this.session.trainingMode() != null) {
       this.session.trainingMode().notifyShotFired();
     }
   }
@@ -762,68 +654,6 @@ public class Game extends JPanel implements Runnable, GameView {
     }
     playEnemyHitSounds();
     this.enemySystem.collectDeadEnemies();
-    if (!isTrainingLevelActive()) {
-      awardKillScore();
-    }
-  }
-
-  private void awardKillScore() {
-    java.util.List<EnemyType> kills = this.enemySystem.drainKillRewards();
-    if (kills.isEmpty()) {
-      return;
-    }
-    boolean bossKilled = false;
-    for (int i = 0; i < kills.size(); i++) {
-      EnemyType type = kills.get(i);
-      if (type == EnemyType.JEFE_RATA) {
-        bossKilled = true;
-      } else {
-        this.score += type.getScoreReward();
-      }
-    }
-    if (bossKilled) {
-      triggerLevelUp();
-    }
-    checkBossSpawn();
-  }
-
-  private void triggerLevelUp() {
-    if (this.level >= LEVEL_WEAPONS.length) {
-      return;
-    }
-    this.level++;
-    this.lastBossTriggerLevel = this.level - 1;
-    this.enemySystem.setPlayerLevel(this.level);
-    int weaponIndex = this.level - 1;
-    if (weaponIndex < LEVEL_WEAPONS.length && LEVEL_WEAPONS[weaponIndex] != null && this.session.player() != null) {
-      ItemDefinition weapon = LEVEL_WEAPONS[weaponIndex];
-      this.session.player().getEquipment().unlockWeapon(weapon);
-      this.infoMessages[0] = "NIVEL " + this.level + "! Nueva arma: " + weapon.getDisplayName() + " [TAB]";
-      this.infoMessageTicks[0] = GameConfig.TARGET_FPS * 6;
-    } else {
-      this.infoMessages[0] = "NIVEL " + this.level + "! Enemigos mucho mas fuertes!";
-      this.infoMessageTicks[0] = GameConfig.TARGET_FPS * 5;
-    }
-    int burst = 4 + this.level * 2;
-    this.enemySystem.spawnBurst(this.session.map(), this.session.player(), burst);
-    this.infoMessages[1] = "Oleada! " + burst + " enemigos mas fuertes!";
-    this.infoMessageTicks[1] = GameConfig.TARGET_FPS * 4;
-  }
-
-  private void checkBossSpawn() {
-    if (this.session.player() == null || this.level > BOSS_SCORE_TRIGGERS.length) {
-      return;
-    }
-    int triggerIndex = this.level - 1;
-    if (triggerIndex >= BOSS_SCORE_TRIGGERS.length) {
-      return;
-    }
-    if (this.score >= BOSS_SCORE_TRIGGERS[triggerIndex] && this.lastBossTriggerLevel < this.level) {
-      this.lastBossTriggerLevel = this.level;
-      this.enemySystem.spawnSpecific(this.session.map(), this.session.player(), EnemyType.JEFE_RATA);
-      this.infoMessages[2] = "*** JEFE APROXIMANDOSE! ***";
-      this.infoMessageTicks[2] = GameConfig.TARGET_FPS * 5;
-    }
   }
 
   private void playEnemyHitSounds() {
@@ -1026,8 +856,7 @@ public class Game extends JPanel implements Runnable, GameView {
     int heldDirection = this.input.getZoomKeyDirection();
     if ((wheelSteps == 0 && keySteps == 0 && heldDirection == 0)
         || this.session.player() == null
-        || this.session.player().isDead()
-        || this.session.isDeathOverlayActive()) {
+        || this.session.player().isDead()) {
       return;
     }
     setCameraZoom(this.session.cameraZoom()
@@ -1046,14 +875,12 @@ public class Game extends JPanel implements Runnable, GameView {
     stopTrainingIfActive();
     this.enemySystem.clear();
     this.projectileSystem.clear();
-    this.healthPickupSystem.clear();
     this.session.setMap(null);
     this.session.setPlayer(null);
     resetLocalToolAnimation();
     this.toolTargetObject = null;
     this.displaySettingsController.clearActiveSlider();
     this.dayNightCycle.reset();
-    resetDeathSpectatorState();
     this.state = State.MENU;
   }
 
@@ -1096,8 +923,7 @@ public class Game extends JPanel implements Runnable, GameView {
     this.musicController.update(
       this.audio,
       this.state,
-      this.session.player(),
-      this.session.isDeathOverlayActive());
+      this.session.player());
   }
 
   private void updateCursor() {
@@ -1143,10 +969,6 @@ public class Game extends JPanel implements Runnable, GameView {
         this.infoMessageTicks[i]--;
       }
     }
-  }
-
-  private void resetDeathSpectatorState() {
-    this.session.setDeathOverlayActive(false);
   }
 
   private boolean consumePrimaryGameplayClick() {
@@ -1218,7 +1040,6 @@ public class Game extends JPanel implements Runnable, GameView {
   public List<Projectile> getProjectiles() { return this.projectileSystem.getProjectiles(); }
   public List<FlameBurstEffect> getFlameBurstEffects() { return this.enemySystem.getFlameBurstEffects(); }
   public List<CombatFloatingText> getCombatFloatingTexts() { return this.enemySystem.getCombatFloatingTexts(); }
-  public boolean isDeathOverlayActive() { return this.session.isDeathOverlayActive(); }
   public boolean isUsingTool() { return this.usingTool; }
   public int getToolUseTicks() { return this.toolUseTicks; }
   public int getToolUseDurationTicks() { return this.toolUseDurationTicks; }
@@ -1263,16 +1084,6 @@ public class Game extends JPanel implements Runnable, GameView {
     return this.displaySettingsController.windowResolutionSliderValue();
   }
   public String getWindowResolutionLabel() { return this.displaySettingsController.windowResolutionLabel(); }
-  public ScoreHudView getScoreHudView() {
-    this.scoreHudView.update(this.score, this.level, LEVEL_WEAPONS.length, getBossTriggerScore());
-    return this.scoreHudView;
-  }
-
-  private int getBossTriggerScore() {
-    int idx = this.level - 1;
-    return idx < BOSS_SCORE_TRIGGERS.length ? BOSS_SCORE_TRIGGERS[idx] : -1;
-  }
-
   public TrainingHudView getTrainingHudView() {
     TrainingMode trainingMode = this.session.trainingMode();
     this.trainingHudView.update(
@@ -1281,20 +1092,13 @@ public class Game extends JPanel implements Runnable, GameView {
     return this.trainingHudView;
   }
 
-  public List<int[]> getHealthPickups() { return this.healthPickupSystem.pickups(); }
-  public int getDeathMenuButtonX() { return GameConfig.SCREEN_CENTER_X - DEATH_BTN_W / 2; }
-  public int getDeathMenuButtonY() { return GameConfig.SCREEN_CENTER_Y + 110; }
-  public int getDeathMenuButtonW() { return DEATH_BTN_W; }
-  public int getDeathMenuButtonH() { return DEATH_BTN_H; }
-
   private boolean isRootMenuButtonHovered() {
     int mouseX = this.input.getMouseX();
     int mouseY = this.input.getMouseY();
     if (this.menuRenderer.isExitButtonHovered(mouseX, mouseY)) {
       return true;
     }
-    return this.menuRenderer.isPlayButtonHovered(mouseX, mouseY)
-      || this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)
+    return this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)
       || this.menuRenderer.isTrainingSettingsButtonHovered(mouseX, mouseY);
   }
 

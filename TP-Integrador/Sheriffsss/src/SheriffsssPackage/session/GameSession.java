@@ -15,7 +15,6 @@ public final class GameSession {
   private PlayerRuntimeState playerRuntime = new PlayerRuntimeState();
   private TrainingMode trainingMode;
   private GameLevel activeLevel = new NoLevel();
-  private boolean deathOverlayActive;
   private double cameraZoom = GameConfig.CAMERA_MIN_ZOOM;
 
   public GameMap map() {
@@ -56,14 +55,6 @@ public final class GameSession {
 
   public void setActiveLevel(GameLevel activeLevel) {
     this.activeLevel = activeLevel == null ? new NoLevel() : activeLevel;
-  }
-
-  public boolean isDeathOverlayActive() {
-    return this.deathOverlayActive;
-  }
-
-  public void setDeathOverlayActive(boolean deathOverlayActive) {
-    this.deathOverlayActive = deathOverlayActive;
   }
 
   public double cameraZoom() {

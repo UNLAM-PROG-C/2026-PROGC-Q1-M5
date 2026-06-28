@@ -3,7 +3,6 @@ package SheriffsssPackage;
 import java.util.List;
 
 import SheriffsssPackage.render.EquipmentHudView;
-import SheriffsssPackage.render.ScoreHudView;
 import SheriffsssPackage.render.TrainingHudView;
 
 public interface GameView {
@@ -22,7 +21,6 @@ public interface GameView {
   List<Projectile> getProjectiles();
   List<FlameBurstEffect> getFlameBurstEffects();
   List<CombatFloatingText> getCombatFloatingTexts();
-  boolean isDeathOverlayActive();
   boolean isUsingTool();
   int getToolUseTicks();
   int getToolUseDurationTicks();
@@ -50,12 +48,6 @@ public interface GameView {
   int getSettingsOverlayOffsetY();
   double getWindowResolutionSliderValue();
   String getWindowResolutionLabel();
-  ScoreHudView getScoreHudView();
-  List<int[]> getHealthPickups();
-  int getDeathMenuButtonX();
-  int getDeathMenuButtonY();
-  int getDeathMenuButtonW();
-  int getDeathMenuButtonH();
   long getFrameCount();
   DayNightCycle getDayNightCycle();
   TrainingHudView getTrainingHudView();

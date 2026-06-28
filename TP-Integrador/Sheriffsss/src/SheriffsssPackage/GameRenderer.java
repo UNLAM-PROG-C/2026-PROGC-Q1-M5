@@ -12,7 +12,6 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 
 import SheriffsssPackage.render.EquipmentHudView;
-import SheriffsssPackage.render.ScoreHudView;
 import SheriffsssPackage.render.TrainingHudRenderer;
 import SheriffsssPackage.render.TrainingHudSnapshot;
 import SheriffsssPackage.render.TrainingHudView;
@@ -90,12 +89,6 @@ public class GameRenderer {
       return;
     }
     renderWorld(g2, game);
-    if (!game.getTrainingHudView().active()) {
-      drawHealthPickups(g2, game);
-    }
-    if (game.isDeathOverlayActive()) {
-      drawDeathOverlay(g2, game);
-    }
     drawInfoMessages(g2, game);
     TrainingHudView trainingHud = game.getTrainingHudView();
     if (trainingHud.active()) {
@@ -1209,129 +1202,13 @@ public class GameRenderer {
 
   private void drawDebugAndUi(Graphics2D g2, GameView game) {
     Player player = game.getPlayer();
-    if (game.isSpectating() || game.isDeathOverlayActive()) {
+    if (game.isSpectating()) {
       return;
     }
     if (player.getTakingDamage()) {
       g2.setColor(GameTheme.DAMAGE_RED);
       g2.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
     }
-    if (!game.getTrainingHudView().active()) {
-      drawFullGameHud(g2, game, player);
-    }
-  }
-
-  private void drawFullGameHud(Graphics2D g2, GameView game, Player player) {
-    // HP bar bottom-left
-    int barX = 10;
-    int barW = 160;
-    int barH = 12;
-    int barY = GameConfig.SCREEN_HEIGHT - 14 - barH;
-    double hpRatio = Math.max(0.0, Math.min(1.0, player.getCurrentHP() / player.getMaxHP()));
-    g2.setColor(GameTheme.TRANSPARENT_BLACK);
-    g2.fillRect(barX - 4, barY - 18, barW + 8, barH + 24);
-    TextRenderer.draw(g2, this.playerNameFont, "HP  " + (int) Math.ceil(player.getCurrentHP()) + " / " + (int) player.getMaxHP(),
-      Color.WHITE, barX, barY - 4, false);
-    g2.setColor(Color.BLACK);
-    g2.fillRect(barX, barY, barW, barH);
-    g2.setColor(hpRatio > 0.4 ? this.healthyHpColor : this.lowHpColor);
-    g2.fillRect(barX, barY, (int) (barW * hpRatio), barH);
-    g2.setColor(Color.DARK_GRAY);
-    g2.setStroke(GameTheme.LIGHT_STROKE);
-    g2.drawRect(barX, barY, barW, barH);
-
-    ScoreHudView scoreHud = game.getScoreHudView();
-    int level = scoreHud.level();
-    int score = scoreHud.score();
-    int maxLevel = scoreHud.maxLevel();
-    int bossAt = scoreHud.bossTriggerScore();
-    String bossHint = (bossAt > 0 && score < bossAt) ? "  jefe en " + bossAt + " pts" : (level >= maxLevel ? " (MAX)" : "");
-    String levelText = "Nivel " + level + bossHint;
-    String scoreText = "Puntaje: " + score;
-    int scoreLabelW = Math.max(g2.getFontMetrics(this.playerNameFont).stringWidth(levelText),
-      g2.getFontMetrics(this.playerNameFont).stringWidth(scoreText));
-    int scoreBoxX = 10;
-    int scoreBoxY = 10;
-    g2.setColor(GameTheme.TRANSPARENT_BLACK);
-    g2.fillRect(scoreBoxX - 4, scoreBoxY, scoreLabelW + 12, 42);
-    TextRenderer.draw(g2, this.playerNameFont, scoreText, this.scoreColor, scoreBoxX, scoreBoxY + 14, false);
-    TextRenderer.draw(g2, this.playerNameFont, levelText, Color.WHITE, scoreBoxX, scoreBoxY + 32, false);
-
-    // Day/phase top-right
-    DayNightCycle cycle = game.getDayNightCycle();
-    String dayText = "Dia " + cycle.getDayCount() + "  " + cycle.getPhase().getDisplayName();
-    int dayTextW = g2.getFontMetrics(this.playerNameFont).stringWidth(dayText);
-    int dayX = GameConfig.SCREEN_WIDTH - dayTextW - 14;
-    int dayY = 18;
-    g2.setColor(GameTheme.TRANSPARENT_BLACK);
-    g2.fillRect(dayX - 6, dayY - 14, dayTextW + 12, 20);
-    TextRenderer.draw(g2, this.playerNameFont, dayText, Color.WHITE, dayX, dayY, false);
-
-    String tabHint = "[TAB] Armas";
-    int hintW = g2.getFontMetrics(this.playerNameFont).stringWidth(tabHint);
-    int hintX = GameConfig.SCREEN_WIDTH - hintW - 14;
-    int hintY = dayY + 22;
-    g2.setColor(GameTheme.TRANSPARENT_BLACK);
-    g2.fillRect(hintX - 6, hintY - 14, hintW + 12, 20);
-    TextRenderer.draw(g2, this.playerNameFont, tabHint, this.hintColor, hintX, hintY, false);
-  }
-
-  private static final int PICKUP_DRAW_SIZE = 64;
-
-  private void drawHealthPickups(Graphics2D g2, GameView game) {
-    java.util.List<int[]> pickups = game.getHealthPickups();
-    if (pickups.isEmpty()) {
-      return;
-    }
-    java.awt.image.BufferedImage sprite = this.assets.getImage("sprites/Botiquin.png");
-    double zoom = game.getCameraZoom();
-    int camX = game.getCameraCenterWorldX();
-    int camY = game.getCameraCenterWorldY();
-    int half = (int)(PICKUP_DRAW_SIZE * zoom / 2);
-    for (int i = 0; i < pickups.size(); i++) {
-      int[] p = pickups.get(i);
-      int sx = (int)(GameConfig.SCREEN_CENTER_X + (p[0] - camX) * zoom) - half;
-      int sy = (int)(GameConfig.SCREEN_CENTER_Y + (p[1] - camY) * zoom) - half;
-      int drawSize = (int)(PICKUP_DRAW_SIZE * zoom);
-      if (sprite != null) {
-        g2.drawImage(sprite, sx, sy, drawSize, drawSize, null);
-      } else {
-        g2.setColor(this.fallbackPickupColor);
-        g2.fillRect(sx, sy, drawSize, drawSize);
-      }
-    }
-  }
-
-  private void drawDeathOverlay(Graphics2D g2, GameView game) {
-    g2.setColor(this.deathBlack);
-    g2.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
-
-    // GAME OVER title
-    int goX = TextRenderer.centeredX(g2, this.deathFont, "GAME OVER", GameConfig.SCREEN_CENTER_X);
-    TextRenderer.draw(g2, this.deathFont, "GAME OVER", Color.RED, goX, GameConfig.SCREEN_CENTER_Y - 40, true);
-
-    ScoreHudView scoreHud = game.getScoreHudView();
-    String scoreText = "Puntaje: " + scoreHud.score();
-    int sX = TextRenderer.centeredX(g2, this.settingsTitleFont, scoreText, GameConfig.SCREEN_CENTER_X);
-    TextRenderer.draw(g2, this.settingsTitleFont, scoreText, Color.WHITE, sX, GameConfig.SCREEN_CENTER_Y + 40, true);
-
-    String levelText = "Nivel alcanzado: " + scoreHud.level() + " / " + scoreHud.maxLevel();
-    int lX = TextRenderer.centeredX(g2, this.settingsTitleFont, levelText, GameConfig.SCREEN_CENTER_X);
-    TextRenderer.draw(g2, this.settingsTitleFont, levelText, this.levelRewardColor, lX, GameConfig.SCREEN_CENTER_Y + 82, true);
-
-    // Return to menu button
-    int btnX = game.getDeathMenuButtonX();
-    int btnY = game.getDeathMenuButtonY();
-    int btnW = game.getDeathMenuButtonW();
-    int btnH = game.getDeathMenuButtonH();
-    g2.setColor(this.deathButtonColor);
-    g2.fillRect(btnX, btnY, btnW, btnH);
-    g2.setColor(this.deathButtonBorderColor);
-    g2.setStroke(GameTheme.LIGHT_STROKE);
-    g2.drawRect(btnX, btnY, btnW, btnH);
-    String btnText = "Volver al Menu Principal";
-    int bX = TextRenderer.centeredX(g2, this.settingsButtonFont, btnText, GameConfig.SCREEN_CENTER_X);
-    TextRenderer.draw(g2, this.settingsButtonFont, btnText, Color.WHITE, bX, btnY + 33, false);
   }
 
   private void drawInfoMessages(Graphics2D g2, GameView game) {

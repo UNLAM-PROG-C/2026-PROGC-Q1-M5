@@ -6,44 +6,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import SheriffsssPackage.system.EnemyFactory;
-
 public class EnemySystem {
   private static final int MAX_ENEMIES = 2000;
-  private static final int MIN_SPAWN_DISTANCE_TILES = 13;
-  private static final int MAX_SPAWN_DISTANCE_TILES = 22;
-  private static final int DESPAWN_DISTANCE_TILES = 64;
-  private static final int DESPAWN_DISTANCE_PIXELS = DESPAWN_DISTANCE_TILES * GameConfig.TILE_SIZE;
-  private static final int DESPAWN_DISTANCE_PIXELS_SQUARED = DESPAWN_DISTANCE_PIXELS * DESPAWN_DISTANCE_PIXELS;
   private static final double ENEMY_COLLISION_EPSILON = 0.0001;
   private static final double ENEMY_COLLISION_MAX_PUSH_PIXELS = 4.0;
   private static final Color CRIT_TEXT_COLOR = new Color(255, 45, 45);
-  private static final EnemyType[] ENEMY_TYPES = EnemyType.values();
 
   private final ArrayList<Enemy> enemies = new ArrayList<Enemy>(MAX_ENEMIES);
   private final ArrayList<FlameBurstEffect> flameBurstEffects = new ArrayList<FlameBurstEffect>();
   private final ArrayList<CombatFloatingText> combatFloatingTexts = new ArrayList<CombatFloatingText>();
   private final ArrayList<EnemyHitSound> hitSounds = new ArrayList<EnemyHitSound>();
-  private final ArrayList<EnemyType> pendingKillRewards = new ArrayList<EnemyType>();
   private final ArrayList<Enemy> collectedDeadEnemies = new ArrayList<Enemy>();
-  private final EnemyFactory enemyFactory = new EnemyFactory();
-  private Random spawnRandom = new Random(0L);
   private Random combatRandom = new Random(0L);
-  private int spawnCooldownTicks;
-  private boolean autoSpawnEnabled = true;
-  private int playerLevel = 1;
 
   public void reset(int seedHash) {
     this.enemies.clear();
     this.flameBurstEffects.clear();
     this.combatFloatingTexts.clear();
     this.hitSounds.clear();
-    this.pendingKillRewards.clear();
     this.collectedDeadEnemies.clear();
-    this.spawnRandom = new Random(seedHash ^ 0x4F1BBCDC);
     this.combatRandom = new Random(seedHash ^ 0xC2B2AE35);
-    this.spawnCooldownTicks = 20;
-    this.playerLevel = 1;
   }
 
   public void clear() {
@@ -51,10 +33,7 @@ public class EnemySystem {
     this.flameBurstEffects.clear();
     this.combatFloatingTexts.clear();
     this.hitSounds.clear();
-    this.pendingKillRewards.clear();
     this.collectedDeadEnemies.clear();
-    this.spawnCooldownTicks = 0;
-    this.playerLevel = 1;
   }
 
   public void addEnemy(Enemy enemy) {
@@ -90,114 +69,26 @@ public class EnemySystem {
     return removedCount;
   }
 
-  public void setPlayerLevel(int level) {
-    this.playerLevel = Math.max(1, level);
-  }
-
-  public void update(GameMap map, Player player, DayNightCycle cycle) {
-    int dayCount = cycle.getDayCount();
+  public void update(GameMap map, Player player) {
+    if (map == null || player == null) {
+      updateFlameBurstEffects();
+      updateCombatFloatingTexts();
+      return;
+    }
     for (int i = this.enemies.size() - 1; i >= 0; i--) {
       Enemy enemy = this.enemies.get(i);
       if (enemy.isDead()) {
-        this.pendingKillRewards.add(enemy.getType());
-        this.enemies.remove(i);
-        continue;
-      }
-      if (shouldDespawn(enemy, player)) {
         this.enemies.remove(i);
         continue;
       }
       enemy.update(map, player);
       if (enemy.isDead()) {
-        this.pendingKillRewards.add(enemy.getType());
         this.enemies.remove(i);
       }
     }
     resolveEnemyCollisions(map);
-    updateSpawns(map, player, cycle, dayCount);
     updateFlameBurstEffects();
     updateCombatFloatingTexts();
-  }
-
-  public void update(GameMap map, List<Player> players, DayNightCycle cycle) {
-    if (players == null || players.isEmpty()) {
-      updateFlameBurstEffects();
-      updateCombatFloatingTexts();
-      return;
-    }
-    int dayCount = cycle.getDayCount();
-    for (int i = this.enemies.size() - 1; i >= 0; i--) {
-      Enemy enemy = this.enemies.get(i);
-      if (enemy.isDead()) {
-        this.enemies.remove(i);
-        continue;
-      }
-      if (shouldDespawn(enemy, players)) {
-        this.enemies.remove(i);
-        continue;
-      }
-      enemy.update(map, players);
-      if (enemy.isDead()) {
-        this.enemies.remove(i);
-      }
-    }
-    resolveEnemyCollisions(map);
-    Player spawnAnchor = chooseSpawnAnchor(players);
-    if (spawnAnchor != null) {
-      updateSpawns(map, spawnAnchor, cycle, dayCount);
-    }
-    updateFlameBurstEffects();
-    updateCombatFloatingTexts();
-  }
-
-  private Player chooseSpawnAnchor(List<Player> players) {
-    int livingCount = 0;
-    for (int i = 0; i < players.size(); i++) {
-      Player player = players.get(i);
-      if (player != null && player.getCurrentHP() > 0.0) {
-        livingCount++;
-      }
-    }
-    if (livingCount <= 0) {
-      return null;
-    }
-    int selected = this.spawnRandom.nextInt(livingCount);
-    for (int i = 0; i < players.size(); i++) {
-      Player player = players.get(i);
-      if (player == null || player.getCurrentHP() <= 0.0) {
-        continue;
-      }
-      if (selected == 0) {
-        return player;
-      }
-      selected--;
-    }
-    return null;
-  }
-
-  private boolean shouldDespawn(Enemy enemy, Player player) {
-    if (enemy == null || player == null || player.getCurrentHP() <= 0.0) {
-      return false;
-    }
-    return distanceSquared(player.getX(), player.getFeetWorldY(), enemy.getWorldX(), enemy.getWorldY()) > DESPAWN_DISTANCE_PIXELS_SQUARED;
-  }
-
-  private boolean shouldDespawn(Enemy enemy, List<Player> players) {
-    if (enemy == null || players == null || players.isEmpty()) {
-      return false;
-    }
-    boolean hasLivingPlayer = false;
-    for (int i = 0; i < players.size(); i++) {
-      Player player = players.get(i);
-      if (player == null || player.getCurrentHP() <= 0.0) {
-        continue;
-      }
-      hasLivingPlayer = true;
-      if (distanceSquared(player.getX(), player.getFeetWorldY(), enemy.getWorldX(), enemy.getWorldY()) <= DESPAWN_DISTANCE_PIXELS_SQUARED) {
-        return false;
-      }
-    }
-    return hasLivingPlayer;
   }
 
   private void resolveEnemyCollisions(GameMap map) {
@@ -244,7 +135,11 @@ public class EnemySystem {
     double finalDamage = amount;
     if (isCriticalHit(sourcePlayer, weapon)) {
       finalDamage *= 2.0;
-      this.combatFloatingTexts.add(new CombatFloatingText(enemy.getWorldX(), enemy.getWorldY() - enemy.getType().getDrawHeight() / 2, "CRIT", CRIT_TEXT_COLOR));
+      this.combatFloatingTexts.add(new CombatFloatingText(
+        enemy.getWorldX(),
+        enemy.getWorldY() - enemy.getType().getDrawHeight() / 2,
+        "CRIT",
+        CRIT_TEXT_COLOR));
     }
     recordHitSound(enemy);
     enemy.damage(finalDamage, sourcePlayer);
@@ -274,7 +169,6 @@ public class EnemySystem {
         continue;
       }
       this.collectedDeadEnemies.add(enemy);
-      this.pendingKillRewards.add(enemy.getType());
       this.enemies.remove(i);
     }
   }
@@ -285,110 +179,6 @@ public class EnemySystem {
 
   public void clearCollectedDeadEnemies() {
     this.collectedDeadEnemies.clear();
-  }
-
-  public List<EnemyType> drainKillRewards() {
-    if (this.pendingKillRewards.isEmpty()) {
-      return java.util.Collections.emptyList();
-    }
-    List<EnemyType> rewards = new ArrayList<EnemyType>(this.pendingKillRewards);
-    this.pendingKillRewards.clear();
-    return rewards;
-  }
-
-  public void spawnBurst(GameMap map, Player player, int count) {
-    for (int i = 0; i < count; i++) {
-      spawnNearPlayer(map, player, 1);
-    }
-  }
-
-  public void spawnSpecific(GameMap map, Player player, EnemyType type) {
-    attemptPlaceEnemy(map, player, type, 1);
-  }
-
-  private void updateSpawns(GameMap map, Player player, DayNightCycle cycle, int dayCount) {
-    if (!this.autoSpawnEnabled) {
-      return;
-    }
-    if (this.enemies.size() >= MAX_ENEMIES) {
-      return;
-    }
-    if (this.spawnCooldownTicks > 0) {
-      this.spawnCooldownTicks--;
-      return;
-    }
-    spawnNearPlayer(map, player, dayCount);
-    this.spawnCooldownTicks = nextSpawnCooldown(cycle, dayCount);
-  }
-
-  public void setAutoSpawnEnabled(boolean enabled) {
-    this.autoSpawnEnabled = enabled;
-  }
-
-  private int nextSpawnCooldown(DayNightCycle cycle, int dayCount) {
-    double dayScale = 1.0 + Math.max(0, dayCount - 1) * 0.22;
-    int baseTicks = cycle.getPhase() == DayPhase.NIGHT ? 50 : 120;
-    int jitter = cycle.getPhase() == DayPhase.NIGHT ? this.spawnRandom.nextInt(30) : this.spawnRandom.nextInt(80);
-    return Math.max(15, (int) ((baseTicks + jitter) / dayScale));
-  }
-
-  private void spawnNearPlayer(GameMap map, Player player, int dayCount) {
-    EnemyType type = chooseEnemyType(dayCount);
-    if (type == null) {
-      return;
-    }
-    attemptPlaceEnemy(map, player, type, dayCount);
-  }
-
-  private void attemptPlaceEnemy(GameMap map, Player player, EnemyType type, int dayCount) {
-    int playerTileX = map.worldToTileX(player.getX());
-    int playerTileY = map.worldToTileY(player.getFeetWorldY());
-    for (int attempt = 0; attempt < 18; attempt++) {
-      int distanceTiles = this.spawnRandom.nextInt(MIN_SPAWN_DISTANCE_TILES, MAX_SPAWN_DISTANCE_TILES + 1);
-      int offsetX = this.spawnRandom.nextInt(-distanceTiles, distanceTiles + 1);
-      int offsetY = this.spawnRandom.nextBoolean() ? distanceTiles : -distanceTiles;
-      if (Math.abs(offsetX) < MIN_SPAWN_DISTANCE_TILES / 2) {
-        offsetX += offsetX < 0 ? -MIN_SPAWN_DISTANCE_TILES / 2 : MIN_SPAWN_DISTANCE_TILES / 2;
-      }
-      if (this.spawnRandom.nextBoolean()) {
-        int swap = offsetX;
-        offsetX = offsetY;
-        offsetY = swap;
-      }
-      int tileX = playerTileX + offsetX;
-      int tileY = playerTileY + offsetY;
-      int worldX = tileX * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
-      int worldY = tileY * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
-      if (map.isWalkableAtWorld(worldX, worldY)) {
-        this.enemies.add(this.enemyFactory.createWorldEnemy(type, worldX, worldY, this.playerLevel));
-        return;
-      }
-    }
-  }
-
-  private EnemyType chooseEnemyType(int dayCount) {
-    int totalWeight = 0;
-    for (int i = 0; i < ENEMY_TYPES.length; i++) {
-      EnemyType type = ENEMY_TYPES[i];
-      if (dayCount >= type.getMinimumSpawnDay()) {
-        totalWeight += type.getSpawnWeight();
-      }
-    }
-    if (totalWeight <= 0) {
-      return null;
-    }
-    int roll = this.spawnRandom.nextInt(totalWeight);
-    for (int i = 0; i < ENEMY_TYPES.length; i++) {
-      EnemyType type = ENEMY_TYPES[i];
-      if (dayCount < type.getMinimumSpawnDay()) {
-        continue;
-      }
-      roll -= type.getSpawnWeight();
-      if (roll < 0) {
-        return type;
-      }
-    }
-    return null;
   }
 
   private void updateFlameBurstEffects() {
@@ -409,12 +199,6 @@ public class EnemySystem {
         this.combatFloatingTexts.remove(i);
       }
     }
-  }
-
-  private int distanceSquared(int startX, int startY, int endX, int endY) {
-    int deltaX = endX - startX;
-    int deltaY = endY - startY;
-    return deltaX * deltaX + deltaY * deltaY;
   }
 
   public List<Enemy> getEnemies() {
