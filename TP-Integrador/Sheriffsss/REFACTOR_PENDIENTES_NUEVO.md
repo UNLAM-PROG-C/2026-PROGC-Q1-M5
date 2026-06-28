@@ -37,11 +37,11 @@ Estado generado contra el estado actual del repo.
 
 - [x] Probar training.
 
-- [x] Probar partida normal.
+- [x] Confirmar que el menu ya no expone partida normal/PLAY.
 
 - [x] Probar disparos.
 
-- [x] Probar botiquines.
+- [x] Confirmar que `HealthPickupSystem` y `Botiquin.png` quedan conservados pero desconectados.
 
 - [x] Probar settings de volumen, resolucion y fullscreen.
 

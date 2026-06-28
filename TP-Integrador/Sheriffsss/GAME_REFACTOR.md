@@ -127,7 +127,6 @@ final class GameSession {
     PlayerRuntimeState playerRuntime;
     GameLevel activeLevel;
     TrainingMode trainingMode;
-    boolean deathOverlayActive;
     double cameraZoom;
 }
 ```
@@ -169,7 +168,7 @@ Primer nivel concreto:
 
 Niveles futuros:
 
-- `WorldLevel`, solo si vuelve un modo mundo normal.
+- Un nivel de mundo normal, solo si en una version futura se reintroduce ese modo.
 - `SecretLevel`, solo si el producto decide conservarlo.
 - `SecretBossLevel`, solo si el secret boss sigue siendo feature activa.
 
@@ -184,7 +183,7 @@ Mantener al principio el enum existente, pero limpiar el modelo:
 - `PLAYING`;
 - `PAUSE_MENU`;
 - `SETTINGS`;
-- `DEAD`, solo si realmente se asigna;
+- `DEAD`, eliminado en el estado actual porque ya no hay pantalla de muerte del modo normal;
 - eliminar `TRAINING` si el training pasa a ser `GameLevel`.
 
 Objetivo:
@@ -260,7 +259,7 @@ Mover estado mutable:
 - `PlayerRuntimeState localRuntimeState`;
 - `GameLevel activeLevel`;
 - `TrainingMode trainingMode`;
-- `deathOverlayActive`;
+- flags de pantalla de muerte, solo si vuelve un modo que los necesite;
 - `cameraZoom`;
 - flags de runtime que no sean globales.
 
@@ -389,7 +388,7 @@ Resultado esperado: el renderer deja de depender de toda la clase `Game`.
 
 Revisar:
 
-- `State.DEAD`: existe, pero hay que confirmar si realmente se asigna.
+- `State.DEAD`: eliminado en el estado actual.
 - `State.TRAINING`: no debe convivir con `activeLevel.type() == TRAINING`.
 - `trainingActive`: debe reemplazarse por consulta al nivel activo cuando el lifecycle exista.
 - `secretLevelActive`: no debe quedar en el modelo base si la version no tiene secret level.
@@ -431,7 +430,7 @@ Resultado esperado: menos ruido y menos allocations evitables sin cambiar arquit
 10. Extraer `MusicController`.
 11. Extraer `CursorController`.
 12. Crear `GameView`/`RenderContext` para renderer.
-13. Limpiar `State.DEAD`, `State.TRAINING`, `trainingActive` y flags de feature vieja.
+13. Mantener limpio el modelo sin `State.DEAD`, `State.TRAINING`, `trainingActive` ni flags de feature vieja.
 14. Aplicar micro-limpiezas de allocations.
 
 ### Patrones de disenio recomendados
@@ -578,19 +577,19 @@ Aplicar a:
 - item equipado;
 - cambio de estado.
 
-Forma minima:
+Forma minima si vuelve a hacer falta:
 
 ```java
-final class GameEvents {
+final class FrameEvents {
     boolean shotFired;
-    boolean playerDied;
-    int enemiesKilledThisFrame;
 
     void clearFrameEvents() { ... }
 }
 ```
 
 Beneficio: `WeaponUseSystem` no necesita conocer internamente `TrainingMode`; puede emitir `shotFired` y el nivel lo consume.
+
+Estado actual: esta abstraccion no esta presente porque el flujo actual de training no la necesita.
 
 No empezar con un event bus generico complejo.
 
@@ -817,7 +816,7 @@ Aplicacion al refactor:
 
 Aplicacion al refactor:
 
-- Si se crea `LevelType`, cualquier switch sobre `TRAINING`, `WORLD`, `NONE` o futuros valores debe quedar exhaustivo.
+- Si se modifica `LevelType`, cualquier switch sobre `TRAINING`, `NONE` o futuros valores debe quedar exhaustivo.
 - Si se reemplazan flags por enums, la exhaustividad es obligatoria para evitar estados invisibles.
 
 ### 8. Comentarios, TODOs y Javadoc

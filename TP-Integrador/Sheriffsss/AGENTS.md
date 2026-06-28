@@ -12,10 +12,10 @@ El refactor actual separa responsabilidades que antes estaban concentradas en
 - `Game.java` queda como shell principal del loop, input de alto nivel y
   coordinacion entre sistemas.
 - `GameContext` agrupa dependencias estables creadas una vez.
-- `GameSession` guarda estado mutable de partida: mapa, jugador,
-  `PlayerRuntimeState`, training, nivel activo, overlay de muerte y zoom.
-- `GameLevel` modela el nivel activo con `LevelType`; training usa
-  `LevelType.TRAINING` y la partida normal usa `LevelType.WORLD`.
+- `GameSession` guarda estado mutable de sesion: mapa, jugador,
+  `PlayerRuntimeState`, training, nivel activo y zoom.
+- `GameLevel` modela el nivel activo con `LevelType`; la version actual solo
+  conserva `LevelType.NONE` y `LevelType.TRAINING`.
 - `State.TRAINING` fue eliminado. Training no es estado global de UI.
 - `trainingActive` fue reemplazado por `session.activeLevel().type()`.
 - El secret level no forma parte del camino principal de esta version.
@@ -33,23 +33,23 @@ El refactor actual separa responsabilidades que antes estaban concentradas en
 
 - `PlayerMovementSystem`: movimiento del jugador y colisiones.
 - `WeaponUseSystem`: uso de armas, disparos y direccion de aim.
-- `HealthPickupSystem`: spawn y recoleccion de botiquines.
+- `HealthPickupSystem`: sistema conservado para botiquines, actualmente
+  desconectado del flujo jugable principal.
 - `ShotFeedback`: feedback visual temporal de disparos.
 - `MusicController`: musica segun estado.
 - `CursorController`: cursor segun contexto.
 - `DisplaySettingsController`: volumen, resolucion y fullscreen.
 - `EquipmentMenuLayout` y `EquipmentMenuController`: layout e interaccion del menu de armas.
-- `EnemyFactory`: creacion de enemigos de mundo y dianas de training.
-- `GameEvents`: eventos simples como disparo y muerte del jugador.
+- `EnemyFactory`: creacion de dianas de training.
 
 ### Render
 
 - `GameRenderer` debe leer datos de solo lectura desde `GameView`.
 - No agregar features nuevas de render que consulten estado mutable directo si
   puede exponerse un view model.
-- HUD de score, equipment y training se mantiene separado en:
-  `ScoreHudView`, `EquipmentHudView`, `TrainingHudSnapshot`,
-  `TrainingHudView` y `TrainingHudRenderer`.
+- HUD de equipment y training se mantiene separado en:
+  `EquipmentHudView`, `TrainingHudSnapshot`, `TrainingHudView` y
+  `TrainingHudRenderer`.
 
 ### Reglas de estilo para el refactor
 

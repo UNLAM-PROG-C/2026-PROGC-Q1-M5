@@ -1,7 +1,7 @@
 # Refactor pendientes actualizado
 
 Este archivo refleja el estado actual del refactor despues de extraer `GameContext`,
-`GameSession`, `HealthPickupSystem` y `PlayerMovementSystem`.
+`GameSession` y sistemas principales, y despues de remover el modo normal PLAY/WORLD.
 
 ## Cumplido
 
@@ -12,9 +12,9 @@ Este archivo refleja el estado actual del refactor despues de extraer `GameConte
 - [x] Mover `player` a `GameSession`.
 - [x] Mover `PlayerRuntimeState` a `GameSession`.
 - [x] Mover `trainingMode` a `GameSession`.
-- [x] Mover `deathOverlayActive` a `GameSession`.
+- [x] Eliminar `deathOverlayActive` de `GameSession` al quedar sin pantalla de muerte.
 - [x] Mover `cameraZoom` a `GameSession`.
-- [x] Extraer botiquines a `HealthPickupSystem`.
+- [x] Conservar `HealthPickupSystem` como sistema disponible, sin conectarlo al training actual.
 - [x] Extraer movimiento del jugador a `PlayerMovementSystem`.
 - [x] Extraer feedback de disparo a `ShotFeedback`.
 - [x] Mantener archivos nuevos con una sola clase top-level.
@@ -36,21 +36,21 @@ Este archivo refleja el estado actual del refactor despues de extraer `GameConte
 - [x] Agregar operaciones explicitas en `EnemySystem`.
 - [x] Reemplazar casteos de listas concretas en `TrainingMode`.
 - [x] Extraer uso de armas y disparos a `WeaponUseSystem`.
-- [x] Crear `EnemyFactory` para enemigos de mundo y dianas de training.
+- [x] Crear `EnemyFactory` para dianas de training.
 - [x] Revisar arrays temporales en render, especialmente sizes de sprites.
 - [x] Cachear colores creados repetidamente durante render.
 - [x] Crear `GameView` inicial para que `GameRenderer` no dependa de todo `Game`.
 - [x] Migrar `GameRenderer` gradualmente para leer datos de `GameView`.
 - [x] Evitar `String.split(" ")` en render de tooltips.
-- [x] Crear `GameEvents` simple para disparo y muerte del jugador.
+- [x] Eliminar `GameEvents` al quedar sin uso en el flujo actual.
 - [x] Crear una interfaz `GameLevel` real.
 - [x] Crear `LevelStartOptions`.
 - [x] Agregar `activeLevel` a `GameSession`.
 - [x] Extraer armado de training hacia `TrainingSessionBuilder`.
-- [x] Separar arranque de partida normal hacia `FullGameSessionBuilder`.
-- [x] Separar datos de HUD de score, level y boss trigger hacia `ScoreHudView`.
+- [x] Eliminar `FullGameSessionBuilder` junto con el camino de partida normal.
+- [x] Eliminar `ScoreHudView` junto con el HUD de score, level y boss trigger.
 - [x] Reemplazar `trainingActive` por consulta a `activeLevel`.
-- [x] Revisar `State.DEAD`: sigue como estado real para pantalla y update post-muerte.
+- [x] Eliminar `State.DEAD` porque ya no hay pantalla de muerte del modo normal.
 - [x] Eliminar `State.TRAINING` porque training ahora depende de `LevelType.TRAINING`.
 - [x] Separar datos de equipment para render hacia `EquipmentHudView`.
 - [x] Separar datos de HUD de training hacia `TrainingHudSnapshot`.
@@ -69,7 +69,7 @@ Este archivo refleja el estado actual del refactor despues de extraer `GameConte
 ## Prioridad 3: render y vistas
 
 - [x] Separar datos de HUD de training.
-- [x] Separar datos de HUD de score, level y boss trigger.
+- [x] Eliminar datos de HUD de score, level y boss trigger.
 - [x] Separar datos de equipment para render.
 - [x] Evitar que nuevas features de render consulten estado mutable directo.
 
@@ -97,9 +97,9 @@ Este archivo refleja el estado actual del refactor despues de extraer `GameConte
 - [x] Ejecutar `compile-and.run.bat`.
 - [x] Probar menu principal.
 - [x] Probar training.
-- [x] Probar partida normal.
+- [x] Confirmar que el menu ya no expone partida normal/PLAY.
 - [x] Probar disparos.
-- [x] Probar botiquines.
+- [x] Confirmar que `HealthPickupSystem` y `Botiquin.png` quedan conservados pero desconectados.
 - [x] Probar settings de volumen, resolucion y fullscreen.
 - [x] Confirmar que no se editaron `bin/`, `jars/`, `dist`, `dist-jar`, `dist-portable` ni builds generados.
 
@@ -107,4 +107,4 @@ Este archivo refleja el estado actual del refactor despues de extraer `GameConte
 
 1. Evitar que nuevas features de render consulten estado mutable directo.
 2. Ejecutar validacion manual con `compile-and.run.bat`.
-3. Probar menu, training, partida normal, disparos, botiquines y settings.
+3. Probar menu, training, disparos, settings y que no exista entrada PLAY.

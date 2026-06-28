@@ -32,7 +32,7 @@ git diff -- src/SheriffsssPackage/EnemySystem.java
 - `git diff --check` no reporta errores de whitespace.
 - Los warnings de CRLF no son errores de contenido.
 - No queda `out/` generado despues de las validaciones.
-- Las pruebas de smoke temporales cubrieron menu, training, partida normal, disparos, botiquines y settings.
+- Las pruebas de smoke temporales cubrieron menu, training, disparos, settings y la ausencia del boton PLAY.
 
 ## Nota
 

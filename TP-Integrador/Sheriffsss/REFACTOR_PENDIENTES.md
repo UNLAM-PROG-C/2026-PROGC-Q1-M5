@@ -18,8 +18,8 @@ Este archivo lista lo que queda pendiente despues del primer corte aplicado sobr
 - [x] Crear una interfaz `GameLevel` real si el training pasa a lifecycle propio.
 - [x] Crear `LevelStartOptions` solo si hay mas opciones de inicio que un booleano.
 - [x] Extraer armado de training desde `Game` hacia `TrainingMode` o un builder dedicado.
-- [x] Separar arranque de partida normal desde `Game` hacia un builder o factory.
-- [x] Revisar si `State.DEAD` debe seguir como estado real o si basta `deathOverlayActive`.
+- [x] Eliminar el camino de partida normal/PLAY del alcance actual del refactor.
+- [x] Eliminar `State.DEAD` al quedar sin uso despues de remover el modo normal.
 - [x] Revisar si `trainingActive` debe reemplazarse por una consulta de modo o nivel activo.
 
 ## Prioridad 3: render y vistas
@@ -27,7 +27,7 @@ Este archivo lista lo que queda pendiente despues del primer corte aplicado sobr
 - [x] Crear `GameView` o `RenderContext` para que `GameRenderer` no dependa de todo `Game`.
 - [x] Migrar `GameRenderer` gradualmente para leer datos de solo lectura.
 - [x] Separar datos de HUD de training.
-- [x] Separar datos de HUD de score, level y boss trigger.
+- [x] Eliminar HUD de score, level y boss trigger junto con el modo normal.
 - [x] Separar datos de equipment para render.
 - [x] Evitar que nuevas features de render consulten estado mutable directo.
 
@@ -37,7 +37,7 @@ Este archivo lista lo que queda pendiente despues del primer corte aplicado sobr
 - [x] Agregar operaciones explicitas en `EnemySystem` para remover o filtrar enemigos.
 - [x] Revisar si `TrainingMode` castea listas concretas y reemplazarlo por APIs del sistema.
 - [x] Crear factories pequenas para enemigos especiales si aparecen constructores repetidos.
-- [x] Evaluar un event queue simple para eventos como disparo, muerte de enemigo y muerte del jugador.
+- [x] Descartar un event queue dedicado porque `GameEvents` quedo sin uso tras remover el modo normal.
 
 ## Prioridad 5: buenas practicas Java
 
@@ -67,8 +67,8 @@ Este archivo lista lo que queda pendiente despues del primer corte aplicado sobr
 - [x] Ejecutar `compile-and.run.bat`.
 - [x] Probar menu principal.
 - [x] Probar training.
-- [x] Probar partida normal.
+- [x] Confirmar que el menu ya no expone partida normal/PLAY.
 - [x] Probar disparos.
-- [x] Probar botiquines.
+- [x] Confirmar que `HealthPickupSystem` y `Botiquin.png` quedan conservados pero desconectados.
 - [x] Probar settings de volumen, resolucion y fullscreen.
 - [x] Confirmar que no se edito `bin/`, `jars/`, `dist`, `dist-jar`, `dist-portable` ni builds generados.
