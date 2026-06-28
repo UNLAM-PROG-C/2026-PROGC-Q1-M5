@@ -1,6 +1,6 @@
 # Sheriffsss
 
-Juego de acción top-down en Java Swing. Sos un sheriff en un pueblo del Lejano Oeste que debe sobrevivir a oleadas de ratas enemigas cada vez más peligrosas. Matá ratas, acumulá puntaje, desbloqueá armas más poderosas y enfrentá al Jefe Rata para avanzar de nivel.
+Juego top-down en Java Swing centrado en un modo de entrenamiento para practicar movimiento, punteria y uso de armas en una arena cerrada.
 
 ---
 
@@ -9,7 +9,7 @@ Juego de acción top-down en Java Swing. Sos un sheriff en un pueblo del Lejano 
 - **Java 17** o superior (JDK)
 - Sistema operativo: Linux, Windows o macOS
 
-Para verificar tu instalación:
+Para verificar tu instalacion:
 
 ```bash
 java -version
@@ -17,7 +17,7 @@ java -version
 
 ---
 
-## Instalación y ejecución
+## Instalacion y ejecucion
 
 ### Linux / macOS
 
@@ -25,7 +25,7 @@ java -version
 # Compilar y ejecutar
 ./compile-and-run.sh
 
-# Solo compilar (sin ejecutar)
+# Solo compilar
 ./compile-and-run.sh --compile-only
 ```
 
@@ -35,13 +35,13 @@ java -version
 # PowerShell
 .\compile-and-run.ps1
 
-# O con el archivo .bat
+# CMD
 compile-and.run.bat
 ```
 
 ### Ejecutar el JAR directamente
 
-Si ya tenés el `.jar` compilado en `dist-jar/`:
+Si ya tenes el `.jar` compilado en `dist-jar/`:
 
 ```bash
 java -jar dist-jar/Sheriffsss.jar
@@ -49,167 +49,78 @@ java -jar dist-jar/Sheriffsss.jar
 
 ---
 
-## Modos de juego
+## Modo Entrenamiento
 
-### Juego Completo
-El modo principal. Sobreviví a oleadas de ratas que escalan de dificultad con cada nivel. El objetivo es llegar al nivel 10.
+Arena cerrada para practicar el movimiento, la punteria y las mecanicas principales sin un modo de supervivencia activo. Incluye tutorial guiado paso a paso.
 
-- Empezás con el **Revolver de Bronce**
-- Las ratas aparecen desde el inicio y aumentan en cantidad y fuerza
-- Cuando acumulás suficiente puntaje, aparece el **Jefe Rata**
-- Al matar al jefe subís de nivel, desbloqueás un arma nueva y aparece una oleada de refuerzo
-
-### Modo Entrenamiento
-Arena cerrada para practicar el movimiento, la puntería y conocer las mecánicas del juego sin presión. Incluye tutorial guiado paso a paso.
-
-- Podés controlar cuántos enemigos aparecen (de 1 a 50)
-- Los controles del panel de entrenamiento están activos (`PgUp`, `PgDown`, `R`)
-- Presioná `B` para volver al menú
+- Control de cantidad de dianas de entrenamiento.
+- HUD con aciertos, fallos, precision, temporizador y resultado final.
+- Panel de debug opcional desde settings durante training.
+- Opcion para volver al menu principal.
 
 ---
 
 ## Controles
 
-### Movimiento y acción
+### Movimiento y accion
 
-| Tecla | Acción |
+| Tecla | Accion |
 |-------|--------|
-| `W` / `A` / `S` / `D` | Moverse (arriba / izquierda / abajo / derecha) |
-| `Click izquierdo` | Disparar / atacar hacia el cursor |
-| `Click derecho` | Acción secundaria |
+| `W` / `A` / `S` / `D` | Moverse |
+| `Click izquierdo` | Disparar hacia el cursor |
+| `Click derecho` | Accion secundaria |
 | `E` | Interactuar |
 | `TAB` | Abrir/cerrar panel de armas |
-| `1` – `9`, `0` | Seleccionar arma del inventario |
+| `1` - `9`, `0` | Seleccionar arma del inventario |
 | `Scroll del mouse` | Cambiar arma seleccionada |
-| `ESC` | Pausa / Configuración |
+| `ESC` | Pausa / Configuracion |
 
-### Cámara
+### Camara
 
-| Tecla | Acción |
+| Tecla | Accion |
 |-------|--------|
-| `+` / `=` / `Numpad +` | Acercar cámara (zoom in) |
-| `-` / `Numpad -` | Alejar cámara (zoom out) |
+| `+` / `=` / `Numpad +` | Acercar camara |
+| `-` / `Numpad -` | Alejar camara |
 | `Ctrl + Scroll` | Zoom con la rueda del mouse |
 
 ### Pantalla
 
-| Tecla | Acción |
+| Tecla | Accion |
 |-------|--------|
 | `F11` | Pantalla completa |
-| `Alt + Enter` | Pantalla completa (alternativo) |
+| `Alt + Enter` | Pantalla completa alternativa |
 
-### Solo en modo Entrenamiento
+### Training
 
-| Tecla | Acción |
+| Tecla | Accion |
 |-------|--------|
-| `PgUp` | Aumentar cantidad de enemigos |
-| `PgDown` | Disminuir cantidad de enemigos |
+| `PgUp` | Aumentar cantidad de dianas |
+| `PgDown` | Disminuir cantidad de dianas |
 | `R` | Resetear arena |
 | `K` | Saltar tutorial |
-| `B` | Volver al menú principal |
+| `B` | Volver al menu principal |
 
 ---
 
-## Sistema de progresión
+## Configuracion
 
-### Puntaje y niveles
+Las preferencias de resolucion, volumen y pantalla completa se guardan automaticamente en `saves/game.cfg`.
 
-Cada enemigo eliminado otorga puntos:
-
-| Enemigo | Puntos |
-|---------|--------|
-| Rata Chica | 3 |
-| Rata | 8 |
-| Rata Grande | 20 |
-| Jefe Rata | 50 |
-
-Al acumular suficiente puntaje aparece el **Jefe Rata**. Matarlo sube de nivel.
-
-### Umbrales para el Jefe Rata
-
-| Nivel actual | Puntaje necesario |
-|--------------|-----------------|
-| 1 | 40 |
-| 2 | 150 |
-| 3 | 350 |
-| 4 | 650 |
-| 5 | 1100 |
-| 6 | 1800 |
-| 7 | 2800 |
-| 8 | 4200 |
-| 9 | 6000 |
-
-### Armas desbloqueables por nivel
-
-| Nivel | Arma desbloqueada |
-|-------|-------------------|
-| Inicio | Revolver de Bronce |
-| 2 | Luger |
-| 3 | Revolver Reforzado |
-| 4 | Alta Pistola Plateada |
-| 5 | La Primera Alta Pistola |
-| 6 | Nail Gun |
-
-### Escalado de enemigos
-
-Con cada nivel, todos los enemigos que aparezcan son más poderosos:
-
-- **Vida** ×1.32 por nivel
-- **Velocidad** ×1.09 por nivel
-- **Daño** ×1.25 por nivel
-
----
-
-## Enemigos
-
-| Enemigo | Tamaño | Vida base | Daño base | Velocidad |
-|---------|--------|-----------|-----------|-----------|
-| Rata Chica | 40×40 px | 3 | 4 | Muy alta |
-| Rata | 62×62 px | 10 | 14 | Alta |
-| Rata Grande | 86×86 px | 30 | 28 | Media |
-| Jefe Rata | 148×148 px | 200 | 40 | Lenta |
-
-Todos los enemigos persiguen activamente al jugador.
-
----
-
-## Botiquines de salud
-
-- Aparecen solos en el mapa, máximo **2 al mismo tiempo**
-- Se genera uno cada **60 segundos**
-- Al acercarte lo recolectás automáticamente
-- Restauran **+25 HP** (hasta el máximo de 100 HP)
-
----
-
-## HUD (interfaz durante el juego)
-
-- **Esquina inferior izquierda**: barra de vida
-- **Esquina superior izquierda**: puntaje actual, nivel y el puntaje necesario para el próximo jefe
-- **Esquina superior derecha**: hora del día y fase (mañana / tarde / atardecer / noche)
-- **`TAB`**: panel de armas desbloqueadas
-
----
-
-## Configuración
-
-Las preferencias (resolución, volumen, pantalla completa) se guardan automáticamente en `saves/game.cfg`.
-
-Resoluciones disponibles: 800×704, 1024×768, 1280×720, 1366×768, 1600×900, 1920×1080.
+Resoluciones disponibles: 800x704, 1024x768, 1280x720, 1366x768, 1600x900, 1920x1080.
 
 ---
 
 ## Estructura del proyecto
 
-```
+```text
 Sheriffsss/
-├── src/                   # Código fuente Java
-├── resources/
-│   ├── sprites/           # Imágenes y sprites
-│   └── sounds/            # Efectos de sonido y música
-├── dist-jar/              # JAR ejecutable compilado
-├── saves/                 # Configuración guardada
-├── compile-and-run.sh     # Script Linux/macOS
-├── compile-and-run.ps1    # Script Windows (PowerShell)
-└── compile-and.run.bat    # Script Windows (CMD)
+|-- src/                   # Codigo fuente Java
+|-- resources/
+|   |-- sprites/           # Imagenes y sprites
+|   `-- sounds/            # Efectos de sonido y musica
+|-- dist-jar/              # JAR ejecutable compilado
+|-- saves/                 # Configuracion guardada
+|-- compile-and-run.sh     # Script Linux/macOS
+|-- compile-and-run.ps1    # Script Windows PowerShell
+`-- compile-and.run.bat    # Script Windows CMD
 ```

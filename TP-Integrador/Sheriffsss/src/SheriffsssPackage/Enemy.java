@@ -35,10 +35,14 @@ public class Enemy {
 	}
 
 	public Enemy(EnemyType type, int worldX, int worldY, int dayCount, double currentHP) {
+		this(type, worldX, worldY, dayCount, type.getScaledMaxHP(dayCount), currentHP);
+	}
+
+	public Enemy(EnemyType type, int worldX, int worldY, int dayCount, double maxHP, double currentHP) {
 		this.type = type;
 		this.x = worldX;
 		this.y = worldY;
-		this.maxHP = type.getScaledMaxHP(dayCount);
+		this.maxHP = Math.max(1.0, maxHP);
 		this.speed = type.getScaledSpeed(dayCount);
 		this.damage = type.getScaledDamage(dayCount);
 		this.currentHP = Math.max(0.0, Math.min(currentHP, this.maxHP));
@@ -321,6 +325,10 @@ public class Enemy {
 
 	public double getMaxHP() {
 		return this.maxHP;
+	}
+
+	public Player getLastDamageSourcePlayer() {
+		return this.lastDamageSourcePlayer;
 	}
 
 	public int getAnimationTicks() {

@@ -4,6 +4,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 public class Main {
@@ -12,6 +13,15 @@ public class Main {
 		if (args != null && args.length > 0 && "--packaging-check".equals(args[0])) {
 			return;
 		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				createAndShowGame();
+			}
+		});
+	}
+
+	private static void createAndShowGame() {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		window.setResizable(false);
@@ -30,13 +40,11 @@ public class Main {
 			}
 		});
 		window.add(game);
-		window.pack();
+		game.applyInitialDisplaySettings();
 		
-		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 		
 		game.startGame();
-
 	}
 
 }
