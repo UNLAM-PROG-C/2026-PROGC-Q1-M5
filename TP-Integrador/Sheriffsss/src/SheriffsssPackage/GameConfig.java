@@ -48,6 +48,8 @@ public final class GameConfig {
 	public static int SCREEN_WIDTH = BASE_SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT = BASE_SCREEN_HEIGHT;
 	public static final int TARGET_FPS = 60;
+	/** Nanoseconds per frame at TARGET_FPS; used by the game loop delta-time calculation. */
+	public static final double FRAME_INTERVAL_NS = 1_000_000_000.0 / TARGET_FPS;
 	public static final int TILE_SIZE = 32;
 	public static final double CAMERA_MIN_ZOOM = 1.0;
 	public static final double CAMERA_MAX_ZOOM = 2.0;
