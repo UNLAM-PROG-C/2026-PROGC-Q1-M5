@@ -1,6 +1,6 @@
 package SheriffsssPackage.system.enemy;
 
-import SheriffsssPackage.level.TrainingMode;
+import SheriffsssPackage.level.TrainingModeConstants;
 
 
 
@@ -12,8 +12,8 @@ public final class EnemyFactory {
       worldX,
       worldY,
       dayCount,
-      TrainingMode.TARGET_LIFETIME_SECONDS,
-      TrainingMode.TARGET_LIFETIME_SECONDS);
+      TrainingModeConstants.TARGET_LIFETIME_SECONDS,
+      TrainingModeConstants.TARGET_LIFETIME_SECONDS);
     enemy.setBehaviorOverride(EnemyBehavior.STATIC);
     return enemy;
   }

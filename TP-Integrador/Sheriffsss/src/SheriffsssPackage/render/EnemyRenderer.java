@@ -1,7 +1,7 @@
 package SheriffsssPackage.render;
 
 import SheriffsssPackage.context.GameConfig;
-import SheriffsssPackage.level.TrainingMode;
+import SheriffsssPackage.level.TrainingModeConstants;
 import SheriffsssPackage.system.enemy.Debuff;
 import SheriffsssPackage.system.enemy.Enemy;
 import SheriffsssPackage.system.enemy.EnemyType;
@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
 public class EnemyRenderer
 {
   private static final Composite TRAINING_DIANA_BLINK_COMPOSITE =
-    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TrainingMode.TARGET_BLINK_ALPHA);
+    AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TrainingModeConstants.TARGET_BLINK_ALPHA);
 
   private final Camera camera;
   private final SheriffsssPackage.context.AssetManager assets;
@@ -118,11 +118,11 @@ public class EnemyRenderer
     }
     double hpRatio = enemy.getCurrentHP() / enemy.getMaxHP();
     int phaseTicks;
-    if (hpRatio <= TrainingMode.TARGET_BLINK_FAST_HP_RATIO)
+    if (hpRatio <= TrainingModeConstants.TARGET_BLINK_FAST_HP_RATIO)
     {
-      phaseTicks = TrainingMode.TARGET_BLINK_FAST_PHASE_TICKS;
-    } else if (hpRatio <= TrainingMode.TARGET_BLINK_SLOW_HP_RATIO) {
-      phaseTicks = TrainingMode.TARGET_BLINK_SLOW_PHASE_TICKS;
+      phaseTicks = TrainingModeConstants.TARGET_BLINK_FAST_PHASE_TICKS;
+    } else if (hpRatio <= TrainingModeConstants.TARGET_BLINK_SLOW_HP_RATIO) {
+      phaseTicks = TrainingModeConstants.TARGET_BLINK_SLOW_PHASE_TICKS;
     } else {
       return false;
     }

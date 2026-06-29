@@ -1,10 +1,9 @@
 package SheriffsssPackage.level;
 
 /**
- * Represents the different phases of training mode tutorial.
+ * Enumeration of training mode tutorial phases.
  */
-public enum TutorialPhase
-{
+public enum TutorialPhase {
   AIM,
   TARGETS,
   TIMER_NOTICE,
