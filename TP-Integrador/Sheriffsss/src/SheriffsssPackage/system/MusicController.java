@@ -1,8 +1,10 @@
 package SheriffsssPackage.system;
 
-import SheriffsssPackage.AudioManager;
-import SheriffsssPackage.Player;
-import SheriffsssPackage.State;
+import SheriffsssPackage.context.AudioManager;
+import SheriffsssPackage.context.State;
+import SheriffsssPackage.session.Player;
+
+
 
 public final class MusicController {
   private static final String MENU_MUSIC = "sounds/Menu.wav";

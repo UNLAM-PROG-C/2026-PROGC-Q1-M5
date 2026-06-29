@@ -1,12 +1,14 @@
 package SheriffsssPackage.system;
 
+import SheriffsssPackage.context.GameConfig;
+import SheriffsssPackage.session.GameMap;
+import SheriffsssPackage.session.Player;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import SheriffsssPackage.GameConfig;
-import SheriffsssPackage.GameMap;
-import SheriffsssPackage.Player;
 
 /** Handles health pickup spawn and collection rules for the active match. */
 public final class HealthPickupSystem {

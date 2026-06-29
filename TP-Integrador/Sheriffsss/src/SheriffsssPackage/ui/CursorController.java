@@ -1,7 +1,8 @@
 package SheriffsssPackage.ui;
 
-import SheriffsssPackage.CursorType;
-import SheriffsssPackage.State;
+import SheriffsssPackage.context.State;
+
+
 
 public final class CursorController {
   public CursorType resolve(

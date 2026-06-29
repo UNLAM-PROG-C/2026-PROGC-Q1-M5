@@ -3,6 +3,8 @@ package SheriffsssPackage.level;
 import SheriffsssPackage.context.GameContext;
 import SheriffsssPackage.session.GameSession;
 
+
+
 public final class TrainingLevel implements GameLevel {
   @Override
   public LevelType type() {

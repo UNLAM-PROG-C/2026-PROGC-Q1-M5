@@ -1,6 +1,8 @@
 package SheriffsssPackage.ui;
 
-import SheriffsssPackage.Equipment;
+import SheriffsssPackage.session.Equipment;
+
+
 
 public final class EquipmentMenuController {
   private final EquipmentMenuLayout layout;

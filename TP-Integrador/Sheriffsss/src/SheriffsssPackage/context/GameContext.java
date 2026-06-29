@@ -1,12 +1,9 @@
 package SheriffsssPackage.context;
 
-import SheriffsssPackage.AssetManager;
-import SheriffsssPackage.AudioManager;
-import SheriffsssPackage.DayNightCycle;
-import SheriffsssPackage.DebugOptions;
-import SheriffsssPackage.EnemySystem;
-import SheriffsssPackage.GameInput;
-import SheriffsssPackage.ProjectileSystem;
+import SheriffsssPackage.system.enemy.EnemySystem;
+import SheriffsssPackage.system.weapon.ProjectileSystem;
+
+
 
 /** Groups stable systems created once by the main game shell. */
 public final class GameContext {

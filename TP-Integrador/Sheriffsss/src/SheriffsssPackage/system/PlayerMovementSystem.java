@@ -1,7 +1,9 @@
 package SheriffsssPackage.system;
 
-import SheriffsssPackage.GameMap;
-import SheriffsssPackage.Player;
+import SheriffsssPackage.session.GameMap;
+import SheriffsssPackage.session.Player;
+
+
 
 public final class PlayerMovementSystem {
   private static final double STRAIGHT_MOVE_SCALE = 1.0;

@@ -1,5 +1,8 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.context.GameConfig;
+
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -7,9 +10,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
-import SheriffsssPackage.GameConfig;
-import SheriffsssPackage.GameTheme;
-import SheriffsssPackage.TextRenderer;
 
 public final class TrainingHudRenderer {
   private static final TextRenderer.Style TEXT_STYLE = TextRenderer.Style.OUTLINED;

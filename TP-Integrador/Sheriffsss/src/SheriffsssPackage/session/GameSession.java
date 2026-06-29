@@ -1,12 +1,11 @@
 package SheriffsssPackage.session;
 
-import SheriffsssPackage.GameConfig;
-import SheriffsssPackage.GameMap;
-import SheriffsssPackage.Player;
-import SheriffsssPackage.PlayerRuntimeState;
-import SheriffsssPackage.TrainingMode;
+import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.level.GameLevel;
 import SheriffsssPackage.level.NoLevel;
+import SheriffsssPackage.level.TrainingMode;
+
+
 
 /** Holds mutable state for the current playable session. */
 public final class GameSession {

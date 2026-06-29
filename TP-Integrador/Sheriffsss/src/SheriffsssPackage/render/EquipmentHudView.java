@@ -1,11 +1,13 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.session.Equipment;
+import SheriffsssPackage.system.weapon.ItemDefinition;
+import SheriffsssPackage.ui.EquipmentMenuLayout;
+
+
 import java.util.Collections;
 import java.util.List;
 
-import SheriffsssPackage.Equipment;
-import SheriffsssPackage.ItemDefinition;
-import SheriffsssPackage.ui.EquipmentMenuLayout;
 
 public final class EquipmentHudView {
   private boolean visible;

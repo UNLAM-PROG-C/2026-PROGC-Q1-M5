@@ -1,6 +1,8 @@
 package SheriffsssPackage.ui;
 
-import SheriffsssPackage.GameConfig;
+import SheriffsssPackage.context.GameConfig;
+
+
 
 public final class EquipmentMenuLayout {
   private static final int PANEL_WIDTH = 250;

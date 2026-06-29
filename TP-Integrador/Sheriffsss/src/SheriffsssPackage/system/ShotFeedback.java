@@ -1,6 +1,8 @@
 package SheriffsssPackage.system;
 
-import SheriffsssPackage.GameConfig;
+import SheriffsssPackage.context.GameConfig;
+
+
 
 /** Tracks short-lived visual feedback created by projectile weapon shots. */
 public final class ShotFeedback {

@@ -1,9 +1,11 @@
 package SheriffsssPackage.ui;
 
+import SheriffsssPackage.context.AudioManager;
+import SheriffsssPackage.context.GameConfig;
+
+
 import java.awt.Dimension;
 
-import SheriffsssPackage.AudioManager;
-import SheriffsssPackage.GameConfig;
 
 public final class DisplaySettingsController {
   private enum ActiveSlider {
