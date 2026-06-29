@@ -7,6 +7,7 @@ import SheriffsssPackage.context.GameInput;
 import SheriffsssPackage.context.State;
 import SheriffsssPackage.level.LevelType;
 import SheriffsssPackage.render.GameView;
+import SheriffsssPackage.render.MenuRenderer;
 import SheriffsssPackage.session.GameSession;
 
 import javax.swing.SwingUtilities;
@@ -19,6 +20,9 @@ public class SettingsScreenController
   private final GameSession session;
   private final DebugOptions debugOptions;
   private State state;
+  private boolean requestExitToMenu;
+  private boolean requestShutdown;
+  private MenuRenderer menuRenderer;
 
   public SettingsScreenController(
       DisplaySettingsController displaySettingsController,
@@ -33,16 +37,38 @@ public class SettingsScreenController
     this.session = session;
     this.debugOptions = debugOptions;
     this.state = State.MENU;
+    this.requestExitToMenu = false;
+    this.requestShutdown = false;
+  }
+
+  public void setMenuRenderer(MenuRenderer renderer)
+  {
+    this.menuRenderer = renderer;
   }
 
   public void update(GameView game)
   {
-    updateSettings();
+    if (this.state == State.MENU_SETTINGS) {
+      updateMenuSettings();
+    } else if (this.state == State.SETTINGS) {
+      updateSettings();
+    }
   }
 
-  public void resume()
+  public boolean shouldExitToMenu()
   {
-    resumeFromSettings(false);
+    return this.requestExitToMenu;
+  }
+
+  public boolean shouldShutdown()
+  {
+    return this.requestShutdown;
+  }
+
+  public void clearRequestFlags()
+  {
+    this.requestExitToMenu = false;
+    this.requestShutdown = false;
   }
 
   public State getState()
@@ -96,43 +122,68 @@ public class SettingsScreenController
     }
     if (isExitToMenuButtonHovered())
     {
-      applyPendingDisplaySettings();
+      this.displaySettingsController.applyPending();
+      this.requestExitToMenu = true;
       return;
     }
     if (isQuitButtonHovered())
     {
-      // Shutdown will be handled by Game
+      this.requestShutdown = true;
       return;
     }
   }
 
+  private void updateMenuSettings()
+  {
+    if (this.input.consumeEscapePressed()) {
+      closeMenuSettings();
+      return;
+    }
+    boolean primaryPressed = this.input.consumePrimaryClick();
+    if (primaryPressed)
+    {
+      this.displaySettingsController.selectHoveredSlider(
+        isMusicSliderHovered(),
+        isSfxSliderHovered(),
+        isResolutionSliderHovered());
+    }
+    if (!this.input.isPrimaryHeld())
+    {
+      this.displaySettingsController.clearActiveSlider();
+    }
+    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse()))
+    {
+      return;
+    }
+    if (primaryPressed && this.menuRenderer != null
+        && this.menuRenderer.isMenuFullscreenButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+      this.displaySettingsController.togglePendingFullscreen();
+      return;
+    }
+    if (primaryPressed && this.menuRenderer != null
+        && this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
+    {
+      closeMenuSettings();
+    }
+  }
+
+  private void closeMenuSettings()
+  {
+    this.displaySettingsController.applyPending();
+    this.displaySettingsController.clearMessage();
+    this.displaySettingsController.clearActiveSlider();
+    this.state = State.MENU;
+  }
+
   private void resumeFromSettings(boolean blockPrimaryGameplay)
   {
-    applyPendingDisplaySettings();
+    this.displaySettingsController.applyPending();
     this.state = State.PLAYING;
     this.displaySettingsController.clearMessage();
     this.displaySettingsController.clearActiveSlider();
   }
 
-  private void beginDisplaySettingsEdit()
-  {
-    this.displaySettingsController.beginEdit();
-  }
-
-  private void applyPendingDisplaySettings()
-  {
-    DisplaySettingsChange change = this.displaySettingsController.applyPending();
-    if (change.fullscreenChanged())
-    {
-      final boolean targetFullscreen = change.targetFullscreen();
-      // Note: Fullscreen application will be handled by Game
-    } else if (!change.targetFullscreen() && change.resolutionChanged())
-    {
-      // Note: Window resolution will be handled by Game
-    }
-  }
-
-  private boolean isMusicSliderHovered()
+  public boolean isMusicSliderHovered()
   {
     return isPointInside(
       settingsSliderInteractionX(),
@@ -141,7 +192,7 @@ public class SettingsScreenController
       24);
   }
 
-  private boolean isSfxSliderHovered()
+  public boolean isSfxSliderHovered()
   {
     return isPointInside(
       settingsSliderInteractionX(),
@@ -150,7 +201,7 @@ public class SettingsScreenController
       24);
   }
 
-  private boolean isResolutionSliderHovered()
+  public boolean isResolutionSliderHovered()
   {
     return isPointInside(
       settingsSliderInteractionX(),
@@ -159,35 +210,45 @@ public class SettingsScreenController
       24);
   }
 
-  private boolean isFullscreenButtonHovered()
+  public boolean isFullscreenButtonHovered()
   {
     return isSettingsButtonHovered(GameConfig.SETTINGS_FULLSCREEN_BUTTON_Y);
   }
 
-  private boolean isDebugSettingsButtonHovered()
+  public boolean isDebugSettingsButtonHovered()
   {
     return isTrainingLevelActive()
       && isSettingsButtonHovered(GameConfig.SETTINGS_DEBUG_BUTTON_Y);
   }
 
-  private int settingsDebugButtonX()
+  public int getSettingsDebugButtonX()
   {
     return GameConfig.SETTINGS_BUTTON_X;
   }
 
-  private boolean isResumeButtonHovered()
+  public int getSettingsDebugButtonY()
+  {
+    return settingsOverlayY(GameConfig.SETTINGS_DEBUG_BUTTON_Y);
+  }
+
+  public boolean isResumeButtonHovered()
   {
     return isSettingsButtonHovered(GameConfig.SETTINGS_RESUME_BUTTON_Y);
   }
 
-  private boolean isExitToMenuButtonHovered()
+  public boolean isExitToMenuButtonHovered()
   {
     return isSettingsButtonHovered(GameConfig.SETTINGS_MENU_BUTTON_Y);
   }
 
-  private boolean isQuitButtonHovered()
+  public boolean isQuitButtonHovered()
   {
     return isSettingsButtonHovered(GameConfig.SETTINGS_QUIT_BUTTON_Y);
+  }
+
+  public int getSettingsOverlayOffsetY()
+  {
+    return settingsOverlayOffsetY();
   }
 
   private boolean isSettingsButtonHovered(int baseY)
@@ -199,32 +260,30 @@ public class SettingsScreenController
       GameConfig.SETTINGS_BUTTON_HEIGHT);
   }
 
-  private boolean isPointInside(int x, int y, int width, int height)
+  public boolean isPointInside(int x, int y, int width, int height)
   {
     return this.input.getMouseX() >= x && this.input.getMouseX() <= x + width
       && this.input.getMouseY() >= y && this.input.getMouseY() <= y + height;
   }
 
-  private double sliderValueFromMouse()
+  public double sliderValueFromMouse()
   {
     double value = (this.input.getMouseX() - settingsSliderInteractionX())
       / (double) GameConfig.SETTINGS_SLIDER_WIDTH;
     return Math.max(0.0, Math.min(1.0, value));
   }
 
-  private int settingsSliderInteractionX()
+  public int settingsSliderInteractionX()
   {
     if (this.state == State.MENU_SETTINGS) {
-      // Menu renderer offset would need to be passed in
       return GameConfig.BASE_SCREEN_WIDTH / 2 - 90;
     }
     return GameConfig.SETTINGS_SLIDER_X;
   }
 
-  private int settingsSliderInteractionY(int baseY)
+  public int settingsSliderInteractionY(int baseY)
   {
     if (this.state == State.MENU_SETTINGS) {
-      // Menu renderer offset would need to be passed in
       return baseY;
     }
     return settingsOverlayY(baseY);
@@ -246,56 +305,5 @@ public class SettingsScreenController
   {
     return this.session.activeLevel() != null
       && this.session.activeLevel().type() == LevelType.TRAINING;
-  }
-
-  // Public getters for hover states
-  public boolean isMusicSliderHoveredPublic()
-  {
-    return isMusicSliderHovered();
-  }
-
-  public boolean isSfxSliderHoveredPublic()
-  {
-    return isSfxSliderHovered();
-  }
-
-  public boolean isResolutionSliderHoveredPublic()
-  {
-    return isResolutionSliderHovered();
-  }
-
-  public boolean isFullscreenButtonHoveredPublic()
-  {
-    return isFullscreenButtonHovered();
-  }
-
-  public boolean isDebugSettingsButtonHoveredPublic()
-  {
-    return isDebugSettingsButtonHovered();
-  }
-
-  public int getSettingsDebugButtonX()
-  {
-    return settingsDebugButtonX();
-  }
-
-  public boolean isResumeButtonHoveredPublic()
-  {
-    return isResumeButtonHovered();
-  }
-
-  public boolean isExitToMenuButtonHoveredPublic()
-  {
-    return isExitToMenuButtonHovered();
-  }
-
-  public boolean isQuitButtonHoveredPublic()
-  {
-    return isQuitButtonHovered();
-  }
-
-  public int getSettingsOverlayOffsetY()
-  {
-    return settingsOverlayOffsetY();
   }
 }

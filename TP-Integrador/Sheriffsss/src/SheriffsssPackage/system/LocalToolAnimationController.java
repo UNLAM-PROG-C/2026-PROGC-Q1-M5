@@ -54,7 +54,7 @@ public class LocalToolAnimationController
   public void startToolAnimation(ItemDefinition definition)
   {
     this.toolAnimationDefinition = definition;
-    this.toolAnimationTicksRemaining = definition.getAnimationDurationTicks();
+    this.toolAnimationTicksRemaining = definition.getUseAnimationTicks();
   }
 
   public void tickToolAnimation()

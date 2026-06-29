@@ -7,6 +7,8 @@ import SheriffsssPackage.context.DebugOptions;
 import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.context.GameContext;
 import SheriffsssPackage.context.GameInput;
+import SheriffsssPackage.context.InfoMessageSystem;
+import SheriffsssPackage.context.SpatialAudioSystem;
 import SheriffsssPackage.context.State;
 import SheriffsssPackage.level.LevelType;
 import SheriffsssPackage.level.TrainingMode;
@@ -24,6 +26,7 @@ import SheriffsssPackage.session.GameMap;
 import SheriffsssPackage.session.GameSession;
 import SheriffsssPackage.session.MapObject;
 import SheriffsssPackage.session.Player;
+import SheriffsssPackage.system.LocalToolAnimationController;
 import SheriffsssPackage.system.MusicController;
 import SheriffsssPackage.system.PlayerMovementSystem;
 import SheriffsssPackage.system.ShotFeedback;
@@ -43,12 +46,12 @@ import SheriffsssPackage.ui.DisplaySettingsChange;
 import SheriffsssPackage.ui.DisplaySettingsController;
 import SheriffsssPackage.ui.EquipmentMenuController;
 import SheriffsssPackage.ui.EquipmentMenuLayout;
+import SheriffsssPackage.ui.SettingsScreenController;
 
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -61,7 +64,6 @@ public class Game extends JPanel implements Runnable, GameView {
   private static final String DEFAULT_WEAPON_ATTACK_SOUND = "sounds/Shot.wav";
   private static final float WEAPON_GAIN_DB = 0f;
   private static final float ENEMY_HIT_GAIN_DB = 0f;
-  private static final int INFO_MESSAGE_SLOTS = 4;
   private final AssetManager assets;
   private final AudioManager audio;
   private final GameInput input;
@@ -75,20 +77,15 @@ public class Game extends JPanel implements Runnable, GameView {
   private final GameContext context;
   private final TrainingSessionBuilder trainingSessionBuilder = new TrainingSessionBuilder();
   private final PlayerMovementSystem playerMovementSystem = new PlayerMovementSystem();
-  private final String[] infoMessages = new String[INFO_MESSAGE_SLOTS];
-  private final int[] infoMessageTicks = new int[INFO_MESSAGE_SLOTS];
-  private final HashSet<String> unavailableSfxPaths = new HashSet<String>();
+  private final InfoMessageSystem infoMessageSystem;
+  private final LocalToolAnimationController localToolAnimation;
+  private final SpatialAudioSystem spatialAudioSystem;
+  private final SettingsScreenController settingsScreenController;
 
   private volatile Thread gameThread;
   private State state = State.MENU;
-  private boolean usingTool;
   private boolean blockPrimaryGameplayUntilRelease;
   private boolean primaryGameplayPressedThisFrame;
-  private MapObject toolTargetObject;
-  private int toolUseTicks;
-  private int toolUseDurationTicks = 1;
-  private ItemDefinition toolAnimationDefinition;
-  private int toolAnimationTicksRemaining;
   private boolean activeDebugTrajectorySlider;
   private boolean debugPanelPrimaryHeld;
   private long frameCount;
@@ -118,6 +115,12 @@ public class Game extends JPanel implements Runnable, GameView {
     this.context = new GameContext(this.assets, this.audio, this.input,
       this.dayNightCycle, this.enemySystem, this.projectileSystem,
       this.debugOptions);
+    this.infoMessageSystem = new InfoMessageSystem();
+    this.localToolAnimation = new LocalToolAnimationController();
+    this.spatialAudioSystem = new SpatialAudioSystem(this.audio);
+    this.settingsScreenController = new SettingsScreenController(
+      this.displaySettingsController, this.input, this.audio, this.session, this.debugOptions);
+    this.settingsScreenController.setMenuRenderer(this.menuRenderer);
 
     setPreferredSize(this.displaySettingsController.windowedSize());
     setDoubleBuffered(true);
@@ -310,13 +313,24 @@ public class Game extends JPanel implements Runnable, GameView {
       updateMenu();
     } else if (this.state == State.MENU_SETTINGS)
       {
-      updateMenuSettings();
+      this.settingsScreenController.setState(State.MENU_SETTINGS);
+      this.settingsScreenController.update(this);
+      this.state = this.settingsScreenController.getState();
     } else if (this.state == State.PLAYING)
       {
       updatePlaying();
     } else if (this.state == State.SETTINGS)
       {
-      updateSettings();
+      this.settingsScreenController.setState(State.SETTINGS);
+      this.settingsScreenController.update(this);
+      this.state = this.settingsScreenController.getState();
+      if (this.settingsScreenController.shouldExitToMenu()) {
+        this.settingsScreenController.clearRequestFlags();
+        returnToMenu();
+      } else if (this.settingsScreenController.shouldShutdown()) {
+        this.settingsScreenController.clearRequestFlags();
+        shutdownApplication();
+      }
     }
     if (isTrainingLevelActive() && this.session.trainingMode() != null
       && this.state == State.PLAYING
@@ -324,7 +338,7 @@ public class Game extends JPanel implements Runnable, GameView {
       {
       this.session.trainingMode().update(this.session.player(), this.input, this.projectileSystem);
     }
-    updateInfoMessages();
+    this.infoMessageSystem.update();
     updateMusic();
     updateCursor();
   }
@@ -399,7 +413,10 @@ public class Game extends JPanel implements Runnable, GameView {
     }
     if (this.menuRenderer.isTrainingSettingsButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
       {
-      openMenuSettings();
+      this.displaySettingsController.clearMessage();
+      this.displaySettingsController.clearActiveSlider();
+      this.displaySettingsController.beginEdit();
+      this.state = State.MENU_SETTINGS;
       return;
     }
   }
@@ -424,8 +441,8 @@ public class Game extends JPanel implements Runnable, GameView {
   private void resetTrainingTransientState()
     {
     this.projectileSystem.clear();
-    resetLocalToolAnimation();
-    this.toolTargetObject = null;
+    this.localToolAnimation.resetToolAnimation();
+    this.localToolAnimation.clearToolTarget();
   }
 
   private void stopTrainingIfActive()
@@ -473,12 +490,12 @@ public class Game extends JPanel implements Runnable, GameView {
     {
     if (isTrainingSessionFinished()) {
       clearToolTarget();
-      resetLocalToolAnimation();
+      this.localToolAnimation.resetToolAnimation();
       return;
     }
     if (this.input.consumeEscapePressed())
       {
-      beginDisplaySettingsEdit();
+      this.displaySettingsController.beginEdit();
       this.state = State.SETTINGS;
       this.displaySettingsController.clearMessage();
       clearToolTarget();
@@ -490,7 +507,7 @@ public class Game extends JPanel implements Runnable, GameView {
         this.session.player().getEquipment().toggleMenu();
       }
       clearToolTarget();
-      resetLocalToolAnimation();
+      this.localToolAnimation.resetToolAnimation();
       return;
     }
     this.input.consumeMapToggle();
@@ -541,14 +558,17 @@ public class Game extends JPanel implements Runnable, GameView {
   private void updateToolUse()
       {
     this.weaponUseSystem.updateProjectileWeaponCooldown(this.session.playerRuntime());
-    this.usingTool = false;
     ItemDefinition selectedDefinition = this.session.player().getEquipment().getEquippedWeapon();
-    if (this.toolAnimationDefinition != null)
+    if (this.localToolAnimation.getToolAnimationDefinition() != null)
     {
-      if (selectedDefinition == this.toolAnimationDefinition) {
-        tickLocalToolAnimation(this.toolAnimationDefinition);
+      if (selectedDefinition == this.localToolAnimation.getToolAnimationDefinition()) {
+        this.localToolAnimation.update();
+        this.localToolAnimation.tickToolAnimation();
+        this.localToolAnimation.setUsingTool(this.localToolAnimation.isToolAnimationActive());
+        this.localToolAnimation.setToolUseDurationTicks(
+          Math.max(1, selectedDefinition.getUseAnimationTicks()));
       } else {
-        resetLocalToolAnimation();
+        this.localToolAnimation.resetToolAnimation();
       }
     }
     boolean primaryActive = isPrimaryGameplayHeld() || this.primaryGameplayPressedThisFrame;
@@ -592,39 +612,14 @@ public class Game extends JPanel implements Runnable, GameView {
       ? baseDurationTicks
       : this.session.player().applyAttackSpeedToCooldown(baseDurationTicks);
     durationTicks = Math.max(1, durationTicks);
-    if (this.toolAnimationTicksRemaining <= 0 || this.toolAnimationDefinition != definition)
+    if (this.localToolAnimation.getToolAnimationTicksRemaining() <= 0
+      || this.localToolAnimation.getToolAnimationDefinition() != definition)
     {
-      this.toolUseTicks = 0;
-      this.toolAnimationTicksRemaining = durationTicks;
-      this.toolAnimationDefinition = definition;
+      this.localToolAnimation.setToolUseTicks(0);
+      this.localToolAnimation.setToolUseDurationTicks(durationTicks);
     }
-    this.usingTool = true;
-    this.toolUseDurationTicks = durationTicks;
-  }
-
-  private void tickLocalToolAnimation(ItemDefinition definition)
-  {
-    if (this.toolAnimationTicksRemaining <= 0 || this.toolAnimationDefinition != definition) {
-      resetLocalToolAnimation();
-      return;
-    }
-    this.usingTool = true;
-    this.toolUseDurationTicks = Math.max(1, this.toolUseDurationTicks);
-    this.toolUseTicks++;
-    this.toolAnimationTicksRemaining--;
-    if (this.toolAnimationTicksRemaining <= 0)
-      {
-      this.toolAnimationDefinition = null;
-    }
-  }
-
-  private void resetLocalToolAnimation()
-  {
-    this.usingTool = false;
-    this.toolUseTicks = 0;
-    this.toolUseDurationTicks = 1;
-    this.toolAnimationTicksRemaining = 0;
-    this.toolAnimationDefinition = null;
+    this.localToolAnimation.startToolAnimation(definition);
+    this.localToolAnimation.setUsingTool(true);
   }
 
   private void handleWeaponUseResult(WeaponUseResult result)
@@ -662,100 +657,20 @@ public class Game extends JPanel implements Runnable, GameView {
     String fireSoundPath = weapon == null ? "" : weapon.getAttackSoundPath();
     if (fireSoundPath != null && !fireSoundPath.isEmpty())
     {
-      String fallbackSoundPath = weapon != null && weapon.getWeaponType() == WeaponType.ARMA_DE_FUEGO
-        ? DEFAULT_WEAPON_ATTACK_SOUND
-        : "";
-      playPersistentSpatialSfxOrFallback(
-        fireSoundPath,
-        fallbackSoundPath,
-        WEAPON_GAIN_DB,
-        result.startWorldX(),
-        result.startWorldY());
+      if (this.session.player() != null) {
+        this.spatialAudioSystem.playPersistentSpatialSfxOrFallback(
+          fireSoundPath,
+          WEAPON_GAIN_DB,
+          result.startWorldX(),
+          result.startWorldY(),
+          this.session.player().getX(),
+          this.session.player().getY());
+      }
     }
     if (type != null && type.triggersMuzzleFlash())
       {
       this.shotFeedback.triggerMuzzleFlash(result.startWorldX(), result.startWorldY());
     }
-  }
-
-  private void playPersistentSpatialSfxOrFallback(
-      String resourcePath,
-      String fallbackResourcePath,
-      float gainDb,
-      int sourceWorldX,
-      int sourceWorldY)
-      {
-    if (resourcePath == null || resourcePath.isEmpty()) {
-      return;
-    }
-    if (this.unavailableSfxPaths.contains(resourcePath)) {
-      playFallbackPersistentSpatialSfx(resourcePath, fallbackResourcePath, gainDb, sourceWorldX, sourceWorldY);
-      return;
-    }
-    try {
-      playPersistentSpatialSfx(resourcePath, gainDb, sourceWorldX, sourceWorldY);
-    } catch (IllegalStateException e)
-      {
-      this.unavailableSfxPaths.add(resourcePath);
-      System.err.println("Unable to play audio resource " + resourcePath + ": " + e.getMessage());
-      playFallbackPersistentSpatialSfx(resourcePath, fallbackResourcePath, gainDb, sourceWorldX, sourceWorldY);
-    }
-  }
-
-  private void playFallbackPersistentSpatialSfx(
-      String failedResourcePath,
-      String fallbackResourcePath,
-      float gainDb,
-      int sourceWorldX,
-      int sourceWorldY)
-      {
-    if (fallbackResourcePath == null
-        || fallbackResourcePath.isEmpty()
-        || fallbackResourcePath.equals(failedResourcePath)) {
-      return;
-    }
-    if (this.unavailableSfxPaths.contains(fallbackResourcePath)) {
-      return;
-    }
-    try {
-      playPersistentSpatialSfx(fallbackResourcePath, gainDb, sourceWorldX, sourceWorldY);
-    } catch (IllegalStateException e)
-      {
-      this.unavailableSfxPaths.add(fallbackResourcePath);
-      System.err.println("Unable to play fallback audio resource " + fallbackResourcePath + ": " + e.getMessage());
-    }
-  }
-
-  private void playPersistentSpatialSfx(String resourcePath, float gainDb, int sourceWorldX, int sourceWorldY)
-      {
-    double volumeScale = spatialSfxVolumeScale(sourceWorldX, sourceWorldY);
-    if (volumeScale > 0.0)
-    {
-      this.audio.playOnceUntilFinished(resourcePath, gainDb, volumeScale);
-    }
-  }
-
-  private double spatialSfxVolumeScale(int sourceWorldX, int sourceWorldY)
-      {
-    if (this.session.player() == null || this.session.player().isDead()) {
-      return 1.0;
-    }
-    int listenerX = this.session.player().getX();
-    int listenerY = this.session.player().getY();
-    int deltaX = sourceWorldX - listenerX;
-    int deltaY = sourceWorldY - listenerY;
-    int fullRadius = GameConfig.SPATIAL_SFX_FULL_VOLUME_RADIUS_PIXELS;
-    int audibleRadius = GameConfig.SPATIAL_SFX_AUDIBLE_RADIUS_PIXELS;
-    int distanceSquared = deltaX * deltaX + deltaY * deltaY;
-    if (distanceSquared <= fullRadius * fullRadius)
-    {
-      return 1.0;
-    }
-    if (distanceSquared >= audibleRadius * audibleRadius || audibleRadius <= fullRadius) {
-      return 0.0;
-    }
-    double distance = Math.sqrt(distanceSquared);
-    return Math.max(0.0, Math.min(1.0, 1.0 - (distance - fullRadius) / (audibleRadius - fullRadius)));
   }
 
   private void updateProjectiles()
@@ -775,215 +690,29 @@ public class Game extends JPanel implements Runnable, GameView {
     for (int i = 0; i < hitSounds.size(); i++)
     {
       EnemyHitSound hitSound = hitSounds.get(i);
-      playPersistentSpatialSfxOrFallback(
-        hitSound.getResourcePath(),
-        "",
-        ENEMY_HIT_GAIN_DB,
-        hitSound.getWorldX(),
-        hitSound.getWorldY());
+      if (this.session.player() != null) {
+        this.spatialAudioSystem.playPersistentSpatialSfxOrFallback(
+          hitSound.getResourcePath(),
+          ENEMY_HIT_GAIN_DB,
+          hitSound.getWorldX(),
+          hitSound.getWorldY(),
+          this.session.player().getX(),
+          this.session.player().getY());
+      }
     }
     this.enemySystem.clearHitSounds();
   }
 
   private void clearToolTarget()
       {
-    if (this.toolTargetObject != null) {
-      this.toolTargetObject.resetDurabilityDamage();
-      this.toolTargetObject = null;
+    if (this.localToolAnimation.getToolTargetObject() != null) {
+      this.localToolAnimation.getToolTargetObject().resetDurabilityDamage();
+      this.localToolAnimation.clearToolTarget();
     }
   }
 
-  private void updateSettings()
-      {
-    if (this.input.consumeEscapePressed()) {
-      resumeFromSettings(false);
-      return;
-    }
-    boolean primaryPressed = this.input.consumePrimaryClick();
-    if (primaryPressed)
-      {
-      this.displaySettingsController.selectHoveredSlider(
-        isMusicSliderHovered(),
-        isSfxSliderHovered(),
-        isResolutionSliderHovered());
-    }
-    if (!this.input.isPrimaryHeld())
-      {
-      this.displaySettingsController.clearActiveSlider();
-    }
-    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse()))
-      {
-      return;
-    }
-    if (!primaryPressed) {
-      return;
-    }
-    if (isTrainingLevelActive() && isDebugSettingsButtonHovered()) {
-      this.debugOptions.toggleMenu();
-      return;
-    }
-    if (isFullscreenButtonHovered())
-      {
-      this.displaySettingsController.togglePendingFullscreen();
-      return;
-    }
-    if (isResumeButtonHovered())
-      {
-      resumeFromSettings(true);
-      return;
-    }
-    if (isExitToMenuButtonHovered())
-      {
-      applyPendingDisplaySettings();
-      returnToMenu();
-      return;
-    }
-    if (isQuitButtonHovered())
-      {
-      shutdownApplication();
-    }
-  }
 
-  private void updateMenuSettings()
-      {
-    if (this.input.consumeEscapePressed()) {
-      closeMenuSettings();
-      return;
-    }
-    boolean primaryPressed = this.input.consumePrimaryClick();
-    if (primaryPressed)
-      {
-      this.displaySettingsController.selectHoveredSlider(
-        isMusicSliderHovered(),
-        isSfxSliderHovered(),
-        isResolutionSliderHovered());
-    }
-    if (!this.input.isPrimaryHeld())
-      {
-      this.displaySettingsController.clearActiveSlider();
-    }
-    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse()))
-      {
-      return;
-    }
-    if (primaryPressed
-        && this.menuRenderer.isMenuFullscreenButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
-      this.displaySettingsController.togglePendingFullscreen();
-      return;
-    }
-    if (primaryPressed && this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
-      {
-      closeMenuSettings();
-    }
-  }
 
-  private boolean isMusicSliderHovered()
-      {
-    return isPointInside(
-      settingsSliderInteractionX(),
-      settingsSliderInteractionY(GameConfig.SETTINGS_MUSIC_SLIDER_Y) - 10,
-      GameConfig.SETTINGS_SLIDER_WIDTH,
-      24);
-  }
-
-  private boolean isSfxSliderHovered()
-    {
-    return isPointInside(
-      settingsSliderInteractionX(),
-      settingsSliderInteractionY(GameConfig.SETTINGS_SFX_SLIDER_Y) - 10,
-      GameConfig.SETTINGS_SLIDER_WIDTH,
-      24);
-  }
-
-  private boolean isResolutionSliderHovered()
-    {
-    return isPointInside(
-      settingsSliderInteractionX(),
-      settingsSliderInteractionY(GameConfig.SETTINGS_RESOLUTION_SLIDER_Y) - 10,
-      GameConfig.SETTINGS_SLIDER_WIDTH,
-      24);
-  }
-
-  private boolean isFullscreenButtonHovered()
-    {
-    return isSettingsButtonHovered(GameConfig.SETTINGS_FULLSCREEN_BUTTON_Y);
-  }
-
-  private boolean isDebugSettingsButtonHovered()
-    {
-    return isTrainingLevelActive()
-      && isSettingsButtonHovered(GameConfig.SETTINGS_DEBUG_BUTTON_Y);
-  }
-
-  private int settingsDebugButtonX()
-    {
-    return GameConfig.SETTINGS_BUTTON_X;
-  }
-
-  private boolean isResumeButtonHovered()
-  {
-    return isSettingsButtonHovered(GameConfig.SETTINGS_RESUME_BUTTON_Y);
-  }
-
-  private boolean isExitToMenuButtonHovered()
-    {
-    return isSettingsButtonHovered(GameConfig.SETTINGS_MENU_BUTTON_Y);
-  }
-
-  private boolean isQuitButtonHovered()
-    {
-    return isSettingsButtonHovered(GameConfig.SETTINGS_QUIT_BUTTON_Y);
-  }
-
-  private boolean isSettingsButtonHovered(int baseY)
-    {
-    return isPointInside(
-      GameConfig.SETTINGS_BUTTON_X,
-      settingsOverlayY(baseY),
-      GameConfig.SETTINGS_BUTTON_WIDTH,
-      GameConfig.SETTINGS_BUTTON_HEIGHT);
-  }
-
-  private boolean isPointInside(int x, int y, int width, int height)
-    {
-    return this.input.getMouseX() >= x && this.input.getMouseX() <= x + width
-      && this.input.getMouseY() >= y && this.input.getMouseY() <= y + height;
-  }
-
-  private double sliderValueFromMouse()
-    {
-    double value = (this.input.getMouseX() - settingsSliderInteractionX())
-      / (double) GameConfig.SETTINGS_SLIDER_WIDTH;
-    return Math.max(0.0, Math.min(1.0, value));
-  }
-
-  private int settingsSliderInteractionX()
-    {
-    if (this.state == State.MENU_SETTINGS) {
-      return this.menuRenderer.getMenuOffsetX() + GameConfig.BASE_SCREEN_WIDTH / 2 - 90;
-    }
-    return GameConfig.SETTINGS_SLIDER_X;
-  }
-
-  private int settingsSliderInteractionY(int baseY)
-      {
-    if (this.state == State.MENU_SETTINGS) {
-      return this.menuRenderer.getMenuOffsetY() + baseY;
-    }
-    return settingsOverlayY(baseY);
-  }
-
-  private int settingsOverlayY(int baseY)
-      {
-    return baseY + settingsOverlayOffsetY();
-  }
-
-  private int settingsOverlayOffsetY()
-    {
-    return isTrainingLevelActive() && this.state == State.SETTINGS
-      ? GameConfig.TRAINING_SETTINGS_OVERLAY_Y_OFFSET
-      : 0;
-  }
 
   private int screenToWorldX(int screenX)
     {
@@ -1028,26 +757,10 @@ public class Game extends JPanel implements Runnable, GameView {
     this.projectileSystem.clear();
     this.session.setMap(null);
     this.session.setPlayer(null);
-    resetLocalToolAnimation();
-    this.toolTargetObject = null;
+    this.localToolAnimation.resetToolAnimation();
+    this.localToolAnimation.clearToolTarget();
     this.displaySettingsController.clearActiveSlider();
     this.dayNightCycle.reset();
-    this.state = State.MENU;
-  }
-
-  private void openMenuSettings()
-    {
-    this.displaySettingsController.clearMessage();
-    this.displaySettingsController.clearActiveSlider();
-    beginDisplaySettingsEdit();
-    this.state = State.MENU_SETTINGS;
-  }
-
-  private void closeMenuSettings()
-    {
-    applyPendingDisplaySettings();
-    this.displaySettingsController.clearMessage();
-    this.displaySettingsController.clearActiveSlider();
     this.state = State.MENU;
   }
 
@@ -1096,22 +809,22 @@ public class Game extends JPanel implements Runnable, GameView {
   private boolean isMenuSettingsControlHovered()
     {
     return this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY())
-      || isMusicSliderHovered()
-      || isSfxSliderHovered()
-      || isResolutionSliderHovered()
+      || this.settingsScreenController.isMusicSliderHovered()
+      || this.settingsScreenController.isSfxSliderHovered()
+      || this.settingsScreenController.isResolutionSliderHovered()
       || this.menuRenderer.isMenuFullscreenButtonHovered(this.input.getMouseX(), this.input.getMouseY());
   }
 
   private boolean isGameSettingsControlHovered()
     {
-    return isMusicSliderHovered()
-      || isSfxSliderHovered()
-      || isResolutionSliderHovered()
-      || (isTrainingLevelActive() && isDebugSettingsButtonHovered())
-      || isFullscreenButtonHovered()
-      || isResumeButtonHovered()
-      || isExitToMenuButtonHovered()
-      || isQuitButtonHovered();
+    return this.settingsScreenController.isMusicSliderHovered()
+      || this.settingsScreenController.isSfxSliderHovered()
+      || this.settingsScreenController.isResolutionSliderHovered()
+      || (isTrainingLevelActive() && this.settingsScreenController.isDebugSettingsButtonHovered())
+      || this.settingsScreenController.isFullscreenButtonHovered()
+      || this.settingsScreenController.isResumeButtonHovered()
+      || this.settingsScreenController.isExitToMenuButtonHovered()
+      || this.settingsScreenController.isQuitButtonHovered();
   }
 
   public long getFrameCount()
@@ -1122,15 +835,6 @@ public class Game extends JPanel implements Runnable, GameView {
   public DayNightCycle getDayNightCycle()
   {
     return this.dayNightCycle;
-  }
-
-  private void updateInfoMessages()
-  {
-    for (int i = 0; i < INFO_MESSAGE_SLOTS; i++) {
-      if (this.infoMessageTicks[i] > 0) {
-        this.infoMessageTicks[i]--;
-      }
-    }
   }
 
   private boolean consumePrimaryGameplayClick()
@@ -1156,23 +860,6 @@ public class Game extends JPanel implements Runnable, GameView {
       this.blockPrimaryGameplayUntilRelease = false;
     }
     return false;
-  }
-
-  private void resumeFromSettings(boolean blockPrimaryGameplay)
-  {
-    applyPendingDisplaySettings();
-    this.state = State.PLAYING;
-    this.displaySettingsController.clearMessage();
-    this.displaySettingsController.clearActiveSlider();
-    if (blockPrimaryGameplay && this.input.isPrimaryHeld())
-    {
-      this.blockPrimaryGameplayUntilRelease = true;
-    }
-  }
-
-  private void beginDisplaySettingsEdit()
-  {
-    this.displaySettingsController.beginEdit();
   }
 
   private void applyPendingDisplaySettings()
@@ -1232,13 +919,13 @@ public class Game extends JPanel implements Runnable, GameView {
   public List<CombatFloatingText> getCombatFloatingTexts()
   { return this.enemySystem.getCombatFloatingTexts(); }
   public boolean isUsingTool()
-  { return this.usingTool; }
+  { return this.localToolAnimation.isUsingTool(); }
   public int getToolUseTicks()
-  { return this.toolUseTicks; }
+  { return this.localToolAnimation.getToolUseTicks(); }
   public int getToolUseDurationTicks()
-  { return this.toolUseDurationTicks; }
+  { return this.localToolAnimation.getToolUseDurationTicks(); }
   public MapObject getToolTargetObject()
-  { return this.toolTargetObject; }
+  { return this.localToolAnimation.getToolTargetObject(); }
   public int getRevolverFlashTicks()
   { return this.shotFeedback.muzzleFlashTicks(); }
   public int getRevolverFlashWorldX()
@@ -1271,11 +958,11 @@ public class Game extends JPanel implements Runnable, GameView {
     return this.equipmentHudView;
   }
   public int getInfoMessageSlotCount()
-    { return INFO_MESSAGE_SLOTS; }
+    { return this.infoMessageSystem.getInfoMessageSlotCount(); }
   public String getInfoMessage(int index)
-  { return this.infoMessages[index]; }
+  { return this.infoMessageSystem.getInfoMessage(index); }
   public int getInfoMessageTicks(int index)
-  { return this.infoMessageTicks[index]; }
+  { return this.infoMessageSystem.getInfoMessageTicks(index); }
   public String getSettingsMessage()
   { return this.displaySettingsController.message(); }
   public boolean isPendingFullscreen()
@@ -1283,17 +970,17 @@ public class Game extends JPanel implements Runnable, GameView {
   public boolean isDebugMenuOpen()
   { return this.debugOptions.isMenuOpen(); }
   public boolean isSettingsDebugButtonHovered()
-  { return isDebugSettingsButtonHovered(); }
+  { return this.settingsScreenController.isDebugSettingsButtonHovered(); }
   public int getSettingsDebugButtonX()
-  { return settingsDebugButtonX(); }
+  { return this.settingsScreenController.getSettingsDebugButtonX(); }
   public int getSettingsDebugButtonY()
-  { return settingsOverlayY(GameConfig.SETTINGS_DEBUG_BUTTON_Y); }
+  { return this.settingsScreenController.getSettingsDebugButtonY(); }
   public int getSettingsDebugButtonWidth()
   { return GameConfig.SETTINGS_BUTTON_WIDTH; }
   public int getSettingsDebugButtonHeight()
   { return GameConfig.SETTINGS_BUTTON_HEIGHT; }
   public int getSettingsOverlayOffsetY()
-  { return settingsOverlayOffsetY(); }
+  { return this.settingsScreenController.getSettingsOverlayOffsetY(); }
   public double getWindowResolutionSliderValue()
   {
     return this.displaySettingsController.windowResolutionSliderValue();

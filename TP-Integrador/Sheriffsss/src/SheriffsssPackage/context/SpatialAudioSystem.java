@@ -40,8 +40,11 @@ public class SpatialAudioSystem
     try
     {
       double distance = Math.sqrt(Math.pow(sourceWorldX - playerWorldX, 2.0) + Math.pow(sourceWorldY - playerWorldY, 2.0));
-      float finalGainDb = (float) (gainDb + spatialSfxVolumeScale(distance, sourceWorldX, sourceWorldY, playerWorldX, playerWorldY));
-      this.audio.playPersistentSoundEffect(resourcePath, finalGainDb);
+      double volumeScale = spatialSfxVolumeScale(distance, sourceWorldX, sourceWorldY, playerWorldX, playerWorldY);
+      if (volumeScale > 0.0)
+      {
+        this.audio.playOnceUntilFinished(resourcePath, gainDb, volumeScale);
+      }
     } catch (Exception ex) {
       this.unavailableSfxPaths.add(resourcePath);
     }
