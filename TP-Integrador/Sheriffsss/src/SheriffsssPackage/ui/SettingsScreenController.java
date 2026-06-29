@@ -276,7 +276,7 @@ public class SettingsScreenController
   public int settingsSliderInteractionX()
   {
     if (this.state == State.MENU_SETTINGS) {
-      return GameConfig.BASE_SCREEN_WIDTH / 2 - 90;
+      return this.menuRenderer.getMenuOffsetX() + GameConfig.BASE_SCREEN_WIDTH / 2 - 90;
     }
     return GameConfig.SETTINGS_SLIDER_X;
   }
@@ -284,7 +284,7 @@ public class SettingsScreenController
   public int settingsSliderInteractionY(int baseY)
   {
     if (this.state == State.MENU_SETTINGS) {
-      return baseY;
+      return this.menuRenderer.getMenuOffsetY() + baseY;
     }
     return settingsOverlayY(baseY);
   }

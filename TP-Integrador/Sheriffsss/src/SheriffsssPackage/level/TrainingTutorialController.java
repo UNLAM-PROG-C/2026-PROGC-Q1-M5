@@ -65,7 +65,6 @@ public class TrainingTutorialController
   public void startTargetLifetime()
   {
     this.targetBlinkTicks = 0;
-    this.phase = TutorialPhase.TARGETS;
   }
 
   public void resetTargetAnimationTicks()
