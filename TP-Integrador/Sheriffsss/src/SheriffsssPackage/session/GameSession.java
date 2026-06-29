@@ -20,23 +20,28 @@ public final class GameSession {
     return this.map;
   }
 
-  public void setMap(GameMap map) {
+  public void setMap(GameMap map)
+  {
     this.map = map;
   }
 
-  public Player player() {
+  public Player player()
+  {
     return this.player;
   }
 
-  public void setPlayer(Player player) {
+  public void setPlayer(Player player)
+  {
     this.player = player;
   }
 
-  public PlayerRuntimeState playerRuntime() {
+  public PlayerRuntimeState playerRuntime()
+  {
     return this.playerRuntime;
   }
 
-  public void resetPlayerRuntime() {
+  public void resetPlayerRuntime()
+  {
     this.playerRuntime = new PlayerRuntimeState();
   }
 
@@ -44,15 +49,18 @@ public final class GameSession {
     return this.trainingMode;
   }
 
-  public void setTrainingMode(TrainingMode trainingMode) {
+  public void setTrainingMode(TrainingMode trainingMode)
+  {
     this.trainingMode = trainingMode;
   }
 
-  public GameLevel activeLevel() {
+  public GameLevel activeLevel()
+  {
     return this.activeLevel;
   }
 
-  public void setActiveLevel(GameLevel activeLevel) {
+  public void setActiveLevel(GameLevel activeLevel)
+  {
     this.activeLevel = activeLevel == null ? new NoLevel() : activeLevel;
   }
 
@@ -60,7 +68,8 @@ public final class GameSession {
     return this.cameraZoom;
   }
 
-  public void setCameraZoom(double cameraZoom) {
+  public void setCameraZoom(double cameraZoom)
+  {
     this.cameraZoom = cameraZoom;
   }
 }

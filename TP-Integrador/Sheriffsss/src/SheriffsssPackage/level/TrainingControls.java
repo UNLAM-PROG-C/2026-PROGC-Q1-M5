@@ -10,39 +10,47 @@ import SheriffsssPackage.context.GameConfig;
 public final class TrainingControls {
   private int enemyCount;
 
-  public TrainingControls() {
+  public TrainingControls()
+  {
     this(GameConfig.TRAINING_DEFAULT_ENEMIES);
   }
 
-  public TrainingControls(int enemyCount) {
+  public TrainingControls(int enemyCount)
+  {
     this.enemyCount = clampCount(enemyCount);
   }
 
-  public int getEnemyCount() {
+  public int getEnemyCount()
+  {
     return this.enemyCount;
   }
 
-  public void incCount() {
+  public void incCount()
+  {
     if (this.enemyCount < GameConfig.TRAINING_MAX_ENEMIES) {
       this.enemyCount++;
     }
   }
 
-  public void decCount() {
+  public void decCount()
+  {
     if (this.enemyCount > 0) {
       this.enemyCount--;
     }
   }
 
-  public void setEnemyCount(int count) {
+  public void setEnemyCount(int count)
+  {
     this.enemyCount = clampCount(count);
   }
 
-  public void reset() {
+  public void reset()
+  {
     this.enemyCount = GameConfig.TRAINING_DEFAULT_ENEMIES;
   }
 
-  private static int clampCount(int count) {
+  private static int clampCount(int count)
+  {
     if (count < 0) {
       return 0;
     }

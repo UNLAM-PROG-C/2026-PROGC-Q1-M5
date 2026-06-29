@@ -9,7 +9,8 @@ public class MapObject {
 	private final boolean abovePlayer;
 	private double durabilityDamage;
 
-	public MapObject(MapObjectType type, int rootTileX, int rootTileY, int drawIndex, boolean solid, boolean abovePlayer) {
+	public MapObject(MapObjectType type, int rootTileX, int rootTileY, int drawIndex, boolean solid, boolean abovePlayer)
+ {
 		this.type = type;
 		this.rootTileX = rootTileX;
 		this.rootTileY = rootTileY;
@@ -18,39 +19,48 @@ public class MapObject {
 		this.abovePlayer = abovePlayer;
 	}
 
-	public MapObjectType getType() {
+	public MapObjectType getType()
+ {
 		return this.type;
 	}
 
-	public int getRootTileX() {
+	public int getRootTileX()
+ {
 		return this.rootTileX;
 	}
 
-	public int getRootTileY() {
+	public int getRootTileY()
+ {
 		return this.rootTileY;
 	}
 
-	public int getDrawIndex() {
+	public int getDrawIndex()
+ {
 		return this.drawIndex;
 	}
 
-	public boolean isSolid() {
+	public boolean isSolid()
+ {
 		return this.solid;
 	}
 
-	public boolean isAbovePlayer() {
+	public boolean isAbovePlayer()
+ {
 		return this.abovePlayer;
 	}
 
-	public double getDurabilityDamage() {
+	public double getDurabilityDamage()
+ {
 		return this.durabilityDamage;
 	}
 
-	public void resetDurabilityDamage() {
+	public void resetDurabilityDamage()
+ {
 		this.durabilityDamage = 0.0;
 	}
 
-	public boolean isRootCell(int tileX, int tileY) {
+	public boolean isRootCell(int tileX, int tileY)
+ {
 		return this.rootTileX == tileX && this.rootTileY == tileY;
 	}
 }

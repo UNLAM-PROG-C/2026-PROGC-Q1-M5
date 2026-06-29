@@ -12,26 +12,31 @@ public final class DisplaySettingsChange {
       boolean fullscreenChanged,
       boolean resolutionChanged,
       boolean targetFullscreen,
-      Dimension windowedSize) {
+      Dimension windowedSize)
+  {
     this.fullscreenChanged = fullscreenChanged;
     this.resolutionChanged = resolutionChanged;
     this.targetFullscreen = targetFullscreen;
     this.windowedSize = windowedSize;
   }
 
-  public boolean fullscreenChanged() {
+  public boolean fullscreenChanged()
+  {
     return this.fullscreenChanged;
   }
 
-  public boolean resolutionChanged() {
+  public boolean resolutionChanged()
+  {
     return this.resolutionChanged;
   }
 
-  public boolean targetFullscreen() {
+  public boolean targetFullscreen()
+  {
     return this.targetFullscreen;
   }
 
-  public Dimension windowedSize() {
+  public Dimension windowedSize()
+  {
     return this.windowedSize;
   }
 }

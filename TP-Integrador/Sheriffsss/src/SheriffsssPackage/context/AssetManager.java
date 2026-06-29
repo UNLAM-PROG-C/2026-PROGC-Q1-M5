@@ -23,13 +23,16 @@ public class AssetManager {
 	private final Map<String, BufferedImage> imageCache = new HashMap<String, BufferedImage>();
 	private final EnumMap<CursorType, Cursor> cursorCache = new EnumMap<CursorType, Cursor>(CursorType.class);
 
-	public AssetManager() {
+	public AssetManager()
+ {
 		preload();
 	}
 
-	public BufferedImage getImage(String path) {
+	public BufferedImage getImage(String path)
+  {
 		BufferedImage image = this.imageCache.get(path);
-		if (image != null) {
+		if (image != null)
+  {
 			return image;
 		}
 		BufferedImage loadedImage = loadImage(path);
@@ -37,9 +40,11 @@ public class AssetManager {
 		return loadedImage;
 	}
 
-	public Cursor getCursor(CursorType cursorType) {
+	public Cursor getCursor(CursorType cursorType)
+  {
 		Cursor cursor = this.cursorCache.get(cursorType);
-		if (cursor != null) {
+		if (cursor != null)
+  {
 			return cursor;
 		}
 		BufferedImage cursorImage = getImage(cursorType.getSpritePath());
@@ -50,23 +55,28 @@ public class AssetManager {
 		return createdCursor;
 	}
 
-	private void preload() {
+	private void preload()
+  {
 		for (TileType tileType : TileType.values()) {
 			for (String spritePath : tileType.getSpritePaths()) {
 				getImage(spritePath);
 			}
 		}
 		getImage("sprites/sheriffsss_icono.png");
-		for (MapObjectType objectType : MapObjectType.values()) {
+		for (MapObjectType objectType : MapObjectType.values())
+    {
 			getImage(objectType.getSpritePath());
 		}
-		for (ItemDefinition itemDefinition : ItemDefinition.values()) {
+		for (ItemDefinition itemDefinition : ItemDefinition.values())
+   {
 			getImage(itemDefinition.getSpritePath());
 		}
-		for (EnemyType enemyType : EnemyType.values()) {
+		for (EnemyType enemyType : EnemyType.values())
+   {
 			getImage(enemyType.getSpritePath());
 		}
-		for (CursorType cursorType : CursorType.values()) {
+		for (CursorType cursorType : CursorType.values())
+   {
 			getImage(cursorType.getSpritePath());
 		}
 		getImage("sprites/sheriffsss-player-sprites/1/sheriff-south.png");
@@ -79,9 +89,11 @@ public class AssetManager {
 		getImage("sprites/sheriffsss-player-sprites/1/sheriff-south-east.png");
 	}
 
-	private BufferedImage loadImage(String path) {
+	private BufferedImage loadImage(String path)
+   {
 		URL resource = getClass().getClassLoader().getResource(path);
-		if (resource == null) {
+		if (resource == null)
+  {
 			throw new IllegalStateException("Missing image resource: " + path);
 		}
 		try {

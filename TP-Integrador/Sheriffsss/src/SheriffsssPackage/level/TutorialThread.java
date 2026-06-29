@@ -25,14 +25,16 @@ public final class TutorialThread extends Thread {
   private final AtomicBoolean skipRequested = new AtomicBoolean(false);
   private final AtomicBoolean finished = new AtomicBoolean(false);
 
-  public TutorialThread(List<TutorialStep> steps) {
+  public TutorialThread(List<TutorialStep> steps)
+  {
     super(THREAD_NAME);
     setDaemon(true);
     this.steps = steps;
   }
 
   @Override
-  public void run() {
+  public void run()
+  {
     try {
       runAllSteps();
     } catch (InterruptedException ignored) {
@@ -42,7 +44,8 @@ public final class TutorialThread extends Thread {
     }
   }
 
-  private void runAllSteps() throws InterruptedException {
+  private void runAllSteps() throws InterruptedException
+  {
     int total = this.steps.size();
     for (int i = 0; i < total; i++) {
       if (this.skipRequested.get()) {
@@ -52,7 +55,8 @@ public final class TutorialThread extends Thread {
     }
   }
 
-  private void runStep(TutorialStep step, int stepNumber, int totalSteps) throws InterruptedException {
+  private void runStep(TutorialStep step, int stepNumber, int totalSteps) throws InterruptedException
+  {
     if (step.getMinDurationMs() > 0) {
       Thread.sleep(step.getMinDurationMs());
     }
@@ -66,14 +70,16 @@ public final class TutorialThread extends Thread {
     Thread.sleep(remainingWaitMs(step));
   }
 
-  private static long remainingWaitMs(TutorialStep step) {
+  private static long remainingWaitMs(TutorialStep step)
+  {
     return Math.max(MIN_WAIT_AFTER_MIN_DURATION_MS, step.getMaxWaitMs() - step.getMinDurationMs());
   }
 
   /**
    * Called from the game loop or during shutdown. Idempotent.
    */
-  public void skip() {
+  public void skip()
+  {
     if (this.skipRequested.compareAndSet(false, true)) {
       interrupt();
     }

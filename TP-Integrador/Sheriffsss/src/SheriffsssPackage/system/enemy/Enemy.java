@@ -35,7 +35,8 @@ public class Enemy {
 	private Player lastDamageSourcePlayer;
 	private EnemyBehavior behaviorOverride;
 
-	public Enemy(EnemyType type, int worldX, int worldY, int dayCount) {
+	public Enemy(EnemyType type, int worldX, int worldY, int dayCount)
+ {
 		this(type, worldX, worldY, dayCount, type.getScaledMaxHP(dayCount));
 	}
 
@@ -55,24 +56,29 @@ public class Enemy {
 		resetDebuffDamageMultipliers();
 	}
 
-	public void restoreTransientState(int animationTicks, Facing facing) {
+	public void restoreTransientState(int animationTicks, Facing facing)
+  {
 		this.animationTicks = Math.max(0, animationTicks);
-		if (facing != null) {
+		if (facing != null)
+  {
 			this.facing = facing;
 		}
 	}
 
-	public void update(GameMap map, Player player) {
+	public void update(GameMap map, Player player)
+ {
 		this.animationTicks++;
 		updateDebuffs();
-		if (this.attackCooldownTicks > 0) {
+		if (this.attackCooldownTicks > 0)
+  {
 			this.attackCooldownTicks--;
 		}
 		double deltaX = player.getX() - this.x;
 		double deltaY = player.getFeetWorldY() - this.y;
 		updateFacing(deltaX, deltaY);
 		EnemyBehavior behavior = effectiveBehavior();
-		if (behavior == EnemyBehavior.STATIC) {
+		if (behavior == EnemyBehavior.STATIC)
+  {
 			// STATIC: no se mueve, pero sigue dañable y puede atacar si el jugador entra al rango.
 		} else if (behavior == EnemyBehavior.JUMPING) {
 			updateJumpingMovement(map, deltaX, deltaY);
@@ -83,20 +89,25 @@ public class Enemy {
 		attackPlayerIfInRange(player);
 	}
 
-	public void setBehaviorOverride(EnemyBehavior behavior) {
+	public void setBehaviorOverride(EnemyBehavior behavior)
+   {
 		this.behaviorOverride = behavior;
 	}
 
-	public EnemyBehavior effectiveBehavior() {
+	public EnemyBehavior effectiveBehavior()
+ {
 		return this.behaviorOverride != null ? this.behaviorOverride : this.type.getBehavior();
 	}
 
-	public void update(GameMap map, java.util.List<Player> players) {
+	public void update(GameMap map, java.util.List<Player> players)
+  {
 		Player target = nearestLivingPlayer(players);
-		if (target == null) {
+		if (target == null)
+  {
 			this.animationTicks++;
 			updateDebuffs();
-			if (this.attackCooldownTicks > 0) {
+			if (this.attackCooldownTicks > 0)
+   {
 				this.attackCooldownTicks--;
 			}
 			applyKnockback(map);
@@ -105,18 +116,21 @@ public class Enemy {
 		update(map, target);
 	}
 
-	private Player nearestLivingPlayer(java.util.List<Player> players) {
+	private Player nearestLivingPlayer(java.util.List<Player> players)
+   {
 		Player nearest = null;
 		double nearestDistanceSquared = Double.MAX_VALUE;
 		for (int i = 0; i < players.size(); i++) {
 			Player player = players.get(i);
-			if (player == null || player.getCurrentHP() <= 0.0) {
+			if (player == null || player.getCurrentHP() <= 0.0)
+   {
 				continue;
 			}
 			double deltaX = player.getX() - this.x;
 			double deltaY = player.getFeetWorldY() - this.y;
 			double distanceSquared = deltaX * deltaX + deltaY * deltaY;
-			if (distanceSquared < nearestDistanceSquared) {
+			if (distanceSquared < nearestDistanceSquared)
+   {
 				nearest = player;
 				nearestDistanceSquared = distanceSquared;
 			}
@@ -124,37 +138,43 @@ public class Enemy {
 		return nearest;
 	}
 
-	private void updateDebuffs() {
+	private void updateDebuffs()
+ {
 		for (int i = 0; i < DEBUFFS.length; i++) {
 			if (this.debuffTicks[i] <= 0) {
 				continue;
 			}
 			DEBUFFS[i].update(this);
 			this.debuffTicks[i]--;
-			if (this.debuffTicks[i] <= 0) {
+			if (this.debuffTicks[i] <= 0)
+   {
 				this.debuffDamageMultipliers[i] = 1.0;
 			}
 		}
 	}
 
-	private void resetDebuffDamageMultipliers() {
+	private void resetDebuffDamageMultipliers()
+ {
 		for (int i = 0; i < this.debuffDamageMultipliers.length; i++) {
 			this.debuffDamageMultipliers[i] = 1.0;
 		}
 	}
 
-	private void updateJumpingMovement(GameMap map, double deltaX, double deltaY) {
+	private void updateJumpingMovement(GameMap map, double deltaX, double deltaY)
+ {
 		if (this.jumpTicks > 0) {
 			moveWithCollision(map, this.jumpVelocityX, this.jumpVelocityY);
 			this.jumpTicks--;
 			return;
 		}
-		if (this.jumpRestTicks > 0) {
+		if (this.jumpRestTicks > 0)
+   {
 			this.jumpRestTicks--;
 			return;
 		}
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001) {
+		if (length <= 0.001)
+  {
 			this.jumpVelocityX = 0.0;
 			this.jumpVelocityY = 0.0;
 		} else {
@@ -166,15 +186,18 @@ public class Enemy {
 		this.jumpRestTicks = JUMP_REST_TICKS;
 	}
 
-	private void moveToward(GameMap map, double deltaX, double deltaY, double movementSpeed) {
+	private void moveToward(GameMap map, double deltaX, double deltaY, double movementSpeed)
+ {
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001) {
+		if (length <= 0.001)
+  {
 			return;
 		}
 		moveWithCollision(map, deltaX / length * movementSpeed, deltaY / length * movementSpeed);
 	}
 
-	private void applyKnockback(GameMap map) {
+	private void applyKnockback(GameMap map)
+  {
 		if (Math.abs(this.knockbackX) < MIN_KNOCKBACK_SPEED && Math.abs(this.knockbackY) < MIN_KNOCKBACK_SPEED) {
 			this.knockbackX = 0.0;
 			this.knockbackY = 0.0;
@@ -185,7 +208,8 @@ public class Enemy {
 		this.knockbackY *= KNOCKBACK_FRICTION;
 	}
 
-	private void moveWithCollision(GameMap map, double deltaX, double deltaY) {
+	private void moveWithCollision(GameMap map, double deltaX, double deltaY)
+  {
 		double nextX = this.x + deltaX;
 		if (canStandAt(map, nextX, this.y)) {
 			this.x = nextX;
@@ -200,7 +224,8 @@ public class Enemy {
 		}
 	}
 
-	private boolean canStandAt(GameMap map, double worldX, double worldY) {
+	private boolean canStandAt(GameMap map, double worldX, double worldY)
+ {
 		int checkX = (int) Math.round(worldX);
 		int checkY = (int) Math.round(worldY);
 		return map.isWalkableAtWorld(checkX, checkY)
@@ -208,18 +233,21 @@ public class Enemy {
 			&& map.isWalkableAtWorld(checkX + this.type.getCollisionRadius(), checkY);
 	}
 
-	void pushBy(GameMap map, double deltaX, double deltaY) {
+	void pushBy(GameMap map, double deltaX, double deltaY)
+  {
 		moveWithCollision(map, deltaX, deltaY);
 	}
 
-	private void attackPlayerIfInRange(Player player) {
+	private void attackPlayerIfInRange(Player player)
+  {
 		if (this.damage <= 0.0) {
 			return;
 		}
 		double deltaX = player.getX() - this.x;
 		double deltaY = player.getFeetWorldY() - this.y;
 		int range = this.type.getAttackRangePixels();
-		if (deltaX * deltaX + deltaY * deltaY > range * range || this.attackCooldownTicks > 0) {
+		if (deltaX * deltaX + deltaY * deltaY > range * range || this.attackCooldownTicks > 0)
+  {
 			return;
 		}
 		player.damageEnemyAttack(this.damage);
@@ -228,7 +256,8 @@ public class Enemy {
 		this.attackCooldownTicks = this.type.getAttackCooldownTicks();
 	}
 
-	private void updateFacing(double deltaX, double deltaY) {
+	private void updateFacing(double deltaX, double deltaY)
+  {
 		if (Math.abs(deltaX) > Math.abs(deltaY)) {
 			this.facing = deltaX < 0.0 ? Facing.LEFT : Facing.RIGHT;
 		} else if (deltaY < 0.0) {
@@ -238,11 +267,13 @@ public class Enemy {
 		}
 	}
 
-	public boolean containsWorldPoint(int worldX, int worldY) {
+	public boolean containsWorldPoint(int worldX, int worldY)
+ {
 		return containsWorldPoint(worldX, worldY, 0);
 	}
 
-	public boolean containsWorldPoint(int worldX, int worldY, int paddingPixels) {
+	public boolean containsWorldPoint(int worldX, int worldY, int paddingPixels)
+  {
 		int halfWidth = this.type.getDrawWidth() / 2;
 		int halfHeight = this.type.getDrawHeight() / 2;
 		int padding = Math.max(0, paddingPixels);
@@ -250,27 +281,32 @@ public class Enemy {
 			&& worldY >= getWorldY() - halfHeight - padding && worldY <= getWorldY() + halfHeight + padding;
 	}
 
-	public void damage(double amount) {
+	public void damage(double amount)
+  {
 		this.currentHP -= amount;
 	}
 
-	public void damage(double amount, Player sourcePlayer) {
+	public void damage(double amount, Player sourcePlayer)
+ {
 		if (sourcePlayer != null) {
 			this.lastDamageSourcePlayer = sourcePlayer;
 		}
 		damage(amount);
 	}
 
-	public void damageFromDebuff(Debuff debuff, double amount) {
+	public void damageFromDebuff(Debuff debuff, double amount)
+  {
 		Player sourcePlayer = debuff == null ? null : this.debuffSourcePlayers[debuff.ordinal()];
 		damage(amount, sourcePlayer);
 	}
 
-	public void applyDebuff(Debuff debuff) {
+	public void applyDebuff(Debuff debuff)
+  {
 		applyDebuff(debuff, null);
 	}
 
-	public void applyDebuff(Debuff debuff, Player sourcePlayer) {
+	public void applyDebuff(Debuff debuff, Player sourcePlayer)
+  {
 		if (debuff == null) {
 			return;
 		}
@@ -280,18 +316,21 @@ public class Enemy {
 		this.debuffSourcePlayers[index] = sourcePlayer;
 	}
 
-	public double resolveDebuffDamage(Debuff debuff, double baseDamage) {
+	public double resolveDebuffDamage(Debuff debuff, double baseDamage)
+  {
 		if (debuff == null) {
 			return baseDamage;
 		}
 		return baseDamage * this.debuffDamageMultipliers[debuff.ordinal()];
 	}
 
-	public void applyKnockbackFrom(int sourceX, int sourceY, double strength) {
+	public void applyKnockbackFrom(int sourceX, int sourceY, double strength)
+  {
 		double deltaX = this.x - sourceX;
 		double deltaY = this.y - sourceY;
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001) {
+		if (length <= 0.001)
+  {
 			this.knockbackX = 0.0;
 			this.knockbackY = strength;
 			return;
@@ -300,15 +339,18 @@ public class Enemy {
 		this.knockbackY = deltaY / length * strength;
 	}
 
-	public boolean isDead() {
+	public boolean isDead()
+ {
 		return this.currentHP <= 0.0;
 	}
 
-	public EnemyType getType() {
+	public EnemyType getType()
+ {
 		return this.type;
 	}
 
-	public int getWorldX() {
+	public int getWorldX()
+ {
 		return (int) Math.round(this.x);
 	}
 
@@ -320,31 +362,38 @@ public class Enemy {
 		return this.x;
 	}
 
-	double getCollisionY() {
+	double getCollisionY()
+ {
 		return this.y;
 	}
 
-	public double getCurrentHP() {
+	public double getCurrentHP()
+ {
 		return this.currentHP;
 	}
 
-	public double getMaxHP() {
+	public double getMaxHP()
+ {
 		return this.maxHP;
 	}
 
-	public Player getLastDamageSourcePlayer() {
+	public Player getLastDamageSourcePlayer()
+ {
 		return this.lastDamageSourcePlayer;
 	}
 
-	public int getAnimationTicks() {
+	public int getAnimationTicks()
+ {
 		return this.animationTicks;
 	}
 
-	public boolean hasDebuff(Debuff debuff) {
+	public boolean hasDebuff(Debuff debuff)
+ {
 		return debuff != null && this.debuffTicks[debuff.ordinal()] > 0;
 	}
 
-	public boolean hasLightEmittingDebuff() {
+	public boolean hasLightEmittingDebuff()
+  {
 		for (int i = 0; i < DEBUFFS.length; i++) {
 			Debuff debuff = DEBUFFS[i];
 			if (this.debuffTicks[i] > 0 && debuff.getLightRadiusTiles() > 0 && debuff.getLightIntensity() > 0.0) {
@@ -354,7 +403,8 @@ public class Enemy {
 		return false;
 	}
 
-	public Facing getFacing() {
+	public Facing getFacing()
+ {
 		return this.facing;
 	}
 }

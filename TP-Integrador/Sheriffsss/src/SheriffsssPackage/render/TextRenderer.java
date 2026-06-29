@@ -13,7 +13,8 @@ public final class TextRenderer {
 
 		private final int shadowOffset;
 
-		Style(int shadowOffset) {
+		Style(int shadowOffset)
+  {
 			this.shadowOffset = shadowOffset;
 		}
 	}
@@ -26,31 +27,38 @@ public final class TextRenderer {
 	private TextRenderer() {
 	}
 
-	public static void draw(Graphics2D g2, Font font, String text, Color color, int x, int y, boolean shadow) {
+	public static void draw(Graphics2D g2, Font font, String text, Color color, int x, int y, boolean shadow)
+ {
 		draw(g2, font, text, color, x, y, shadow ? Style.OUTLINED : Style.PLAIN);
 	}
 
-	public static void draw(Graphics2D g2, Font font, String text, Color color, int x, int y, Style style) {
+	public static void draw(Graphics2D g2, Font font, String text, Color color, int x, int y, Style style)
+  {
 		g2.setFont(font);
-		if (style == Style.OUTLINED) {
+		if (style == Style.OUTLINED)
+  {
 			drawOutline(g2, text, x, y);
-		} else if (style != Style.PLAIN) {
+		} else if (style != Style.PLAIN)
+   {
 			drawSoftShadow(g2, text, x, y, style.shadowOffset);
 		}
 		g2.setColor(color);
 		g2.drawString(text, x, y);
 	}
 
-	public static void drawCentered(Graphics2D g2, Font font, String text, Color color, int centerX, int baselineY, Style style) {
+	public static void drawCentered(Graphics2D g2, Font font, String text, Color color, int centerX, int baselineY, Style style)
+   {
 		draw(g2, font, text, color, centeredX(g2, font, text, centerX), baselineY, style);
 	}
 
-	public static int centeredX(Graphics2D g2, Font font, String text, int centerX) {
+	public static int centeredX(Graphics2D g2, Font font, String text, int centerX)
+  {
 		g2.setFont(font);
 		return centerX - g2.getFontMetrics().stringWidth(text) / 2;
 	}
 
-	private static void drawSoftShadow(Graphics2D g2, String text, int x, int y, int offset) {
+	private static void drawSoftShadow(Graphics2D g2, String text, int x, int y, int offset)
+  {
 		int shadowX = x + offset;
 		int shadowY = y + offset;
 		g2.setColor(SHADOW_SOFT);
@@ -67,7 +75,8 @@ public final class TextRenderer {
 		g2.drawString(text, shadowX, shadowY);
 	}
 
-	private static void drawOutline(Graphics2D g2, String text, int x, int y) {
+	private static void drawOutline(Graphics2D g2, String text, int x, int y)
+  {
 		g2.setColor(OUTLINE_COLOR);
 		g2.drawString(text, x - 1, y);
 		g2.drawString(text, x + 1, y);

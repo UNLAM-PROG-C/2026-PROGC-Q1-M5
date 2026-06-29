@@ -17,23 +17,28 @@ final class ProjectileStatModifiers {
 		this.lifeTicks = lifeTicks;
 	}
 
-	double getDamage() {
+	double getDamage()
+ {
 		return this.damage;
 	}
 
-	double getSpeedPixels() {
+	double getSpeedPixels()
+ {
 		return this.speedPixels;
 	}
 
-	double getKnockbackStrengthPixels() {
+	double getKnockbackStrengthPixels()
+ {
 		return this.knockbackStrengthPixels;
 	}
 
-	int getCooldownTicks() {
+	int getCooldownTicks()
+ {
 		return this.cooldownTicks;
 	}
 
-	int getLifeTicks() {
+	int getLifeTicks()
+ {
 		return this.lifeTicks;
 	}
 }

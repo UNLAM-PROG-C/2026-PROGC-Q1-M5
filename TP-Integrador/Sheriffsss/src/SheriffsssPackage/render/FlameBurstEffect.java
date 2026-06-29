@@ -9,7 +9,8 @@ public final class FlameBurstEffect {
   private final int radiusPixels;
   private int ageTicks;
 
-  public FlameBurstEffect(int originWorldX, int originWorldY, int radiusPixels) {
+  public FlameBurstEffect(int originWorldX, int originWorldY, int radiusPixels)
+  {
     this(originWorldX, originWorldY, radiusPixels, 0);
   }
 
@@ -20,43 +21,53 @@ public final class FlameBurstEffect {
     this.ageTicks = Math.max(0, Math.min(ageTicks, DEFAULT_LIFE_TICKS));
   }
 
-  public void update() {
+  public void update()
+    {
     this.ageTicks++;
   }
 
-  public boolean isExpired() {
+  public boolean isExpired()
+  {
     return this.ageTicks >= DEFAULT_LIFE_TICKS;
   }
 
-  public int getOriginWorldX() {
+  public int getOriginWorldX()
+  {
     return this.originWorldX;
   }
 
-  public int getOriginWorldY() {
+  public int getOriginWorldY()
+  {
     return this.originWorldY;
   }
 
-  public int getRadiusPixels() {
+  public int getRadiusPixels()
+  {
     return this.radiusPixels;
   }
 
-  public int getAgeTicks() {
+  public int getAgeTicks()
+  {
     return this.ageTicks;
   }
 
-  public int getLifeTicks() {
+  public int getLifeTicks()
+  {
     return DEFAULT_LIFE_TICKS;
   }
 
-  public int getParticleCount() {
+  public int getParticleCount()
+  {
     return PARTICLE_COUNT;
   }
 
-  public double getParticleAngleRadians(int index) {
+  public double getParticleAngleRadians(int index)
+  {
     return index * (Math.PI * 2.0 / PARTICLE_COUNT) + (index % 5) * 0.17;
   }
 
-  public double getParticleDistanceScale(int index) {
+  public double getParticleDistanceScale(int index)
+  {
     return 0.68 + (index % 7) * 0.055;
   }
 }

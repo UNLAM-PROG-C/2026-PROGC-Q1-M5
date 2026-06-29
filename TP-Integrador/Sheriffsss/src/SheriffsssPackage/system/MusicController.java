@@ -13,16 +13,19 @@ public final class MusicController {
 
   private String activeMusicPath;
 
-  public void update(AudioManager audio, State state, Player player) {
+  public void update(AudioManager audio, State state, Player player)
+  {
     String desiredMusicPath = desiredMusicPath(state, player);
-    if (desiredMusicPath == null) {
+    if (desiredMusicPath == null)
+    {
       stop(audio);
       return;
     }
     playIfChanged(audio, desiredMusicPath);
   }
 
-  public void stop(AudioManager audio) {
+  public void stop(AudioManager audio)
+      {
     if (this.activeMusicPath == null) {
       return;
     }
@@ -30,11 +33,13 @@ public final class MusicController {
     this.activeMusicPath = null;
   }
 
-  public void clear() {
+  public void clear()
+    {
     this.activeMusicPath = null;
   }
 
-  private void playIfChanged(AudioManager audio, String desiredMusicPath) {
+  private void playIfChanged(AudioManager audio, String desiredMusicPath)
+  {
     if (desiredMusicPath.equals(this.activeMusicPath)) {
       return;
     }
@@ -42,7 +47,8 @@ public final class MusicController {
     this.activeMusicPath = desiredMusicPath;
   }
 
-  private String desiredMusicPath(State state, Player player) {
+  private String desiredMusicPath(State state, Player player)
+    {
     if (state == State.MENU || state == State.MENU_SETTINGS) {
       return MENU_MUSIC;
     }

@@ -42,11 +42,13 @@ public class DebugOptions {
 	private int bulletTrajectoryLimit = 5;
 	private final ArrayList<DebugBulletTrajectory> bulletTrajectories = new ArrayList<DebugBulletTrajectory>(MAX_BULLET_TRAJECTORIES);
 
-	public void toggleMenu() {
+	public void toggleMenu()
+ {
 		this.menuOpen = !this.menuOpen;
 	}
 
-	public boolean handleClick(int mouseX, int mouseY) {
+	public boolean handleClick(int mouseX, int mouseY)
+ {
 		if (!this.menuOpen || mouseX < PANEL_X || mouseX > PANEL_X + PANEL_WIDTH
 			|| mouseY < PANEL_Y || mouseY > PANEL_Y + PANEL_HEIGHT) {
 			return false;
@@ -56,7 +58,8 @@ public class DebugOptions {
 			return true;
 		}
 		int row = (mouseY - FIRST_ROW_Y) / ROW_HEIGHT;
-		if (row < 0 || row > SHOW_TARGET_HEALTH_BARS_ROW) {
+		if (row < 0 || row > SHOW_TARGET_HEALTH_BARS_ROW)
+   {
 			return true;
 		}
 		int rowTop = FIRST_ROW_Y + row * ROW_HEIGHT;
@@ -72,7 +75,8 @@ public class DebugOptions {
 		return true;
 	}
 
-	public void resetAll() {
+	public void resetAll()
+   {
 		this.menuOpen = false;
 		this.drawHitboxes = false;
 		this.drawSpritePerimeters = false;
@@ -93,7 +97,8 @@ public class DebugOptions {
 		this.bulletTrajectories.clear();
 	}
 
-	private void toggleRow(int row) {
+	private void toggleRow(int row)
+  {
 		if (row == 0) {
 			this.drawHitboxes = !this.drawHitboxes;
 		} else if (row == 1) {
@@ -123,7 +128,8 @@ public class DebugOptions {
 		}
 	}
 
-	public boolean isTrajectorySliderHovered(int mouseX, int mouseY) {
+	public boolean isTrajectorySliderHovered(int mouseX, int mouseY)
+ {
 		return this.menuOpen
 			&& mouseX >= TRAJECTORY_SLIDER_X
 			&& mouseX <= TRAJECTORY_SLIDER_X + TRAJECTORY_SLIDER_WIDTH
@@ -131,17 +137,20 @@ public class DebugOptions {
 			&& mouseY <= TRAJECTORY_SLIDER_Y + 40;
 	}
 
-	public void setBulletTrajectoryLimitFromMouse(int mouseX) {
+	public void setBulletTrajectoryLimitFromMouse(int mouseX)
+ {
 		double value = (mouseX - TRAJECTORY_SLIDER_X) / (double) TRAJECTORY_SLIDER_WIDTH;
 		setBulletTrajectoryLimit((int) Math.round(Math.max(0.0, Math.min(1.0, value)) * MAX_BULLET_TRAJECTORIES));
 	}
 
-	public void setBulletTrajectoryLimit(int limit) {
+	public void setBulletTrajectoryLimit(int limit)
+  {
 		this.bulletTrajectoryLimit = Math.max(0, Math.min(MAX_BULLET_TRAJECTORIES, limit));
 		trimBulletTrajectories();
 	}
 
-	public void recordBulletTrajectory(int startWorldX, int startWorldY, int endWorldX, int endWorldY) {
+	public void recordBulletTrajectory(int startWorldX, int startWorldY, int endWorldX, int endWorldY)
+  {
 		if (this.bulletTrajectoryLimit <= 0) {
 			this.bulletTrajectories.clear();
 			return;
@@ -150,77 +159,95 @@ public class DebugOptions {
 		trimBulletTrajectories();
 	}
 
-	private void trimBulletTrajectories() {
+	private void trimBulletTrajectories()
+   {
 		while (this.bulletTrajectories.size() > this.bulletTrajectoryLimit) {
 			this.bulletTrajectories.remove(0);
 		}
 	}
 
-	public boolean isMenuOpen() {
+	public boolean isMenuOpen()
+   {
 		return this.menuOpen;
 	}
 
-	public void setMenuOpen(boolean menuOpen) {
+	public void setMenuOpen(boolean menuOpen)
+ {
 		this.menuOpen = menuOpen;
 	}
 
-	public boolean shouldDrawHitboxes() {
+	public boolean shouldDrawHitboxes()
+ {
 		return this.drawHitboxes;
 	}
 
-	public boolean shouldDrawSpritePerimeters() {
+	public boolean shouldDrawSpritePerimeters()
+ {
 		return this.drawSpritePerimeters;
 	}
 
-	public boolean shouldDrawPlayerMouseLine() {
+	public boolean shouldDrawPlayerMouseLine()
+ {
 		return this.drawPlayerMouseLine;
 	}
 
-	public boolean shouldDrawPlayerOrigin() {
+	public boolean shouldDrawPlayerOrigin()
+ {
 		return this.drawPlayerOrigin;
 	}
 
-	public boolean shouldDrawWeaponOrigin() {
+	public boolean shouldDrawWeaponOrigin()
+ {
 		return this.drawWeaponOrigin;
 	}
 
-	public boolean shouldDrawWeaponGripAnchor() {
+	public boolean shouldDrawWeaponGripAnchor()
+ {
 		return this.drawWeaponGripAnchor;
 	}
 
-	public boolean shouldDrawWeaponBarrelAnchor() {
+	public boolean shouldDrawWeaponBarrelAnchor()
+ {
 		return this.drawWeaponBarrelAnchor;
 	}
 
-	public boolean shouldDrawFullAccuracyCone() {
+	public boolean shouldDrawFullAccuracyCone()
+ {
 		return this.drawFullAccuracyCone;
 	}
 
-	public boolean shouldDrawWeaponAccuracyCone() {
+	public boolean shouldDrawWeaponAccuracyCone()
+ {
 		return this.drawWeaponAccuracyCone;
 	}
 
-	public boolean shouldDrawBulletTrajectories() {
+	public boolean shouldDrawBulletTrajectories()
+ {
 		return this.drawBulletTrajectories;
 	}
 
-	public boolean shouldForceTrainingPerfectAccuracy() {
+	public boolean shouldForceTrainingPerfectAccuracy()
+ {
 		return this.forceTrainingPerfectAccuracy;
 	}
 
-	public boolean shouldDrawTrainingFailurePerimeter() {
+	public boolean shouldDrawTrainingFailurePerimeter()
+ {
 		return this.drawTrainingFailurePerimeter;
 	}
 
-	public boolean shouldShowTargetHealthBars() {
+	public boolean shouldShowTargetHealthBars()
+ {
 		return this.showTargetHealthBars;
 	}
 
-	public boolean shouldUnlockAllWeapons() {
+	public boolean shouldUnlockAllWeapons()
+ {
 		return this.allWeaponsUnlocked;
 	}
 
-	public boolean hasAnyModeEnabled() {
+	public boolean hasAnyModeEnabled()
+ {
 		return this.drawHitboxes
 			|| this.drawSpritePerimeters
 			|| this.drawPlayerMouseLine
@@ -237,25 +264,30 @@ public class DebugOptions {
 			|| this.allWeaponsUnlocked;
 	}
 
-	public int getBulletTrajectoryLimit() {
+	public int getBulletTrajectoryLimit()
+ {
 		return this.bulletTrajectoryLimit;
 	}
 
-	public double getBulletTrajectorySliderValue() {
+	public double getBulletTrajectorySliderValue()
+ {
 		return this.bulletTrajectoryLimit / (double) MAX_BULLET_TRAJECTORIES;
 	}
 
-	public List<DebugBulletTrajectory> getBulletTrajectories() {
+	public List<DebugBulletTrajectory> getBulletTrajectories()
+ {
 		return this.bulletTrajectories;
 	}
 
-	public boolean consumeUnlockAllWeaponsRequest() {
+	public boolean consumeUnlockAllWeaponsRequest()
+ {
 		boolean requested = this.unlockAllWeaponsRequested;
 		this.unlockAllWeaponsRequested = false;
 		return requested;
 	}
 
-	public boolean isRowEnabled(int row) {
+	public boolean isRowEnabled(int row)
+ {
 		if (row == 0) {
 			return this.drawHitboxes;
 		}

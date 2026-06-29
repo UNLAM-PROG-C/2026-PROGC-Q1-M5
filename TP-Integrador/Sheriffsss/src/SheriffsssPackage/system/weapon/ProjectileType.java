@@ -15,7 +15,8 @@ public enum ProjectileType {
 	private final double lightFalloffExponent;
 	private final double drawAngleOffsetRadians;
 
-	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash) {
+	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash)
+ {
 		this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, 0, 0.0);
 	}
 
@@ -42,39 +43,48 @@ public enum ProjectileType {
 		this.drawAngleOffsetRadians = drawAngleOffsetRadians;
 	}
 
-	public String getSpritePath() {
+	public String getSpritePath()
+  {
 		return this.spritePath;
 	}
 
-	public int getDrawWidth() {
+	public int getDrawWidth()
+ {
 		return this.drawWidth;
 	}
 
-	public int getDrawHeight() {
+	public int getDrawHeight()
+ {
 		return this.drawHeight;
 	}
 
-	public boolean piercesLowDensity() {
+	public boolean piercesLowDensity()
+ {
 		return this.piercesLowDensity;
 	}
 
-	public boolean triggersMuzzleFlash() {
+	public boolean triggersMuzzleFlash()
+ {
 		return this.triggersMuzzleFlash;
 	}
 
-	public int getLightRadiusTiles() {
+	public int getLightRadiusTiles()
+ {
 		return this.lightRadiusTiles;
 	}
 
-	public double getLightIntensity() {
+	public double getLightIntensity()
+ {
 		return this.lightIntensity;
 	}
 
-	public double getLightFalloffExponent() {
+	public double getLightFalloffExponent()
+ {
 		return this.lightFalloffExponent;
 	}
 
-	public double getDrawAngleOffsetRadians() {
+	public double getDrawAngleOffsetRadians()
+ {
 		return this.drawAngleOffsetRadians;
 	}
 }

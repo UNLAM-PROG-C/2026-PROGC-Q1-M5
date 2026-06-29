@@ -48,37 +48,58 @@ public class Player {
 		loadDirectionalSprite(assets, Facing.DOWN_RIGHT	, "sprites/sheriffsss-player-sprites/2/sheriff-south-east.png");
 	}
 
-	private void loadDirectionalSprite(AssetManager assets, Facing facing, String spritePath) {
+	private void loadDirectionalSprite(AssetManager assets, Facing facing, String spritePath)
+  {
 		this.sprites[facing.getSpriteIndex()] = assets.getImage(spritePath);
 	}
 
-	public int getX() { return this.x; }
-	public int getY() { return this.y; }
-	public double getLastLinearVelocityPixels() { return this.lastLinearVelocityPixels; }
-	public double getMaxHP() { return this.maxHP; }
-	public double getCurrentHP() { return this.currentHP; }
-	public int getFeetWorldY() { return this.y + PLAYER_HEIGHT / 2; }
-	public int getHitboxWidth() { return HITBOX_WIDTH; }
-	public int getHitboxHeight() { return HITBOX_HEIGHT; }
-	public int getHitboxLeftWorldX() { return this.x - HITBOX_WIDTH / 2; }
-	public int getHitboxTopWorldY() { return this.y - HITBOX_HEIGHT / 2; }
-	public int getHitboxRightWorldX() { return getHitboxLeftWorldX() + HITBOX_WIDTH - 1; }
-	public int getHitboxBottomWorldY() { return getHitboxTopWorldY() + HITBOX_HEIGHT - 1; }
-	public Equipment getEquipment() { return this.equipment; }
-	public Facing getFacing() { return this.facing; }
-	public BufferedImage getCurrentImage() { return this.sprites[this.facing.getSpriteIndex()]; }
-	public boolean getTakingDamage() { return this.takingDamage; }
-	public void setTakingDamage(boolean takingDamage) { this.takingDamage = takingDamage; }
+	public int getX()
+  { return this.x; }
+	public int getY()
+ { return this.y; }
+	public double getLastLinearVelocityPixels()
+ { return this.lastLinearVelocityPixels; }
+	public double getMaxHP()
+ { return this.maxHP; }
+	public double getCurrentHP()
+ { return this.currentHP; }
+	public int getFeetWorldY()
+ { return this.y + PLAYER_HEIGHT / 2; }
+	public int getHitboxWidth()
+ { return HITBOX_WIDTH; }
+	public int getHitboxHeight()
+ { return HITBOX_HEIGHT; }
+	public int getHitboxLeftWorldX()
+ { return this.x - HITBOX_WIDTH / 2; }
+	public int getHitboxTopWorldY()
+ { return this.y - HITBOX_HEIGHT / 2; }
+	public int getHitboxRightWorldX()
+ { return getHitboxLeftWorldX() + HITBOX_WIDTH - 1; }
+	public int getHitboxBottomWorldY()
+ { return getHitboxTopWorldY() + HITBOX_HEIGHT - 1; }
+	public Equipment getEquipment()
+ { return this.equipment; }
+	public Facing getFacing()
+ { return this.facing; }
+	public BufferedImage getCurrentImage()
+ { return this.sprites[this.facing.getSpriteIndex()]; }
+	public boolean getTakingDamage()
+ { return this.takingDamage; }
+	public void setTakingDamage(boolean takingDamage)
+ { this.takingDamage = takingDamage; }
 
-	public double getSpeedPixelsPerTick() {
+	public double getSpeedPixelsPerTick()
+ {
 		return Math.max(1.0, this.speed);
 	}
 
-	public int consumeMoveDeltaX(int direction) {
+	public int consumeMoveDeltaX(int direction)
+  {
 		return consumeMoveDeltaX(direction, 1.0);
 	}
 
-	public int consumeMoveDeltaX(int direction, double speedScale) {
+	public int consumeMoveDeltaX(int direction, double speedScale)
+  {
 		if (direction == 0) {
 			this.moveCarryX = 0.0;
 			return 0;
@@ -89,11 +110,13 @@ public class Player {
 		return delta;
 	}
 
-	public int consumeMoveDeltaY(int direction) {
+	public int consumeMoveDeltaY(int direction)
+  {
 		return consumeMoveDeltaY(direction, 1.0);
 	}
 
-	public int consumeMoveDeltaY(int direction, double speedScale) {
+	public int consumeMoveDeltaY(int direction, double speedScale)
+  {
 		if (direction == 0) {
 			this.moveCarryY = 0.0;
 			return 0;
@@ -104,16 +127,19 @@ public class Player {
 		return delta;
 	}
 
-	public int applyAttackSpeedToCooldown(int cooldownTicks) {
+	public int applyAttackSpeedToCooldown(int cooldownTicks)
+  {
 		return Math.max(1, cooldownTicks);
 	}
 
-	public void moveBy(int deltaX, int deltaY) {
+	public void moveBy(int deltaX, int deltaY)
+  {
 		this.x += deltaX;
 		this.y += deltaY;
 	}
 
-	public void updateKnockback(GameMap map) {
+	public void updateKnockback(GameMap map)
+ {
 		if (Math.abs(this.knockbackX) < MIN_KNOCKBACK_SPEED && Math.abs(this.knockbackY) < MIN_KNOCKBACK_SPEED) {
 			this.knockbackX = 0.0;
 			this.knockbackY = 0.0;
@@ -124,9 +150,11 @@ public class Player {
 		this.knockbackY *= KNOCKBACK_FRICTION;
 	}
 
-	private void moveWithCollision(GameMap map, double deltaX, double deltaY) {
+	private void moveWithCollision(GameMap map, double deltaX, double deltaY)
+  {
 		int stepX = (int) Math.round(deltaX);
-		if (stepX != 0) {
+		if (stepX != 0)
+  {
 			this.x += stepX;
 			if (isHitboxBlocked(map)) {
 				this.x -= stepX;
@@ -134,7 +162,8 @@ public class Player {
 			}
 		}
 		int stepY = (int) Math.round(deltaY);
-		if (stepY != 0) {
+		if (stepY != 0)
+  {
 			this.y += stepY;
 			if (isHitboxBlocked(map)) {
 				this.y -= stepY;
@@ -143,15 +172,18 @@ public class Player {
 		}
 	}
 
-	public boolean isHitboxBlocked(GameMap map) {
+	public boolean isHitboxBlocked(GameMap map)
+ {
 		return map.isAreaBlockedAtWorld(getHitboxLeftWorldX(), getHitboxTopWorldY(), getHitboxRightWorldX(), getHitboxBottomWorldY());
 	}
 
-	public void applyKnockbackFrom(int sourceX, int sourceY, double strength) {
+	public void applyKnockbackFrom(int sourceX, int sourceY, double strength)
+  {
 		double deltaX = this.x - sourceX;
 		double deltaY = getFeetWorldY() - sourceY;
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001) {
+		if (length <= 0.001)
+  {
 			this.knockbackX = 0.0;
 			this.knockbackY = strength;
 			return;
@@ -160,46 +192,54 @@ public class Player {
 		this.knockbackY = deltaY / length * strength;
 	}
 
-	public void updateLinearVelocityFromPosition(int previousX, int previousY) {
+	public void updateLinearVelocityFromPosition(int previousX, int previousY)
+ {
 		int deltaX = this.x - previousX;
 		int deltaY = this.y - previousY;
 		this.lastLinearVelocityPixels = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 	}
 
-	public void setFacing(Facing facing) {
+	public void setFacing(Facing facing)
+  {
 		if (facing != null) {
 			this.facing = facing;
 		}
 	}
 
-	public void damage(double amount) {
+	public void damage(double amount)
+ {
 		this.currentHP -= amount;
 		if (this.currentHP <= 0.0) {
 			die();
 		}
 	}
 
-	public void damageEnemyAttack(double amount) {
+	public void damageEnemyAttack(double amount)
+   {
 		if (amount > 0.0) {
 			damage(amount);
 		}
 	}
 
-	public void heal(double amount) {
+	public void heal(double amount)
+   {
 		this.currentHP = Math.min(this.maxHP, this.currentHP + amount);
 	}
 
-	public void die() {
+	public void die()
+  {
 		this.currentHP = 0.0;
 		this.dead = true;
 		this.takingDamage = false;
 	}
 
-	public boolean isDead() {
+	public boolean isDead()
+ {
 		return this.dead;
 	}
 
-	public void updateFacing(int moveX, int moveY) {
+	public void updateFacing(int moveX, int moveY)
+ {
 		if (moveX < 0 && moveY < 0) {
 			this.facing = Facing.UP_LEFT;
 		} else if (moveX > 0 && moveY < 0) {
@@ -219,7 +259,8 @@ public class Player {
 		}
 	}
 
-	public boolean shouldRenderHeldItem() {
+	public boolean shouldRenderHeldItem()
+ {
 		ItemDefinition equippedWeapon = this.equipment.getEquippedWeapon();
 		return equippedWeapon != null && equippedWeapon.isHandEquipable();
 	}

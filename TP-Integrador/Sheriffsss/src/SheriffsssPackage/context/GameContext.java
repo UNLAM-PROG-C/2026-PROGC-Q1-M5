@@ -17,7 +17,8 @@ public final class GameContext {
 
   public GameContext(AssetManager assets, AudioManager audio, GameInput input,
       DayNightCycle dayNightCycle, EnemySystem enemySystem,
-      ProjectileSystem projectileSystem, DebugOptions debugOptions) {
+      ProjectileSystem projectileSystem, DebugOptions debugOptions)
+  {
     this.assets = assets;
     this.audio = audio;
     this.input = input;
@@ -27,31 +28,38 @@ public final class GameContext {
     this.debugOptions = debugOptions;
   }
 
-  public AssetManager assets() {
+  public AssetManager assets()
+  {
     return this.assets;
   }
 
-  public AudioManager audio() {
+  public AudioManager audio()
+  {
     return this.audio;
   }
 
-  public GameInput input() {
+  public GameInput input()
+  {
     return this.input;
   }
 
-  public DayNightCycle dayNightCycle() {
+  public DayNightCycle dayNightCycle()
+  {
     return this.dayNightCycle;
   }
 
-  public EnemySystem enemySystem() {
+  public EnemySystem enemySystem()
+  {
     return this.enemySystem;
   }
 
-  public ProjectileSystem projectileSystem() {
+  public ProjectileSystem projectileSystem()
+  {
     return this.projectileSystem;
   }
 
-  public DebugOptions debugOptions() {
+  public DebugOptions debugOptions()
+  {
     return this.debugOptions;
   }
 }

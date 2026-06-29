@@ -130,7 +130,8 @@ public enum ItemDefinition {
 
 	ItemDefinition(int id, String displayName, String spritePath,
 		double accuracy, ProjectileWeaponStats projectileWeaponStats, ProjectileStatModifiers projectileStatModifiers, String attackSoundPath, WeaponType weaponType,
-		boolean handEquipable, ItemDefinitionDrawConfig drawConfig) {
+		boolean handEquipable, ItemDefinitionDrawConfig drawConfig)
+ {
 		this(id, displayName, spritePath, accuracy, projectileWeaponStats, projectileStatModifiers,
 			attackSoundPath, weaponType, handEquipable, 0.10, drawConfig);
 	}
@@ -149,34 +150,41 @@ public enum ItemDefinition {
 		this.handEquipable = handEquipable;
 		this.kickback = Math.max(0.0, kickback);
 		this.drawConfig = drawConfig == null ? new ItemDefinitionDrawConfig() : drawConfig;
-		if (this.handEquipable) {
+		if (this.handEquipable)
+  {
 			this.drawConfig.applyDefaultRecoilForAccuracy(this.accuracy);
 			this.drawConfig.withRecoilRotation(this.kickback);
 		}
 	}
 
-	private static ItemDefinition[] buildByIdIndex() {
+	private static ItemDefinition[] buildByIdIndex()
+   {
 		int maxId = 0;
 		ItemDefinition[] definitions = values();
-		for (int i = 0; i < definitions.length; i++) {
+		for (int i = 0; i < definitions.length; i++)
+  {
 			maxId = Math.max(maxId, definitions[i].id);
 		}
 		ItemDefinition[] byId = new ItemDefinition[maxId + 1];
-		for (int i = 0; i < definitions.length; i++) {
+		for (int i = 0; i < definitions.length; i++)
+   {
 			byId[definitions[i].id] = definitions[i];
 		}
 		return byId;
 	}
 
-	private static ItemDefinition[][] buildByWeaponTypeIndex() {
+	private static ItemDefinition[][] buildByWeaponTypeIndex()
+ {
 		WeaponType[] weaponTypes = WeaponType.values();
 		ItemDefinition[] definitions = values();
 		int[] counts = new int[weaponTypes.length];
-		for (int i = 0; i < definitions.length; i++) {
+		for (int i = 0; i < definitions.length; i++)
+  {
 			counts[definitions[i].weaponType.ordinal()]++;
 		}
 		ItemDefinition[][] byWeaponType = new ItemDefinition[weaponTypes.length][];
-		for (int i = 0; i < weaponTypes.length; i++) {
+		for (int i = 0; i < weaponTypes.length; i++)
+   {
 			byWeaponType[i] = new ItemDefinition[counts[i]];
 		}
 		int[] writeIndices = new int[weaponTypes.length];
@@ -188,47 +196,78 @@ public enum ItemDefinition {
 		return byWeaponType;
 	}
 
-	public static ItemDefinition fromId(int id) {
+	public static ItemDefinition fromId(int id)
+   {
 		if (id < 0 || id >= BY_ID.length) {
 			return null;
 		}
 		return BY_ID[id];
 	}
 
-	public static ItemDefinition[] byWeaponType(WeaponType weaponType) {
+	public static ItemDefinition[] byWeaponType(WeaponType weaponType)
+ {
 		return weaponType == null ? EMPTY_BY_WEAPON_TYPE : BY_WEAPON_TYPE[weaponType.ordinal()];
 	}
 
-	public int getId() { return this.id; }
-	public String getDisplayName() { return this.displayName; }
-	public String getSpritePath() { return this.spritePath; }
-	public int getHeldDrawWidth() { return this.drawConfig.getHeldDrawWidth(); }
-	public int getHeldDrawHeight() { return this.drawConfig.getHeldDrawHeight(); }
-	public ItemDefinitionDrawConfig getDrawConfig() { return this.drawConfig; }
-	public boolean isHandEquipable() { return this.handEquipable; }
-	public double getAccuracy() { return this.accuracy; }
-	public String getAttackSoundPath() { return this.attackSoundPath; }
-	public WeaponType getWeaponType() { return this.weaponType; }
-	public boolean canCrit() { return false; }
-	public int getBaseCritChancePercent() { return 0; }
-	public int getUseAnimationTicks() { return isProjectileWeapon() ? getProjectileCooldownTicks() : 1; }
-	public boolean isProjectileWeapon() { return this.projectileWeaponStats != null; }
-	public ProjectileType getProjectileType() { return this.projectileWeaponStats == null ? null : this.projectileWeaponStats.getProjectileType(); }
-	public ItemDefinition getProjectileAmmoDefinition() { return this.projectileWeaponStats == null ? null : fromId(this.projectileWeaponStats.getAmmoDefinitionId()); }
-	public double getProjectileDamage() { return getProjectileDamage(null); }
-	public double getProjectileDamage(ItemDefinition ammoDefinition) { return this.projectileWeaponStats == null ? 0.0 : this.projectileWeaponStats.getDamage(projectileModifiers(ammoDefinition)); }
-	public double getProjectileKnockbackStrengthPixels() { return getProjectileKnockbackStrengthPixels(null); }
-	public double getProjectileKnockbackStrengthPixels(ItemDefinition ammoDefinition) { return this.projectileWeaponStats == null ? 0.0 : this.projectileWeaponStats.getKnockbackStrengthPixels(projectileModifiers(ammoDefinition)); }
-	public double getProjectileSpeedPixels() { return getProjectileSpeedPixels(null); }
-	public double getProjectileSpeedPixels(ItemDefinition ammoDefinition) { return this.projectileWeaponStats == null ? 0.0 : this.projectileWeaponStats.getSpeedPixels(projectileModifiers(ammoDefinition)); }
-	public int getProjectileCooldownTicks() { return getProjectileCooldownTicks(null); }
-	public int getProjectileCooldownTicks(ItemDefinition ammoDefinition) { return this.projectileWeaponStats == null ? 1 : this.projectileWeaponStats.getCooldownTicks(projectileModifiers(ammoDefinition)); }
-	public int getProjectileLifeTicks() { return getProjectileLifeTicks(null); }
-	public int getProjectileLifeTicks(ItemDefinition ammoDefinition) { return this.projectileWeaponStats == null ? 0 : this.projectileWeaponStats.getLifeTicks(projectileModifiers(ammoDefinition)); }
-	public int getLightRadiusTiles() { return 0; }
-	public double getLightIntensity() { return 0.0; }
+	public int getId()
+  { return this.id; }
+	public String getDisplayName()
+ { return this.displayName; }
+	public String getSpritePath()
+ { return this.spritePath; }
+	public int getHeldDrawWidth()
+ { return this.drawConfig.getHeldDrawWidth(); }
+	public int getHeldDrawHeight()
+ { return this.drawConfig.getHeldDrawHeight(); }
+	public ItemDefinitionDrawConfig getDrawConfig()
+ { return this.drawConfig; }
+	public boolean isHandEquipable()
+ { return this.handEquipable; }
+	public double getAccuracy()
+ { return this.accuracy; }
+	public String getAttackSoundPath()
+ { return this.attackSoundPath; }
+	public WeaponType getWeaponType()
+ { return this.weaponType; }
+	public boolean canCrit()
+ { return false; }
+	public int getBaseCritChancePercent()
+ { return 0; }
+	public int getUseAnimationTicks()
+ { return isProjectileWeapon() ? getProjectileCooldownTicks() : 1; }
+	public boolean isProjectileWeapon()
+ { return this.projectileWeaponStats != null; }
+	public ProjectileType getProjectileType()
+ { return this.projectileWeaponStats == null ? null : this.projectileWeaponStats.getProjectileType(); }
+	public ItemDefinition getProjectileAmmoDefinition()
+ { return this.projectileWeaponStats == null ? null : fromId(this.projectileWeaponStats.getAmmoDefinitionId()); }
+	public double getProjectileDamage()
+ { return getProjectileDamage(null); }
+	public double getProjectileDamage(ItemDefinition ammoDefinition)
+ { return this.projectileWeaponStats == null ? 0.0 : this.projectileWeaponStats.getDamage(projectileModifiers(ammoDefinition)); }
+	public double getProjectileKnockbackStrengthPixels()
+ { return getProjectileKnockbackStrengthPixels(null); }
+	public double getProjectileKnockbackStrengthPixels(ItemDefinition ammoDefinition)
+ { return this.projectileWeaponStats == null ? 0.0 : this.projectileWeaponStats.getKnockbackStrengthPixels(projectileModifiers(ammoDefinition)); }
+	public double getProjectileSpeedPixels()
+ { return getProjectileSpeedPixels(null); }
+	public double getProjectileSpeedPixels(ItemDefinition ammoDefinition)
+ { return this.projectileWeaponStats == null ? 0.0 : this.projectileWeaponStats.getSpeedPixels(projectileModifiers(ammoDefinition)); }
+	public int getProjectileCooldownTicks()
+ { return getProjectileCooldownTicks(null); }
+	public int getProjectileCooldownTicks(ItemDefinition ammoDefinition)
+ { return this.projectileWeaponStats == null ? 1 : this.projectileWeaponStats.getCooldownTicks(projectileModifiers(ammoDefinition)); }
+	public int getProjectileLifeTicks()
+ { return getProjectileLifeTicks(null); }
+	public int getProjectileLifeTicks(ItemDefinition ammoDefinition)
+ { return this.projectileWeaponStats == null ? 0 : this.projectileWeaponStats.getLifeTicks(projectileModifiers(ammoDefinition)); }
+	public int getLightRadiusTiles()
+ { return 0; }
+	public double getLightIntensity()
+ { return 0.0; }
 
-	private ProjectileStatModifiers projectileModifiers(ItemDefinition ammoDefinition) {
+	private ProjectileStatModifiers projectileModifiers(ItemDefinition ammoDefinition)
+ {
 		return ammoDefinition == null ? ProjectileStatModifiers.NONE : ammoDefinition.projectileStatModifiers;
 	}
 }

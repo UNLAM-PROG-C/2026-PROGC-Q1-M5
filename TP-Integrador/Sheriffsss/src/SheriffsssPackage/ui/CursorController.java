@@ -10,7 +10,8 @@ public final class CursorController {
       boolean hitMarkerActive,
       boolean rootMenuHovered,
       boolean menuSettingsHovered,
-      boolean gameSettingsHovered) {
+      boolean gameSettingsHovered)
+  {
     if (hitMarkerActive && state == State.PLAYING) {
       return CursorType.HIT_MARKER;
     }

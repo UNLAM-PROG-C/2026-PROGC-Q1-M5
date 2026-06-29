@@ -34,37 +34,43 @@ public class ItemDefinitionDrawConfig {
 		this.baseAngle[index(Facing.UP)] = -1.5;
 	}
 
-	public ItemDefinitionDrawConfig withHeldDrawSize(int width, int height) {
+	public ItemDefinitionDrawConfig withHeldDrawSize(int width, int height)
+  {
 		this.heldDrawWidth = Math.max(0, width);
 		this.heldDrawHeight = Math.max(0, height);
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig withGripAnchorOffset(int x, int y) {
+	public ItemDefinitionDrawConfig withGripAnchorOffset(int x, int y)
+  {
 		this.gripAnchorOffsetX = x;
 		this.gripAnchorOffsetY = y;
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig withBarrelAnchorOffset(int x, int y) {
+	public ItemDefinitionDrawConfig withBarrelAnchorOffset(int x, int y)
+ {
 		this.barrelAnchorOffsetX = x;
 		this.barrelAnchorOffsetY = y;
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig withBaseOffset(Facing facing, int x, int y) {
+	public ItemDefinitionDrawConfig withBaseOffset(Facing facing, int x, int y)
+ {
 		this.baseOffsetX[index(facing)] = x;
 		this.baseOffsetY[index(facing)] = y;
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig withRecoil(double recoil) {
+	public ItemDefinitionDrawConfig withRecoil(double recoil)
+  {
 		this.recoil = Math.max(0.0, recoil);
 		this.recoilConfigured = true;
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig applyDefaultRecoilForAccuracy(double accuracy) {
+	public ItemDefinitionDrawConfig applyDefaultRecoilForAccuracy(double accuracy)
+  {
 		if (!this.recoilConfigured) {
 			double clampedAccuracy = Math.max(0.0, Math.min(1.0, accuracy));
 			this.recoil = (1.0 - clampedAccuracy) * GameConfig.DEFAULT_RECOIL_ACCURACY_SCALE;
@@ -72,62 +78,75 @@ public class ItemDefinitionDrawConfig {
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig withRecoilRotation(double radians) {
+	public ItemDefinitionDrawConfig withRecoilRotation(double radians)
+   {
 		this.recoilRotationRadians = Math.max(0.0, radians);
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig drawnBehind(Facing... facings) {
+	public ItemDefinitionDrawConfig drawnBehind(Facing... facings)
+  {
 		for (int i = 0; i < facings.length; i++) {
 			this.drawnBehind[index(facings[i])] = true;
 		}
 		return this;
 	}
 
-	public ItemDefinitionDrawConfig mirrored(Facing... facings) {
+	public ItemDefinitionDrawConfig mirrored(Facing... facings)
+   {
 		for (int i = 0; i < facings.length; i++) {
 			this.mirrored[index(facings[i])] = true;
 		}
 		return this;
 	}
 
-	public int getBaseOffsetX(Facing facing) {
+	public int getBaseOffsetX(Facing facing)
+   {
 		return this.baseOffsetX[index(facing)];
 	}
 
-	public int getHeldDrawWidth() {
+	public int getHeldDrawWidth()
+  {
 		return this.heldDrawWidth;
 	}
 
-	public int getHeldDrawHeight() {
+	public int getHeldDrawHeight()
+ {
 		return this.heldDrawHeight;
 	}
 
-	public int getGripAnchorOffsetX() {
+	public int getGripAnchorOffsetX()
+ {
 		return this.gripAnchorOffsetX;
 	}
 
-	public int getGripAnchorOffsetY() {
+	public int getGripAnchorOffsetY()
+ {
 		return this.gripAnchorOffsetY;
 	}
 
-	public int getBarrelAnchorOffsetX() {
+	public int getBarrelAnchorOffsetX()
+ {
 		return this.barrelAnchorOffsetX;
 	}
 
-	public int getBarrelAnchorOffsetY() {
+	public int getBarrelAnchorOffsetY()
+ {
 		return this.barrelAnchorOffsetY;
 	}
 
-	public int getBaseOffsetY(Facing facing) {
+	public int getBaseOffsetY(Facing facing)
+ {
 		return this.baseOffsetY[index(facing)];
 	}
 
-	public double getBaseAngle(Facing facing) {
+	public double getBaseAngle(Facing facing)
+  {
 		return this.baseAngle[index(facing)];
 	}
 
-	public int getSwingOffsetX(Facing facing, double swing) {
+	public int getSwingOffsetX(Facing facing, double swing)
+  {
 		return (int) (swing * this.recoil * recoilXDirection(facing));
 	}
 
@@ -139,33 +158,39 @@ public class ItemDefinitionDrawConfig {
 		return swing * this.recoilRotationRadians * recoilRotationDirection(facing);
 	}
 
-	public boolean isDrawnBehind(Facing facing) {
+	public boolean isDrawnBehind(Facing facing)
+  {
 		return this.drawnBehind[index(facing)];
 	}
 
-	public boolean isMirrored(Facing facing) {
+	public boolean isMirrored(Facing facing)
+  {
 		return this.mirrored[index(facing)];
 	}
 
-	private int index(Facing facing) {
+	private int index(Facing facing)
+  {
 		return facing == null ? 0 : facing.ordinal();
 	}
 
-	private int recoilXDirection(Facing facing) {
+	private int recoilXDirection(Facing facing)
+  {
 		if (facing == Facing.RIGHT || facing == Facing.UP_RIGHT || facing == Facing.DOWN_RIGHT || facing == Facing.UP) {
 			return -1;
 		}
 		return 1;
 	}
 
-	private int recoilYDirection(Facing facing) {
+	private int recoilYDirection(Facing facing)
+ {
 		if (facing == Facing.UP || facing == Facing.UP_LEFT || facing == Facing.UP_RIGHT) {
 			return 1;
 		}
 		return -1;
 	}
 
-	private int recoilRotationDirection(Facing facing) {
+	private int recoilRotationDirection(Facing facing)
+ {
 		return isMirrored(facing) ? 1 : -1;
 	}
 }

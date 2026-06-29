@@ -19,20 +19,23 @@ public final class TrainingHudSnapshotConfig {
   private int failurePerimeterWidthWorld;
   private int failurePerimeterHeightWorld;
 
-  public TrainingHudSnapshotConfig withStats(int failures, int hits, String precisionText) {
+  public TrainingHudSnapshotConfig withStats(int failures, int hits, String precisionText)
+  {
     this.failures = failures;
     this.hits = hits;
     this.precisionText = precisionText;
     return this;
   }
 
-  public TrainingHudSnapshotConfig withTimer(String timerText, boolean timerVisible) {
+  public TrainingHudSnapshotConfig withTimer(String timerText, boolean timerVisible)
+  {
     this.timerText = timerText;
     this.timerVisible = timerVisible;
     return this;
   }
 
-  public TrainingHudSnapshotConfig withHint(float hintAlpha, String hintText, int centerX, int baselineY) {
+  public TrainingHudSnapshotConfig withHint(float hintAlpha, String hintText, int centerX, int baselineY)
+  {
     this.hintAlpha = hintAlpha;
     this.hintText = hintText;
     this.hintCenterX = centerX;
@@ -44,7 +47,8 @@ public final class TrainingHudSnapshotConfig {
       boolean deathPromptVisible,
       boolean finalScreenVisible,
       int finalScore,
-      boolean debugUsed) {
+      boolean debugUsed)
+  {
     this.deathPromptVisible = deathPromptVisible;
     this.finalScreenVisible = finalScreenVisible;
     this.finalScore = finalScore;
@@ -52,7 +56,8 @@ public final class TrainingHudSnapshotConfig {
     return this;
   }
 
-  public TrainingHudSnapshotConfig withFailurePerimeter(int leftX, int topY, int width, int height) {
+  public TrainingHudSnapshotConfig withFailurePerimeter(int leftX, int topY, int width, int height)
+  {
     this.failurePerimeterLeftWorldX = leftX;
     this.failurePerimeterTopWorldY = topY;
     this.failurePerimeterWidthWorld = width;
@@ -60,71 +65,88 @@ public final class TrainingHudSnapshotConfig {
     return this;
   }
 
-  int failures() {
+  int failures()
+  {
     return this.failures;
   }
 
-  int hits() {
+  int hits()
+  {
     return this.hits;
   }
 
-  String precisionText() {
+  String precisionText()
+  {
     return this.precisionText;
   }
 
-  String timerText() {
+  String timerText()
+  {
     return this.timerText;
   }
 
-  boolean timerVisible() {
+  boolean timerVisible()
+  {
     return this.timerVisible;
   }
 
-  float hintAlpha() {
+  float hintAlpha()
+  {
     return this.hintAlpha;
   }
 
-  String hintText() {
+  String hintText()
+  {
     return this.hintText;
   }
 
-  int hintCenterX() {
+  int hintCenterX()
+  {
     return this.hintCenterX;
   }
 
-  int hintBaselineY() {
+  int hintBaselineY()
+  {
     return this.hintBaselineY;
   }
 
-  boolean deathPromptVisible() {
+  boolean deathPromptVisible()
+  {
     return this.deathPromptVisible;
   }
 
-  boolean finalScreenVisible() {
+  boolean finalScreenVisible()
+  {
     return this.finalScreenVisible;
   }
 
-  int finalScore() {
+  int finalScore()
+  {
     return this.finalScore;
   }
 
-  boolean debugUsed() {
+  boolean debugUsed()
+  {
     return this.debugUsed;
   }
 
-  int failurePerimeterLeftWorldX() {
+  int failurePerimeterLeftWorldX()
+  {
     return this.failurePerimeterLeftWorldX;
   }
 
-  int failurePerimeterTopWorldY() {
+  int failurePerimeterTopWorldY()
+  {
     return this.failurePerimeterTopWorldY;
   }
 
-  int failurePerimeterWidthWorld() {
+  int failurePerimeterWidthWorld()
+  {
     return this.failurePerimeterWidthWorld;
   }
 
-  int failurePerimeterHeightWorld() {
+  int failurePerimeterHeightWorld()
+  {
     return this.failurePerimeterHeightWorld;
   }
 }

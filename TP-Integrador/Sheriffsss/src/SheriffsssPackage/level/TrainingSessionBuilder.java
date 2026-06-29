@@ -18,7 +18,8 @@ public final class TrainingSessionBuilder {
   private static final int FNV_OFFSET_BASIS = 0x811C9DC5;
   private static final int FNV_PRIME = 0x01000193;
 
-  public void build(Game owner, GameContext context, GameSession session, boolean resetDebugOptions) {
+  public void build(Game owner, GameContext context, GameSession session, boolean resetDebugOptions)
+  {
     if (resetDebugOptions) {
       context.debugOptions().resetAll();
     }
@@ -29,11 +30,13 @@ public final class TrainingSessionBuilder {
     clearMenuStateForTraining(context, session);
   }
 
-  public double trainingDayProgress() {
+  public double trainingDayProgress()
+  {
     return TRAINING_DAY_PROGRESS;
   }
 
-  public void applyTrainingDebugLoadout(GameContext context, Player targetPlayer) {
+  public void applyTrainingDebugLoadout(GameContext context, Player targetPlayer)
+  {
     if (targetPlayer == null) {
       return;
     }
@@ -44,7 +47,8 @@ public final class TrainingSessionBuilder {
     }
   }
 
-  private String createRandomTrainingWorldSeed() {
+  private String createRandomTrainingWorldSeed()
+  {
     long seed = System.nanoTime() ^ System.currentTimeMillis();
     return "training-" + Long.toUnsignedString(new Random(seed).nextLong(), TRAINING_SEED_RADIX).toUpperCase();
   }
@@ -53,7 +57,8 @@ public final class TrainingSessionBuilder {
       Game owner,
       GameContext context,
       GameSession session,
-      String trainingWorldSeed) {
+      String trainingWorldSeed)
+  {
     int trainingSeedHash = hashString(trainingWorldSeed);
     context.enemySystem().clear();
     context.enemySystem().reset(trainingSeedHash);
@@ -62,34 +67,40 @@ public final class TrainingSessionBuilder {
     session.setMap(session.trainingMode().buildArena());
   }
 
-  private void spawnTrainingPlayer(GameContext context, GameSession session) {
+  private void spawnTrainingPlayer(GameContext context, GameSession session)
+  {
     int spawnX = session.trainingMode().getPlayerSpawnWorldX();
     int spawnY = session.trainingMode().getPlayerSpawnWorldY();
     session.setPlayer(new Player(TRAINING_PLAYER_NAME, spawnX, spawnY, context.assets()));
     session.resetPlayerRuntime();
   }
 
-  private void giveTrainingLoadout(GameContext context, Player targetPlayer) {
+  private void giveTrainingLoadout(GameContext context, Player targetPlayer)
+  {
     if (targetPlayer == null) {
       return;
     }
     applyTrainingDebugLoadout(context, targetPlayer);
   }
 
-  private void resetTrainingWeapon(Player targetPlayer) {
+  private void resetTrainingWeapon(Player targetPlayer)
+  {
     targetPlayer.getEquipment().resetToWeapon(ItemDefinition.ALTA_PISTOLA_PRIMERA);
   }
 
-  private void unlockAllTrainingWeapons(Player targetPlayer) {
+  private void unlockAllTrainingWeapons(Player targetPlayer)
+  {
     targetPlayer.getEquipment().unlockWeapons(ItemDefinition.byWeaponType(WeaponType.ARMA_DE_FUEGO));
   }
 
-  private void clearMenuStateForTraining(GameContext context, GameSession session) {
+  private void clearMenuStateForTraining(GameContext context, GameSession session)
+  {
     context.dayNightCycle().reset();
     context.dayNightCycle().setDayProgress(TRAINING_DAY_PROGRESS);
   }
 
-  private int hashString(String value) {
+  private int hashString(String value)
+  {
     int hash = FNV_OFFSET_BASIS;
     for (char character : value.toCharArray()) {
       hash ^= character;

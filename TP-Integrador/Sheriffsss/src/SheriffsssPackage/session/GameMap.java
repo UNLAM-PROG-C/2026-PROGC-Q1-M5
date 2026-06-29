@@ -14,7 +14,8 @@ public class GameMap {
 	private final MapObject[][] objectGrid;
 	private final BufferedImage minimapImage;
 
-	public GameMap(int widthTiles, int heightTiles) {
+	public GameMap(int widthTiles, int heightTiles)
+ {
 		this.widthTiles = widthTiles;
 		this.heightTiles = heightTiles;
 		this.tiles = new int[widthTiles][heightTiles];
@@ -29,53 +30,64 @@ public class GameMap {
 		}
 	}
 
-	public boolean isInBounds(int tileX, int tileY) {
+	public boolean isInBounds(int tileX, int tileY)
+   {
 		return tileX >= 0 && tileX < this.widthTiles && tileY >= 0 && tileY < this.heightTiles;
 	}
 
-	public TileType getTile(int tileX, int tileY) {
+	public TileType getTile(int tileX, int tileY)
+ {
 		if (!isInBounds(tileX, tileY)) {
 			return null;
 		}
 		return TileType.fromId(this.tiles[tileX][tileY]);
 	}
 
-	public MapObject getObject(int tileX, int tileY) {
+	public MapObject getObject(int tileX, int tileY)
+  {
 		if (!isInBounds(tileX, tileY)) {
 			return null;
 		}
 		return this.objectGrid[tileX][tileY];
 	}
 
-	public int worldToTileX(int worldX) {
+	public int worldToTileX(int worldX)
+ {
 		return Math.floorDiv(worldX, GameConfig.TILE_SIZE);
 	}
 
-	public int worldToTileY(int worldY) {
+	public int worldToTileY(int worldY)
+  {
 		return Math.floorDiv(worldY, GameConfig.TILE_SIZE);
 	}
 
-	public TileType getTileAtWorld(int worldX, int worldY) {
+	public TileType getTileAtWorld(int worldX, int worldY)
+  {
 		return getTile(worldToTileX(worldX), worldToTileY(worldY));
 	}
 
-	public MapObject getObjectAtWorld(int worldX, int worldY) {
+	public MapObject getObjectAtWorld(int worldX, int worldY)
+  {
 		return getObject(worldToTileX(worldX), worldToTileY(worldY));
 	}
 
-	public boolean isAreaBlockedAtWorld(int leftWorldX, int topWorldY, int rightWorldX, int bottomWorldY) {
+	public boolean isAreaBlockedAtWorld(int leftWorldX, int topWorldY, int rightWorldX, int bottomWorldY)
+  {
 		int startTileX = worldToTileX(leftWorldX);
 		int endTileX = worldToTileX(rightWorldX);
 		int startTileY = worldToTileY(topWorldY);
 		int endTileY = worldToTileY(bottomWorldY);
-		for (int tileX = startTileX; tileX <= endTileX; tileX++) {
+		for (int tileX = startTileX; tileX <= endTileX; tileX++)
+  {
 			for (int tileY = startTileY; tileY <= endTileY; tileY++) {
 				TileType tile = getTile(tileX, tileY);
-				if (tile == null || tile.isSolid()) {
+				if (tile == null || tile.isSolid())
+    {
 					return true;
 				}
 				MapObject mapObject = getObject(tileX, tileY);
-				if (mapObject != null && mapObject.isSolid() && intersectsObjectCollision(leftWorldX, topWorldY, rightWorldX, bottomWorldY, tileX, tileY, mapObject)) {
+				if (mapObject != null && mapObject.isSolid() && intersectsObjectCollision(leftWorldX, topWorldY, rightWorldX, bottomWorldY, tileX, tileY, mapObject))
+    {
 					return true;
 				}
 			}
@@ -84,7 +96,8 @@ public class GameMap {
 	}
 
 	private boolean intersectsObjectCollision(int leftWorldX, int topWorldY, int rightWorldX, int bottomWorldY,
-		int objectTileX, int objectTileY, MapObject mapObject) {
+		int objectTileX, int objectTileY, MapObject mapObject)
+ {
 		int objectLeft = objectCollisionLeftWorldX(objectTileX, mapObject);
 		int objectTop = objectCollisionTopWorldY(objectTileY, mapObject);
 		int objectRight = objectLeft + mapObject.getType().getCollisionWidth() - 1;
@@ -92,40 +105,48 @@ public class GameMap {
 		return leftWorldX <= objectRight && rightWorldX >= objectLeft && topWorldY <= objectBottom && bottomWorldY >= objectTop;
 	}
 
-	public int objectCollisionLeftWorldX(int objectTileX, MapObject mapObject) {
+	public int objectCollisionLeftWorldX(int objectTileX, MapObject mapObject)
+  {
 		int width = mapObject.getType().getCollisionWidth();
 		return objectTileX * GameConfig.TILE_SIZE + (GameConfig.TILE_SIZE - width) / 2;
 	}
 
-	public int objectCollisionTopWorldY(int objectTileY, MapObject mapObject) {
+	public int objectCollisionTopWorldY(int objectTileY, MapObject mapObject)
+  {
 		int height = mapObject.getType().getCollisionHeight();
 		return objectTileY * GameConfig.TILE_SIZE + (GameConfig.TILE_SIZE - height) / 2;
 	}
 
-	public boolean isProjectileBlockedAtWorld(int worldX, int worldY) {
+	public boolean isProjectileBlockedAtWorld(int worldX, int worldY)
+  {
 		TileType tile = getTileAtWorld(worldX, worldY);
-		if (tile == null || tile.isSolid()) {
+		if (tile == null || tile.isSolid())
+  {
 			return true;
 		}
 		MapObject mapObject = getObjectAtWorld(worldX, worldY);
 		return mapObject != null && mapObject.isSolid() && mapObject.getType() != MapObjectType.WOODEN_FENCE;
 	}
 
-	public boolean isWalkableAtWorld(int worldX, int worldY) {
+	public boolean isWalkableAtWorld(int worldX, int worldY)
+  {
 		TileType tile = getTileAtWorld(worldX, worldY);
-		if (tile == null || tile.isSolid() || tile.isHazardous()) {
+		if (tile == null || tile.isSolid() || tile.isHazardous())
+  {
 			return false;
 		}
 		MapObject mapObject = getObjectAtWorld(worldX, worldY);
 		return mapObject == null || !mapObject.isSolid();
 	}
 
-	public boolean canPlaceObject(int tileX, int tileY) {
+	public boolean canPlaceObject(int tileX, int tileY)
+  {
 		TileType tile = getTile(tileX, tileY);
 		return tile != null && !tile.isSolid() && !tile.isHazardous() && getObject(tileX, tileY) == null;
 	}
 
-	public void placeSingleObject(MapObjectType type, int tileX, int tileY, boolean solid, boolean abovePlayer) {
+	public void placeSingleObject(MapObjectType type, int tileX, int tileY, boolean solid, boolean abovePlayer)
+  {
 		if (!isInBounds(tileX, tileY)) {
 			return;
 		}
@@ -139,7 +160,8 @@ public class GameMap {
 				TileType tileType = TileType.fromId(this.tiles[tileX][tileY]);
 				this.minimapImage.setRGB(tileX, tileY, tileType.getMinimapColor().getRGB());
 				MapObject mapObject = this.objectGrid[tileX][tileY];
-				if (mapObject != null) {
+				if (mapObject != null)
+    {
 					Color minimapColor = mapObject.getType().resolveMinimapColor(mapObject.getDrawIndex());
 					this.minimapImage.setRGB(tileX, tileY, minimapColor.getRGB());
 				}
@@ -147,7 +169,8 @@ public class GameMap {
 		}
 	}
 
-	public void placeObjectRect(MapObjectType type, int rootTileX, int rootTileY, boolean[] solidByIndex, boolean[] aboveByIndex) {
+	public void placeObjectRect(MapObjectType type, int rootTileX, int rootTileY, boolean[] solidByIndex, boolean[] aboveByIndex)
+     {
 		int drawIndex = 0;
 		for (int offsetY = 0; offsetY < type.getFootprintHeight(); offsetY++) {
 			for (int offsetX = 0; offsetX < type.getFootprintWidth(); offsetX++) {

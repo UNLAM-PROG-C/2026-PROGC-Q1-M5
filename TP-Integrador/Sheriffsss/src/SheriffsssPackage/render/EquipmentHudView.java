@@ -27,7 +27,8 @@ public final class EquipmentHudView {
   private int listWidth;
   private int listRowHeight;
 
-  public void update(Equipment equipment, EquipmentMenuLayout layout, boolean visible) {
+  public void update(Equipment equipment, EquipmentMenuLayout layout, boolean visible)
+  {
     this.visible = visible && equipment != null && equipment.isMenuOpen();
     this.selectorOpen = this.visible && equipment.isWeaponSelectorOpen();
     this.equippedWeapon = equipment == null ? null : equipment.getEquippedWeapon();
@@ -35,7 +36,8 @@ public final class EquipmentHudView {
     updateLayout(layout);
   }
 
-  private void updateLayout(EquipmentMenuLayout layout) {
+  private void updateLayout(EquipmentMenuLayout layout)
+    {
     this.panelX = layout.panelX();
     this.panelY = layout.panelY();
     this.panelWidth = layout.panelWidth();
@@ -50,67 +52,83 @@ public final class EquipmentHudView {
     this.listRowHeight = layout.listRowHeight();
   }
 
-  public boolean visible() {
+  public boolean visible()
+    {
     return this.visible;
   }
 
-  public boolean selectorOpen() {
+  public boolean selectorOpen()
+  {
     return this.selectorOpen;
   }
 
-  public ItemDefinition equippedWeapon() {
+  public ItemDefinition equippedWeapon()
+  {
     return this.equippedWeapon;
   }
 
-  public List<ItemDefinition> weapons() {
+  public List<ItemDefinition> weapons()
+  {
     return this.weapons;
   }
 
-  public int panelX() {
+  public int panelX()
+  {
     return this.panelX;
   }
 
-  public int panelY() {
+  public int panelY()
+  {
     return this.panelY;
   }
 
-  public int panelWidth() {
+  public int panelWidth()
+  {
     return this.panelWidth;
   }
 
-  public int panelHeight() {
+  public int panelHeight()
+  {
     return this.panelHeight;
   }
 
-  public int selectorX() {
+  public int selectorX()
+  {
     return this.selectorX;
   }
 
-  public int selectorY() {
+  public int selectorY()
+  {
     return this.selectorY;
   }
 
-  public int selectorWidth() {
+  public int selectorWidth()
+  {
     return this.selectorWidth;
   }
 
-  public int selectorHeight() {
+  public int selectorHeight()
+  {
     return this.selectorHeight;
   }
 
-  public int listX() {
+  public int listX()
+  {
     return this.listX;
   }
 
-  public int listY() {
+  public int listY()
+  {
     return this.listY;
   }
 
-  public int listWidth() {
+  public int listWidth()
+  {
     return this.listWidth;
   }
 
-  public int listRowHeight() {
+  public int listRowHeight()
+  {
     return this.listRowHeight;
   }
 }

@@ -17,7 +17,8 @@ public final class WeaponUseResult {
       int startWorldX,
       int startWorldY,
       int aimWorldX,
-      int aimWorldY) {
+      int aimWorldY)
+  {
     this.fired = fired;
     this.weapon = weapon;
     this.projectileType = projectileType;
@@ -27,7 +28,8 @@ public final class WeaponUseResult {
     this.aimWorldY = aimWorldY;
   }
 
-  public static WeaponUseResult missed() {
+  public static WeaponUseResult missed()
+  {
     return new WeaponUseResult(false, null, null, 0, 0, 0, 0);
   }
 
@@ -35,27 +37,33 @@ public final class WeaponUseResult {
     return this.fired;
   }
 
-  public ItemDefinition weapon() {
+  public ItemDefinition weapon()
+  {
     return this.weapon;
   }
 
-  public ProjectileType projectileType() {
+  public ProjectileType projectileType()
+  {
     return this.projectileType;
   }
 
-  public int startWorldX() {
+  public int startWorldX()
+  {
     return this.startWorldX;
   }
 
-  public int startWorldY() {
+  public int startWorldY()
+  {
     return this.startWorldY;
   }
 
-  public int aimWorldX() {
+  public int aimWorldX()
+  {
     return this.aimWorldX;
   }
 
-  public int aimWorldY() {
+  public int aimWorldY()
+  {
     return this.aimWorldY;
   }
 }

@@ -34,7 +34,8 @@ public enum EnemyType {
   EnemyType(String spritePath, EnemyBehavior behavior, int frameWidth, int frameHeight, int framesPerRow, int rowCount,
       int drawWidth, int drawHeight, int collisionRadius, double baseMaxHP, double baseSpeed, double baseDamage,
       double attackKnockbackStrengthPixels, int attackRangePixels, int attackCooldownTicks,
-      EnemyDensity density, String hitSoundPath) {
+      EnemyDensity density, String hitSoundPath)
+  {
     this.spritePath = spritePath;
     this.behavior = behavior;
     this.frameWidth = frameWidth;
@@ -54,71 +55,88 @@ public enum EnemyType {
     this.hitSoundPath = hitSoundPath == null ? "" : hitSoundPath;
   }
 
-  public String getSpritePath() {
+  public String getSpritePath()
+  {
     return this.spritePath;
   }
 
-  public EnemyBehavior getBehavior() {
+  public EnemyBehavior getBehavior()
+  {
     return this.behavior;
   }
 
-  public int getFrameWidth() {
+  public int getFrameWidth()
+  {
     return this.frameWidth;
   }
 
-  public int getFrameHeight() {
+  public int getFrameHeight()
+  {
     return this.frameHeight;
   }
 
-  public int getFramesPerRow() {
+  public int getFramesPerRow()
+  {
     return this.framesPerRow;
   }
 
-  public int getDrawWidth() {
+  public int getDrawWidth()
+  {
     return this.drawWidth;
   }
 
-  public int getDrawHeight() {
+  public int getDrawHeight()
+  {
     return this.drawHeight;
   }
 
-  public int getCollisionRadius() {
+  public int getCollisionRadius()
+  {
     return this.collisionRadius;
   }
 
-  public double getScaledMaxHP(int dayCount) {
+  public double getScaledMaxHP(int dayCount)
+  {
     return this.baseMaxHP * Math.pow(1.32, Math.max(0, dayCount - 1));
   }
 
-  public double getScaledSpeed(int dayCount) {
+  public double getScaledSpeed(int dayCount)
+    {
     return this.baseSpeed * Math.pow(1.09, Math.max(0, dayCount - 1));
   }
 
-  public double getScaledDamage(int dayCount) {
+  public double getScaledDamage(int dayCount)
+    {
     return this.baseDamage * Math.pow(1.25, Math.max(0, dayCount - 1));
   }
 
-  public double getAttackKnockbackStrengthPixels() {
+  public double getAttackKnockbackStrengthPixels()
+    {
     return this.attackKnockbackStrengthPixels;
   }
 
-  public int getAttackRangePixels() {
+  public int getAttackRangePixels()
+  {
     return this.attackRangePixels;
   }
 
-  public int getAttackCooldownTicks() {
+  public int getAttackCooldownTicks()
+  {
     return this.attackCooldownTicks;
   }
 
-  public EnemyDensity getDensity() {
+  public EnemyDensity getDensity()
+  {
     return this.density;
   }
 
-  public String getHitSoundPath() {
+  public String getHitSoundPath()
+  {
     return this.hitSoundPath;
   }
 
-  public int getAnimationRow(Facing facing) {
+  public int getAnimationRow(Facing facing)
+  {
     if (this.rowCount <= 1) {
       return 0;
     }

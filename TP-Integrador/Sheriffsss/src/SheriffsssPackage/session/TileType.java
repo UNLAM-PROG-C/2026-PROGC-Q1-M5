@@ -16,23 +16,33 @@ public enum TileType {
 	private final Color minimapColor;
 	private final String spritePath;
 
-	TileType(int id, boolean solid, Color minimapColor, String spritePath) {
+	TileType(int id, boolean solid, Color minimapColor, String spritePath)
+ {
 		this.id = id;
 		this.solid = solid;
 		this.minimapColor = minimapColor;
 		this.spritePath = spritePath;
 	}
 
-	public int getId() { return this.id; }
-	public boolean isSolid() { return this.solid; }
-	public boolean isHazardous() { return false; }
-	public Color getMinimapColor() { return this.minimapColor; }
-	public String[] getSpritePaths() { return new String[] { this.spritePath }; }
-	public int getLightRadiusTiles() { return 0; }
-	public double getLightIntensity() { return 0.0; }
-	public BufferedImage getSprite(AssetManager assets, long frameCount) { return assets.getImage(this.spritePath); }
+	public int getId()
+ { return this.id; }
+	public boolean isSolid()
+ { return this.solid; }
+	public boolean isHazardous()
+ { return false; }
+	public Color getMinimapColor()
+ { return this.minimapColor; }
+	public String[] getSpritePaths()
+ { return new String[] { this.spritePath }; }
+	public int getLightRadiusTiles()
+ { return 0; }
+	public double getLightIntensity()
+ { return 0.0; }
+	public BufferedImage getSprite(AssetManager assets, long frameCount)
+ { return assets.getImage(this.spritePath); }
 
-	public static TileType fromId(int id) {
+	public static TileType fromId(int id)
+ {
 		if (id < 0 || id >= BY_ID.length) {
 			return SAND;
 		}

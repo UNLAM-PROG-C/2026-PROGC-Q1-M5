@@ -14,22 +14,26 @@ public enum Facing {
   private final double unitX;
   private final double unitY;
 
-  Facing(int spriteIndex, int rawX, int rawY) {
+  Facing(int spriteIndex, int rawX, int rawY)
+  {
     this.spriteIndex = spriteIndex;
     double length = Math.sqrt(rawX * rawX + rawY * rawY);
     this.unitX = rawX / length;
     this.unitY = rawY / length;
   }
 
-  public int getSpriteIndex() {
+  public int getSpriteIndex()
+    {
     return this.spriteIndex;
   }
 
-  public double unitX() {
+  public double unitX()
+  {
     return this.unitX;
   }
 
-  public double unitY() {
+  public double unitY()
+  {
     return this.unitY;
   }
 }

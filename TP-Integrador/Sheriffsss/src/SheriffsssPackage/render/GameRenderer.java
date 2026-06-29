@@ -96,12 +96,14 @@ public class GameRenderer {
   private final Path2D.Double debugConePath = new Path2D.Double();
   private final Line2D.Double debugLine = new Line2D.Double();
 
-  public GameRenderer(AssetManager assets, MenuRenderer menuRenderer) {
+  public GameRenderer(AssetManager assets, MenuRenderer menuRenderer)
+    {
     this.assets = assets;
     this.menuRenderer = menuRenderer;
   }
 
-  public void render(Graphics2D g2, GameView game) {
+  public void render(Graphics2D g2, GameView game)
+  {
     if (game.getState() == State.MENU || game.getState() == State.MENU_SETTINGS) {
       this.menuRenderer.draw(g2, game);
       return;
@@ -109,35 +111,41 @@ public class GameRenderer {
     renderWorld(g2, game);
     drawInfoMessages(g2, game);
     TrainingHudView trainingHud = game.getTrainingHudView();
-    if (trainingHud.active()) {
+    if (trainingHud.active())
+      {
       this.trainingHudRenderer.render(g2, trainingHud.snapshot());
     }
     drawEquipment(g2, game);
-    if (game.getState() == State.SETTINGS) {
+    if (game.getState() == State.SETTINGS)
+      {
       drawSettingsOverlay(g2, game);
     }
     drawDebugMenu(g2, game);
   }
 
-  private void renderWorld(Graphics2D g2, GameView game) {
+  private void renderWorld(Graphics2D g2, GameView game)
+      {
     GameMap map = game.getMap();
     Player player = game.getPlayer();
     this.camera.update(game.getCameraCenterWorldX(), game.getCameraCenterWorldY());
     AffineTransform previousTransform = g2.getTransform();
     double cameraZoom = game.getCameraZoom();
-    if (cameraZoom != GameConfig.CAMERA_MIN_ZOOM) {
+    if (cameraZoom != GameConfig.CAMERA_MIN_ZOOM)
+    {
       g2.translate(GameConfig.SCREEN_CENTER_X, GameConfig.SCREEN_CENTER_Y);
       g2.scale(cameraZoom, cameraZoom);
       g2.translate(-GameConfig.SCREEN_CENTER_X, -GameConfig.SCREEN_CENTER_Y);
     }
 
-    for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++) {
+    for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++)
+      {
       for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++) {
         int screenX = this.camera.tileToScreenX(tileX);
         int screenY = this.camera.tileToScreenY(tileY);
         TileType tileType = map.getTile(tileX, tileY);
         BufferedImage tileSprite;
-        if (tileType == null) {
+        if (tileType == null)
+        {
           tileSprite = game.getTrainingHudView().active()
             ? TileType.SAND.getSprite(this.assets, game.getFrameCount())
             : this.assets.getImage("sprites/Pasto.png");
@@ -157,14 +165,16 @@ public class GameRenderer {
 
     boolean heldBehindPlayer = !player.isDead() && isHeldItemRendered(game, player)
       && heldItemDrawConfig(player).isDrawnBehind(facing);
-    if (heldBehindPlayer) {
+    if (heldBehindPlayer)
+          {
       drawHeldItems(g2, game, player);
       drawPlayers(g2, game, player);
     } else {
       drawPlayers(g2, game, player);
       drawHeldItems(g2, game, player);
     }
-    if (!game.isSpectating() && !player.isDead()) {
+    if (!game.isSpectating() && !player.isDead())
+      {
       drawMapObjectOverlay(g2, map, player);
     }
     drawSunsetTint(g2, game);
@@ -176,25 +186,30 @@ public class GameRenderer {
     drawDebugAndUi(g2, game);
   }
 
-  private void drawSunsetTint(Graphics2D g2, GameView game) {
+  private void drawSunsetTint(Graphics2D g2, GameView game)
+      {
     int alpha = game.getDayNightCycle().getSunsetTintAlpha();
-    if (alpha <= 0) {
+    if (alpha <= 0)
+    {
       return;
     }
     g2.setColor(getSunsetTintColor(alpha));
     g2.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
   }
 
-  private void drawLightingOverlay(Graphics2D g2, GameView game) {
+  private void drawLightingOverlay(Graphics2D g2, GameView game)
+    {
     DayNightCycle cycle = game.getDayNightCycle();
-    if (cycle.isNaturallyBright()) {
+    if (cycle.isNaturallyBright())
+    {
       return;
     }
     GameMap map = game.getMap();
     java.util.List<Enemy> enemies = game.getEnemies();
     boolean hasEnemyDebuffLights = this.lighting.hasEnemyDebuffLights(enemies);
     java.util.List<Projectile> projectiles = game.getProjectiles();
-    for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++) {
+    for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++)
+    {
       for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++) {
         int alpha = game.isSpectating() || game.getPlayer().isDead()
           ? this.lighting.resolveDarknessAlpha(map, tileX, tileY, cycle)
@@ -202,7 +217,8 @@ public class GameRenderer {
         alpha = applyRevolverFlash(game, map, tileX, tileY, alpha);
         alpha = applyProjectileLights(projectiles, map, tileX, tileY, alpha);
         alpha = applyEnemyDebuffLights(enemies, map, tileX, tileY, alpha, hasEnemyDebuffLights);
-        if (alpha <= 0) {
+        if (alpha <= 0)
+        {
           continue;
         }
         g2.setColor(getDarknessColor(alpha));
@@ -211,7 +227,8 @@ public class GameRenderer {
     }
   }
 
-  private int applyProjectileLights(java.util.List<Projectile> projectiles, GameMap map, int tileX, int tileY, int alpha) {
+  private int applyProjectileLights(java.util.List<Projectile> projectiles, GameMap map, int tileX, int tileY, int alpha)
+        {
     if (alpha <= 0 || projectiles == null || projectiles.isEmpty()) {
       return alpha;
     }
@@ -219,46 +236,54 @@ public class GameRenderer {
     for (int i = 0; i < projectiles.size(); i++) {
       Projectile projectile = projectiles.get(i);
       ProjectileType type = projectile.getType();
-      if (type.getLightRadiusTiles() <= 0 || type.getLightIntensity() <= 0.0) {
+      if (type.getLightRadiusTiles() <= 0 || type.getLightIntensity() <= 0.0)
+      {
         continue;
       }
       double light = this.lighting.resolveDynamicLight(map, projectile.getWorldX(), projectile.getWorldY(),
         tileX, tileY, type.getLightRadiusTiles(), type.getLightIntensity());
-      if (type.getLightFalloffExponent() > 1.0) {
+      if (type.getLightFalloffExponent() > 1.0)
+      {
         light = Math.pow(light, type.getLightFalloffExponent());
       }
       bestLight = Math.max(bestLight, light);
-      if (bestLight >= 1.0) {
+      if (bestLight >= 1.0)
+        {
         return 0;
       }
     }
     return bestLight <= 0.0 ? alpha : Math.max(0, alpha - (int) (bestLight * WorldLighting.MAX_DARKNESS_ALPHA));
   }
 
-  private int applyEnemyDebuffLights(java.util.List<Enemy> enemies, GameMap map, int tileX, int tileY, int alpha, boolean hasEnemyDebuffLights) {
+  private int applyEnemyDebuffLights(java.util.List<Enemy> enemies, GameMap map, int tileX, int tileY, int alpha, boolean hasEnemyDebuffLights)
+    {
     if (!hasEnemyDebuffLights || alpha <= 0) {
       return alpha;
     }
     double light = this.lighting.resolveEnemyDebuffLight(map, enemies, tileX, tileY);
-    if (light <= 0.0) {
+    if (light <= 0.0)
+    {
       return alpha;
     }
     return Math.max(0, alpha - (int) (light * WorldLighting.MAX_DARKNESS_ALPHA));
   }
 
-  private int applyRevolverFlash(GameView game, GameMap map, int tileX, int tileY, int alpha) {
+  private int applyRevolverFlash(GameView game, GameMap map, int tileX, int tileY, int alpha)
+    {
     if (game.getRevolverFlashTicks() <= 0 || alpha <= 0) {
       return alpha;
     }
     double light = this.lighting.resolveDynamicLight(map, game.getRevolverFlashWorldX(), game.getRevolverFlashWorldY(),
       tileX, tileY, game.getRevolverFlashRadiusTiles(), game.getRevolverFlashIntensity());
-    if (light <= 0.0) {
+    if (light <= 0.0)
+    {
       return alpha;
     }
     return Math.max(0, alpha - (int) (light * WorldLighting.MAX_DARKNESS_ALPHA));
   }
 
-  private Color getDarknessColor(int alpha) {
+  private Color getDarknessColor(int alpha)
+    {
     Color color = this.darknessColors[alpha];
     if (color == null) {
       color = new Color(0, 0, 0, alpha);
@@ -281,27 +306,32 @@ public class GameRenderer {
     int scanEndX = this.camera.getEndTileX();
     int scanStartY = this.camera.getStartTileY() - MapObjectType.getMaxFootprintHeight() + 1;
     int scanEndY = this.camera.getEndTileY();
-    for (int tileX = scanStartX; tileX <= scanEndX; tileX++) {
+    for (int tileX = scanStartX; tileX <= scanEndX; tileX++)
+    {
       for (int tileY = scanStartY; tileY <= scanEndY; tileY++) {
         MapObject mapObject = map.getObject(tileX, tileY);
-        if (mapObject != null && mapObject.isRootCell(tileX, tileY) && intersectsVisibleArea(mapObject)) {
+        if (mapObject != null && mapObject.isRootCell(tileX, tileY) && intersectsVisibleArea(mapObject))
+        {
           drawMapObject(g2, mapObject);
         }
       }
     }
   }
 
-  private void drawPlayer(Graphics2D g2, Player player) {
+  private void drawPlayer(Graphics2D g2, Player player)
+          {
     drawPlayerAt(g2, player, GameConfig.SCREEN_CENTER_X - Player.PLAYER_WIDTH / 2, GameConfig.SCREEN_CENTER_Y - Player.PLAYER_HEIGHT / 2);
   }
 
-  private void drawPlayers(Graphics2D g2, GameView game, Player localPlayer) {
+  private void drawPlayers(Graphics2D g2, GameView game, Player localPlayer)
+    {
     if (!localPlayer.isDead()) {
       drawPlayer(g2, localPlayer);
     }
   }
 
-  private void drawPlayerAt(Graphics2D g2, Player player, int drawX, int drawY) {
+  private void drawPlayerAt(Graphics2D g2, Player player, int drawX, int drawY)
+      {
     BufferedImage sprite = player.getCurrentImage();
     int drawWidth = fittedPlayerSpriteWidth(sprite);
     int drawHeight = fittedPlayerSpriteHeight(sprite);
@@ -310,29 +340,35 @@ public class GameRenderer {
     g2.drawImage(sprite, spriteX, spriteY, drawWidth, drawHeight, null);
   }
 
-  private int fittedPlayerSpriteWidth(BufferedImage sprite) {
+  private int fittedPlayerSpriteWidth(BufferedImage sprite)
+    {
     double scale = Math.min(Player.PLAYER_WIDTH / (double) sprite.getWidth(), Player.PLAYER_HEIGHT / (double) sprite.getHeight());
     return Math.max(1, (int) Math.round(sprite.getWidth() * scale));
   }
 
-  private int fittedPlayerSpriteHeight(BufferedImage sprite) {
+  private int fittedPlayerSpriteHeight(BufferedImage sprite)
+    {
     double scale = Math.min(Player.PLAYER_WIDTH / (double) sprite.getWidth(), Player.PLAYER_HEIGHT / (double) sprite.getHeight());
     return Math.max(1, (int) Math.round(sprite.getHeight() * scale));
   }
 
-  private void drawCombatFloatingTexts(Graphics2D g2, GameView game) {
+  private void drawCombatFloatingTexts(Graphics2D g2, GameView game)
+    {
     java.util.List<CombatFloatingText> combatFloatingTexts = game.getCombatFloatingTexts();
     Composite previousComposite = g2.getComposite();
-    for (int i = 0; i < combatFloatingTexts.size(); i++) {
+    for (int i = 0; i < combatFloatingTexts.size(); i++)
+    {
       CombatFloatingText text = combatFloatingTexts.get(i);
       int alpha = text.getAlpha();
-      if (alpha <= 0) {
+      if (alpha <= 0)
+      {
         continue;
       }
       int centerX = this.camera.worldToScreenX(text.getWorldX());
       int centerY = this.camera.worldToScreenY(text.getWorldY());
       if (centerX < -GameConfig.TILE_SIZE || centerX > GameConfig.SCREEN_WIDTH + GameConfig.TILE_SIZE
-        || centerY < -GameConfig.TILE_SIZE || centerY > GameConfig.SCREEN_HEIGHT + GameConfig.TILE_SIZE) {
+        || centerY < -GameConfig.TILE_SIZE || centerY > GameConfig.SCREEN_HEIGHT + GameConfig.TILE_SIZE)
+      {
         continue;
       }
       String message = text.getMessage();
@@ -344,17 +380,20 @@ public class GameRenderer {
     g2.setComposite(previousComposite);
   }
 
-  private Composite getPickupTextComposite(int alpha) {
+  private Composite getPickupTextComposite(int alpha)
+      {
     int clampedAlpha = Math.max(0, Math.min(255, alpha));
     Composite composite = this.pickupTextComposites[clampedAlpha];
-    if (composite == null) {
+    if (composite == null)
+    {
       composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, clampedAlpha / 255f);
       this.pickupTextComposites[clampedAlpha] = composite;
     }
     return composite;
   }
 
-  private void drawEnemies(Graphics2D g2, GameView game) {
+  private void drawEnemies(Graphics2D g2, GameView game)
+      {
     for (int i = 0; i < game.getEnemies().size(); i++) {
       Enemy enemy = game.getEnemies().get(i);
       EnemyType type = enemy.getType();
@@ -363,7 +402,8 @@ public class GameRenderer {
       int drawWidth = type.getDrawWidth();
       int drawHeight = type.getDrawHeight();
       if (screenX < -drawWidth || screenX > GameConfig.SCREEN_WIDTH + drawWidth
-        || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight) {
+        || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight)
+      {
         continue;
       }
       BufferedImage sheet = this.assets.getImage(type.getSpritePath());
@@ -373,7 +413,8 @@ public class GameRenderer {
       int sourceY = row * type.getFrameHeight();
       int drawX = screenX - drawWidth / 2;
       int drawY = screenY - drawHeight / 2;
-      if (shouldDimTrainingDianaBlink(enemy)) {
+      if (shouldDimTrainingDianaBlink(enemy))
+      {
         Composite previousComposite = g2.getComposite();
         g2.setComposite(TRAINING_DIANA_BLINK_COMPOSITE);
         drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
@@ -382,13 +423,15 @@ public class GameRenderer {
         drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
       }
       drawEnemyHealthBar(g2, game, enemy, screenX, drawY - 8);
-      if (enemy.hasDebuff(Debuff.BURN)) {
+      if (enemy.hasDebuff(Debuff.BURN))
+        {
         drawBurningParticles(g2, enemy, screenX, drawY, drawWidth, drawHeight);
       }
     }
   }
 
-  private void drawProjectiles(Graphics2D g2, GameView game) {
+  private void drawProjectiles(Graphics2D g2, GameView game)
+        {
     for (Projectile projectile : game.getProjectiles()) {
       ProjectileType type = projectile.getType();
       int screenX = this.camera.worldToScreenX(projectile.getWorldX());
@@ -396,7 +439,8 @@ public class GameRenderer {
       int drawWidth = type.getDrawWidth();
       int drawHeight = type.getDrawHeight();
       if (screenX < -drawWidth || screenX > GameConfig.SCREEN_WIDTH + drawWidth
-        || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight) {
+        || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight)
+      {
         continue;
       }
       BufferedImage sprite = this.assets.getImage(type.getSpritePath());
@@ -407,9 +451,11 @@ public class GameRenderer {
     }
   }
 
-  private void drawFlameBurstEffects(Graphics2D g2, GameView game) {
+  private void drawFlameBurstEffects(Graphics2D g2, GameView game)
+      {
     Composite previousComposite = g2.getComposite();
-    for (int i = 0; i < game.getFlameBurstEffects().size(); i++) {
+    for (int i = 0; i < game.getFlameBurstEffects().size(); i++)
+    {
       FlameBurstEffect effect = game.getFlameBurstEffects().get(i);
       double progress = effect.getAgeTicks() / (double) effect.getLifeTicks();
       double easeOut = 1.0 - (1.0 - progress) * (1.0 - progress);
@@ -425,7 +471,8 @@ public class GameRenderer {
       int coreRadius = Math.max(8, radius / 4);
       g2.fillOval(centerX - coreRadius, centerY - coreRadius, coreRadius * 2, coreRadius * 2);
 
-      for (int particle = 0; particle < effect.getParticleCount(); particle++) {
+      for (int particle = 0; particle < effect.getParticleCount(); particle++)
+      {
         double angle = effect.getParticleAngleRadians(particle) + progress * 0.9;
         int distance = (int) (effect.getRadiusPixels() * easeOut * effect.getParticleDistanceScale(particle));
         int particleX = centerX + (int) Math.round(Math.cos(angle) * distance);
@@ -439,10 +486,12 @@ public class GameRenderer {
     g2.setComposite(previousComposite);
   }
 
-  private Color getFlameBurstOuterColor(int alpha) {
+  private Color getFlameBurstOuterColor(int alpha)
+        {
     int colorAlpha = Math.max(35, Math.max(0, Math.min(255, alpha)) / 3);
     Color color = this.flameBurstOuterColors[colorAlpha];
-    if (color == null) {
+    if (color == null)
+    {
       color = new Color(255, 68, 12, colorAlpha);
       this.flameBurstOuterColors[colorAlpha] = color;
     }
@@ -452,7 +501,8 @@ public class GameRenderer {
   private Color getFlameBurstCoreColor(int alpha) {
     int colorAlpha = Math.max(70, Math.max(0, Math.min(255, alpha)) / 2);
     Color color = this.flameBurstCoreColors[colorAlpha];
-    if (color == null) {
+    if (color == null)
+    {
       color = new Color(255, 214, 72, colorAlpha);
       this.flameBurstCoreColors[colorAlpha] = color;
     }
@@ -461,7 +511,8 @@ public class GameRenderer {
 
   private void drawBurningParticles(Graphics2D g2, Enemy enemy, int screenX, int drawY, int drawWidth, int drawHeight) {
     int ticks = enemy.getAnimationTicks();
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
+    {
       int offsetSeed = ticks * (i + 3) + i * 17;
       int particleX = screenX - drawWidth / 3 + Math.floorMod(offsetSeed * 7, Math.max(1, drawWidth * 2 / 3));
       int particleY = drawY + drawHeight - 10 - Math.floorMod(offsetSeed * 5, Math.max(1, drawHeight - 8));
@@ -471,17 +522,20 @@ public class GameRenderer {
     }
   }
 
-  private int enemyAnimationRow(Enemy enemy, EnemyType type) {
+  private int enemyAnimationRow(Enemy enemy, EnemyType type)
+      {
     return type.getAnimationRow(enemy.getFacing());
   }
 
-  private boolean shouldDimTrainingDianaBlink(Enemy enemy) {
+  private boolean shouldDimTrainingDianaBlink(Enemy enemy)
+    {
     if (enemy.getType() != EnemyType.DIANA || enemy.getMaxHP() <= 0.0) {
       return false;
     }
     double hpRatio = enemy.getCurrentHP() / enemy.getMaxHP();
     int phaseTicks;
-    if (hpRatio <= TrainingMode.TARGET_BLINK_FAST_HP_RATIO) {
+    if (hpRatio <= TrainingMode.TARGET_BLINK_FAST_HP_RATIO)
+    {
       phaseTicks = TrainingMode.TARGET_BLINK_FAST_PHASE_TICKS;
     } else if (hpRatio <= TrainingMode.TARGET_BLINK_SLOW_HP_RATIO) {
       phaseTicks = TrainingMode.TARGET_BLINK_SLOW_PHASE_TICKS;
@@ -497,7 +551,8 @@ public class GameRenderer {
       sourceX, sourceY, sourceX + type.getFrameWidth(), sourceY + type.getFrameHeight(), null);
   }
 
-  private void drawEnemyHealthBar(Graphics2D g2, GameView game, Enemy enemy, int centerX, int y) {
+  private void drawEnemyHealthBar(Graphics2D g2, GameView game, Enemy enemy, int centerX, int y)
+    {
     if (enemy.getType() == EnemyType.DIANA) {
       if (game.getDebugOptions() == null || !game.getDebugOptions().shouldShowTargetHealthBars()) {
         return;
@@ -520,33 +575,40 @@ public class GameRenderer {
       TextRenderer.centeredX(g2, this.debugFont, healthText, centerX), y - 4, true);
   }
 
-  private String formatHealthValue(double health) {
+  private String formatHealthValue(double health)
+    {
     return Math.abs(health - Math.round(health)) < 0.001
       ? Integer.toString((int) Math.round(health))
       : String.format(java.util.Locale.US, "%.1f", health);
   }
 
-  private boolean isHeldItemRendered(GameView game, Player player) {
+  private boolean isHeldItemRendered(GameView game, Player player)
+    {
     ItemDefinition equippedWeapon = player.getEquipment().getEquippedWeapon();
-    if (equippedWeapon == null || !equippedWeapon.isHandEquipable()) {
+    if (equippedWeapon == null || !equippedWeapon.isHandEquipable())
+    {
       return false;
     }
     return game.isUsingTool() || player.shouldRenderHeldItem();
   }
 
-  private void drawHeldItem(Graphics2D g2, GameView game, Player player) {
+  private void drawHeldItem(Graphics2D g2, GameView game, Player player)
+    {
     drawHeldItemAt(g2, player, GameConfig.SCREEN_CENTER_X, GameConfig.SCREEN_CENTER_Y, game.isUsingTool(), game.getToolUseTicks(), game.getToolUseDurationTicks());
   }
 
-  private void drawHeldItems(Graphics2D g2, GameView game, Player localPlayer) {
+  private void drawHeldItems(Graphics2D g2, GameView game, Player localPlayer)
+    {
     if (!localPlayer.isDead()) {
       drawHeldItem(g2, game, localPlayer);
     }
   }
 
-  private void drawHeldItemAt(Graphics2D g2, Player player, int centerX, int centerY, boolean usingTool, int toolUseTicks, int toolUseDurationTicks) {
+  private void drawHeldItemAt(Graphics2D g2, Player player, int centerX, int centerY, boolean usingTool, int toolUseTicks, int toolUseDurationTicks)
+      {
     ItemDefinition definition = player.getEquipment().getEquippedWeapon();
-    if (definition == null || !definition.isHandEquipable() || (!usingTool && !player.shouldRenderHeldItem())) {
+    if (definition == null || !definition.isHandEquipable() || (!usingTool && !player.shouldRenderHeldItem()))
+    {
       return;
     }
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
@@ -558,7 +620,8 @@ public class GameRenderer {
     int drawY = centerY + drawConfig.getBaseOffsetY(facing);
     double baseAngle = drawConfig.getBaseAngle(facing);
     double recoilAngle = 0.0;
-    if (usingTool) {
+    if (usingTool)
+    {
       double swing = toolSwing(toolUseTicks, toolUseDurationTicks);
       drawX += drawConfig.getSwingOffsetX(facing, swing);
       drawY += drawConfig.getSwingOffsetY(facing, swing);
@@ -566,7 +629,8 @@ public class GameRenderer {
     }
     AffineTransform previousTransform = g2.getTransform();
     applyHeldItemRotation(g2, drawConfig, facing, drawX, drawY, itemWidth, itemHeight, baseAngle, recoilAngle);
-    if (drawConfig.isMirrored(facing)) {
+    if (drawConfig.isMirrored(facing))
+      {
       g2.drawImage(itemSprite, drawX + itemWidth, drawY, -itemWidth, itemHeight, null);
     } else {
       g2.drawImage(itemSprite, drawX, drawY, itemWidth, itemHeight, null);
@@ -574,18 +638,22 @@ public class GameRenderer {
     g2.setTransform(previousTransform);
   }
 
-  private ItemDefinitionDrawConfig heldItemDrawConfig(Player player) {
+  private ItemDefinitionDrawConfig heldItemDrawConfig(Player player)
+      {
     ItemDefinition equippedWeapon = player.getEquipment().getEquippedWeapon();
     return equippedWeapon == null ? ItemDefinitionDrawConfig.DEFAULT : equippedWeapon.getDrawConfig();
   }
 
-  private void drawToolTargetBar(Graphics2D g2, GameView game) {
+  private void drawToolTargetBar(Graphics2D g2, GameView game)
+    {
     MapObject targetObject = game.getToolTargetObject();
-    if (targetObject == null || !targetObject.getType().isBreakable()) {
+    if (targetObject == null || !targetObject.getType().isBreakable())
+    {
       return;
     }
     double durability = targetObject.getType().getDurability();
-    if (durability <= 0.0) {
+    if (durability <= 0.0)
+    {
       return;
     }
     double remainingRatio = 1.0 - Math.min(1.0, targetObject.getDurabilityDamage() / durability);
@@ -605,18 +673,22 @@ public class GameRenderer {
     g2.drawRect(screenX, screenY, barWidth, barHeight);
   }
 
-  private void drawMapObjectOverlay(Graphics2D g2, GameMap map, Player player) {
+  private void drawMapObjectOverlay(Graphics2D g2, GameMap map, Player player)
+    {
     MapObject objectAtFeet = map.getObjectAtWorld(player.getX(), player.getFeetWorldY());
-    if (objectAtFeet == null || !objectAtFeet.isAbovePlayer()) {
+    if (objectAtFeet == null || !objectAtFeet.isAbovePlayer())
+    {
       return;
     }
     MapObject rootObject = map.getObject(objectAtFeet.getRootTileX(), objectAtFeet.getRootTileY());
-    if (rootObject != null && intersectsVisibleArea(rootObject)) {
+    if (rootObject != null && intersectsVisibleArea(rootObject))
+    {
       drawMapObject(g2, rootObject);
     }
   }
 
-  private void drawMapObject(Graphics2D g2, MapObject mapObject) {
+  private void drawMapObject(Graphics2D g2, MapObject mapObject)
+      {
     BufferedImage sprite = this.assets.getImage(mapObject.getType().getSpritePath());
     int screenX = this.camera.tileToScreenX(mapObject.getRootTileX());
     int screenY = this.camera.tileToScreenY(mapObject.getRootTileY());
@@ -625,7 +697,8 @@ public class GameRenderer {
     g2.drawImage(sprite, screenX, screenY, drawWidth, drawHeight, null);
   }
 
-  private boolean intersectsVisibleArea(MapObject mapObject) {
+  private boolean intersectsVisibleArea(MapObject mapObject)
+    {
     int objectStartX = mapObject.getRootTileX();
     int objectStartY = mapObject.getRootTileY();
     int objectEndX = objectStartX + mapObject.getType().getFootprintWidth() - 1;
@@ -636,60 +709,75 @@ public class GameRenderer {
       && objectStartY <= this.camera.getEndTileY();
   }
 
-  private void drawDebugWorld(Graphics2D g2, GameView game) {
+  private void drawDebugWorld(Graphics2D g2, GameView game)
+    {
     DebugOptions debug = game.getDebugOptions();
     Player player = game.getPlayer();
-    if (!game.getTrainingHudView().active() || debug == null || player == null || player.isDead()) {
+    if (!game.getTrainingHudView().active() || debug == null || player == null || player.isDead())
+    {
       return;
     }
     Composite previousComposite = g2.getComposite();
     java.awt.Stroke previousStroke = g2.getStroke();
     g2.setStroke(this.debugStroke);
-    if (debug.shouldDrawFullAccuracyCone()) {
+    if (debug.shouldDrawFullAccuracyCone())
+    {
       drawAccuracyCone(g2, game, 0.0, this.debugFullConeColor, this.debugFullConeOutlineColor);
     }
-    if (debug.shouldDrawWeaponAccuracyCone()) {
+    if (debug.shouldDrawWeaponAccuracyCone())
+      {
       drawAccuracyCone(g2, game, game.getEquippedPlayerAccuracy(), this.debugWeaponConeColor, this.debugWeaponConeOutlineColor);
     }
-    if (debug.shouldDrawBulletTrajectories()) {
+    if (debug.shouldDrawBulletTrajectories())
+      {
       drawDebugBulletTrajectories(g2, debug);
     }
-    if (debug.shouldDrawTrainingFailurePerimeter()) {
+    if (debug.shouldDrawTrainingFailurePerimeter())
+      {
       drawDebugTrainingFailurePerimeter(g2, game);
     }
-    if (debug.shouldDrawPlayerMouseLine()) {
+    if (debug.shouldDrawPlayerMouseLine())
+      {
       g2.setColor(this.debugLineColor);
       this.debugLine.setLine(GameConfig.SCREEN_CENTER_X, GameConfig.SCREEN_CENTER_Y, mouseCanvasX(game), mouseCanvasY(game));
       g2.draw(this.debugLine);
     }
-    if (debug.shouldDrawHitboxes()) {
+    if (debug.shouldDrawHitboxes())
+      {
       drawDebugHitboxes(g2, game);
     }
-    if (debug.shouldDrawSpritePerimeters()) {
+    if (debug.shouldDrawSpritePerimeters())
+      {
       drawDebugSpritePerimeters(g2, game);
     }
-    if (debug.shouldDrawPlayerOrigin()) {
+    if (debug.shouldDrawPlayerOrigin())
+      {
       drawDebugOrigin(g2);
     }
-    if (debug.shouldDrawWeaponOrigin()) {
+    if (debug.shouldDrawWeaponOrigin())
+      {
       drawDebugWeaponOrigin(g2, game);
     }
-    if (debug.shouldDrawWeaponGripAnchor()) {
+    if (debug.shouldDrawWeaponGripAnchor())
+      {
       drawDebugWeaponGripAnchor(g2, game);
     }
-    if (debug.shouldDrawWeaponBarrelAnchor()) {
+    if (debug.shouldDrawWeaponBarrelAnchor())
+      {
       drawDebugWeaponBarrelAnchor(g2, game);
     }
     g2.setStroke(previousStroke);
     g2.setComposite(previousComposite);
   }
 
-  private void drawDebugHitboxes(Graphics2D g2, GameView game) {
+  private void drawDebugHitboxes(Graphics2D g2, GameView game)
+      {
     g2.setColor(this.debugHitboxColor);
     Player player = game.getPlayer();
     g2.drawRect(GameConfig.SCREEN_CENTER_X - player.getHitboxWidth() / 2, GameConfig.SCREEN_CENTER_Y - player.getHitboxHeight() / 2,
       player.getHitboxWidth(), player.getHitboxHeight());
-    for (int i = 0; i < game.getEnemies().size(); i++) {
+    for (int i = 0; i < game.getEnemies().size(); i++)
+    {
       Enemy enemy = game.getEnemies().get(i);
       int radius = enemy.getType().getCollisionRadius();
       int screenX = this.camera.worldToScreenX(enemy.getWorldX());
@@ -699,9 +787,11 @@ public class GameRenderer {
     drawDebugObjectHitboxes(g2, game.getMap());
   }
 
-  private void drawDebugTrainingFailurePerimeter(Graphics2D g2, GameView game) {
+  private void drawDebugTrainingFailurePerimeter(Graphics2D g2, GameView game)
+      {
     TrainingHudSnapshot trainingHud = game.getTrainingHudView().snapshot();
-    if (trainingHud == null) {
+    if (trainingHud == null)
+    {
       return;
     }
     g2.setColor(this.debugTrainingFailurePerimeterColor);
@@ -713,14 +803,16 @@ public class GameRenderer {
     );
   }
 
-  private void drawDebugObjectHitboxes(Graphics2D g2, GameMap map) {
+  private void drawDebugObjectHitboxes(Graphics2D g2, GameMap map)
+    {
     if (map == null) {
       return;
     }
     for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++) {
       for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++) {
         MapObject mapObject = map.getObject(tileX, tileY);
-        if (mapObject == null || !mapObject.isSolid()) {
+        if (mapObject == null || !mapObject.isSolid())
+        {
           continue;
         }
         int left = map.objectCollisionLeftWorldX(tileX, mapObject);
@@ -731,12 +823,14 @@ public class GameRenderer {
     }
   }
 
-  private void drawDebugSpritePerimeters(Graphics2D g2, GameView game) {
+  private void drawDebugSpritePerimeters(Graphics2D g2, GameView game)
+        {
     drawDebugPlayerSpritePerimeter(g2, game.getPlayer());
     drawDebugHeldItemSpritePerimeter(g2, game);
   }
 
-  private void drawDebugPlayerSpritePerimeter(Graphics2D g2, Player player) {
+  private void drawDebugPlayerSpritePerimeter(Graphics2D g2, Player player)
+    {
     BufferedImage sprite = player.getCurrentImage();
     int drawWidth = fittedPlayerSpriteWidth(sprite);
     int drawHeight = fittedPlayerSpriteHeight(sprite);
@@ -748,10 +842,12 @@ public class GameRenderer {
     g2.drawRect(spriteX, spriteY, drawWidth, drawHeight);
   }
 
-  private void drawDebugHeldItemSpritePerimeter(Graphics2D g2, GameView game) {
+  private void drawDebugHeldItemSpritePerimeter(Graphics2D g2, GameView game)
+    {
     Player player = game.getPlayer();
     ItemDefinition definition = equippedHandDefinition(player);
-    if (definition == null) {
+    if (definition == null)
+    {
       return;
     }
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
@@ -762,7 +858,8 @@ public class GameRenderer {
     int drawY = GameConfig.SCREEN_CENTER_Y + drawConfig.getBaseOffsetY(facing);
     double baseAngle = drawConfig.getBaseAngle(facing);
     double recoilAngle = 0.0;
-    if (game.isUsingTool()) {
+    if (game.isUsingTool())
+    {
       double swing = toolSwing(game.getToolUseTicks(), game.getToolUseDurationTicks());
       drawX += drawConfig.getSwingOffsetX(facing, swing);
       drawY += drawConfig.getSwingOffsetY(facing, swing);
@@ -776,7 +873,8 @@ public class GameRenderer {
   }
 
   private void applyHeldItemRotation(Graphics2D g2, ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int drawY,
-    int itemWidth, int itemHeight, double baseAngle, double recoilAngle) {
+    int itemWidth, int itemHeight, double baseAngle, double recoilAngle)
+      {
     double centerX = drawX + itemWidth / 2.0;
     double centerY = drawY + itemHeight / 2.0;
     if (recoilAngle != 0.0) {
@@ -789,36 +887,43 @@ public class GameRenderer {
     g2.rotate(baseAngle, centerX, centerY);
   }
 
-  private double heldItemGripAnchorX(ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int itemWidth) {
+  private double heldItemGripAnchorX(ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int itemWidth)
+      {
     int offsetX = drawConfig.isMirrored(facing) ? -drawConfig.getGripAnchorOffsetX() : drawConfig.getGripAnchorOffsetX();
     return (drawConfig.isMirrored(facing) ? drawX + itemWidth : drawX) + offsetX;
   }
 
-  private double heldItemBarrelAnchorX(ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int itemWidth) {
+  private double heldItemBarrelAnchorX(ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int itemWidth)
+    {
     return drawConfig.isMirrored(facing) ? drawX : drawX + itemWidth;
   }
 
-  private double heldItemGripAnchorY(ItemDefinitionDrawConfig drawConfig, int drawY, int itemHeight) {
+  private double heldItemGripAnchorY(ItemDefinitionDrawConfig drawConfig, int drawY, int itemHeight)
+    {
     return drawY + itemHeight + drawConfig.getGripAnchorOffsetY();
   }
 
-  private double heldItemBarrelAnchorY(int drawY) {
+  private double heldItemBarrelAnchorY(int drawY)
+    {
     return drawY;
   }
 
-  private double rotateX(double x, double y, double centerX, double centerY, double angle) {
+  private double rotateX(double x, double y, double centerX, double centerY, double angle)
+  {
     double deltaX = x - centerX;
     double deltaY = y - centerY;
     return centerX + deltaX * Math.cos(angle) - deltaY * Math.sin(angle);
   }
 
-  private double rotateY(double x, double y, double centerX, double centerY, double angle) {
+  private double rotateY(double x, double y, double centerX, double centerY, double angle)
+    {
     double deltaX = x - centerX;
     double deltaY = y - centerY;
     return centerY + deltaX * Math.sin(angle) + deltaY * Math.cos(angle);
   }
 
-  private double heldItemGripAnchorCanvasX(Player player, ItemDefinition definition) {
+  private double heldItemGripAnchorCanvasX(Player player, ItemDefinition definition)
+    {
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
     Facing facing = player.getFacing();
     int itemWidth = definition.getHeldDrawWidth();
@@ -832,7 +937,8 @@ public class GameRenderer {
     return rotateX(anchorX, anchorY, centerX, centerY, drawConfig.getBaseAngle(facing));
   }
 
-  private double heldItemGripAnchorCanvasY(Player player, ItemDefinition definition) {
+  private double heldItemGripAnchorCanvasY(Player player, ItemDefinition definition)
+    {
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
     Facing facing = player.getFacing();
     int itemWidth = definition.getHeldDrawWidth();
@@ -846,7 +952,8 @@ public class GameRenderer {
     return rotateY(anchorX, anchorY, centerX, centerY, drawConfig.getBaseAngle(facing));
   }
 
-  private double heldItemBarrelAnchorCanvasX(Player player, ItemDefinition definition) {
+  private double heldItemBarrelAnchorCanvasX(Player player, ItemDefinition definition)
+    {
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
     Facing facing = player.getFacing();
     int itemWidth = definition.getHeldDrawWidth();
@@ -860,7 +967,8 @@ public class GameRenderer {
     return rotateX(anchorX, anchorY, centerX, centerY, drawConfig.getBaseAngle(facing));
   }
 
-  private double heldItemBarrelAnchorCanvasY(Player player, ItemDefinition definition) {
+  private double heldItemBarrelAnchorCanvasY(Player player, ItemDefinition definition)
+    {
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
     Facing facing = player.getFacing();
     int itemWidth = definition.getHeldDrawWidth();
@@ -874,16 +982,19 @@ public class GameRenderer {
     return rotateY(anchorX, anchorY, centerX, centerY, drawConfig.getBaseAngle(facing));
   }
 
-  private double toolSwing(int toolUseTicks, int toolUseDurationTicks) {
+  private double toolSwing(int toolUseTicks, int toolUseDurationTicks)
+    {
     int duration = Math.max(1, toolUseDurationTicks);
-    if (duration <= 1) {
+    if (duration <= 1)
+    {
       return 0.0;
     }
     double progress = Math.max(0.0, Math.min(1.0, toolUseTicks / (double) (duration - 1)));
     return Math.sin(progress * Math.PI);
   }
 
-  private void drawDebugOrigin(Graphics2D g2) {
+  private void drawDebugOrigin(Graphics2D g2)
+    {
     int radius = 2;
     g2.setColor(this.debugOriginColor);
     g2.fillOval(GameConfig.SCREEN_CENTER_X - radius, GameConfig.SCREEN_CENTER_Y - radius, radius * 2, radius * 2);
@@ -891,7 +1002,8 @@ public class GameRenderer {
     g2.drawOval(GameConfig.SCREEN_CENTER_X - radius, GameConfig.SCREEN_CENTER_Y - radius, radius * 2, radius * 2);
   }
 
-  private void drawDebugWeaponOrigin(Graphics2D g2, GameView game) {
+  private void drawDebugWeaponOrigin(Graphics2D g2, GameView game)
+    {
     if (equippedHandDefinition(game.getPlayer()) == null) {
       return;
     }
@@ -904,10 +1016,12 @@ public class GameRenderer {
     g2.drawOval(originX - radius, originY - radius, radius * 2, radius * 2);
   }
 
-  private void drawDebugWeaponGripAnchor(Graphics2D g2, GameView game) {
+  private void drawDebugWeaponGripAnchor(Graphics2D g2, GameView game)
+    {
     Player player = game.getPlayer();
     ItemDefinition definition = equippedHandDefinition(player);
-    if (definition == null) {
+    if (definition == null)
+    {
       return;
     }
     int radius = 3;
@@ -919,10 +1033,12 @@ public class GameRenderer {
     g2.drawOval(anchorX - radius, anchorY - radius, radius * 2, radius * 2);
   }
 
-  private void drawDebugWeaponBarrelAnchor(Graphics2D g2, GameView game) {
+  private void drawDebugWeaponBarrelAnchor(Graphics2D g2, GameView game)
+    {
     Player player = game.getPlayer();
     ItemDefinition definition = equippedHandDefinition(player);
-    if (definition == null) {
+    if (definition == null)
+    {
       return;
     }
     int radius = 3;
@@ -934,17 +1050,20 @@ public class GameRenderer {
     g2.drawOval(anchorX - radius, anchorY - radius, radius * 2, radius * 2);
   }
 
-  private void drawDebugBulletTrajectories(Graphics2D g2, DebugOptions debug) {
+  private void drawDebugBulletTrajectories(Graphics2D g2, DebugOptions debug)
+    {
     java.util.List<DebugBulletTrajectory> trajectories = debug.getBulletTrajectories();
     g2.setColor(this.debugBulletTrajectoryColor);
-    for (int i = 0; i < trajectories.size(); i++) {
+    for (int i = 0; i < trajectories.size(); i++)
+    {
       DebugBulletTrajectory trajectory = trajectories.get(i);
       g2.drawLine(this.camera.worldToScreenX(trajectory.getStartWorldX()), this.camera.worldToScreenY(trajectory.getStartWorldY()),
         this.camera.worldToScreenX(trajectory.getEndWorldX()), this.camera.worldToScreenY(trajectory.getEndWorldY()));
     }
   }
 
-  private void drawAccuracyCone(Graphics2D g2, GameView game, double accuracy, Color fillColor, Color outlineColor) {
+  private void drawAccuracyCone(Graphics2D g2, GameView game, double accuracy, Color fillColor, Color outlineColor)
+      {
     double targetWorldX = mouseWorldX(game);
     double targetWorldY = mouseWorldY(game);
     double originWorldX = weaponOriginWorldX(game);
@@ -952,7 +1071,8 @@ public class GameRenderer {
     double deltaX = targetWorldX - originWorldX;
     double deltaY = targetWorldY - originWorldY;
     double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    if (length <= 0.001) {
+    if (length <= 0.001)
+    {
       return;
     }
     double clampedAccuracy = Math.max(0.0, Math.min(1.0, accuracy));
@@ -976,23 +1096,28 @@ public class GameRenderer {
     g2.draw(this.debugConePath);
   }
 
-  private double mouseWorldX(GameView game) {
+  private double mouseWorldX(GameView game)
+    {
     return game.getCameraCenterWorldX() + (game.getInput().getMouseX() - GameConfig.SCREEN_CENTER_X) / game.getCameraZoom();
   }
 
-  private double mouseWorldY(GameView game) {
+  private double mouseWorldY(GameView game)
+    {
     return game.getCameraCenterWorldY() + (game.getInput().getMouseY() - GameConfig.SCREEN_CENTER_Y) / game.getCameraZoom();
   }
 
-  private double mouseCanvasX(GameView game) {
+  private double mouseCanvasX(GameView game)
+    {
     return GameConfig.SCREEN_CENTER_X + (game.getInput().getMouseX() - GameConfig.SCREEN_CENTER_X) / game.getCameraZoom();
   }
 
-  private double mouseCanvasY(GameView game) {
+  private double mouseCanvasY(GameView game)
+    {
     return GameConfig.SCREEN_CENTER_Y + (game.getInput().getMouseY() - GameConfig.SCREEN_CENTER_Y) / game.getCameraZoom();
   }
 
-  private int weaponOriginCanvasX(GameView game) {
+  private int weaponOriginCanvasX(GameView game)
+    {
     return (int) Math.round(worldToCanvasX(game, weaponOriginWorldX(game)));
   }
 
@@ -1003,50 +1128,60 @@ public class GameRenderer {
   private int weaponOriginWorldX(GameView game) {
     Player player = game.getPlayer();
     ItemDefinition definition = equippedHandDefinition(player);
-    if (player == null || definition == null) {
+    if (player == null || definition == null)
+    {
       return game.getCameraCenterWorldX();
     }
     return game.heldItemOriginWorldX(player, definition, aimFacing(game, player));
   }
 
-  private int weaponOriginWorldY(GameView game) {
+  private int weaponOriginWorldY(GameView game)
+      {
     Player player = game.getPlayer();
     ItemDefinition definition = equippedHandDefinition(player);
-    if (player == null || definition == null) {
+    if (player == null || definition == null)
+    {
       return game.getCameraCenterWorldY();
     }
     return game.heldItemOriginWorldY(player, definition, aimFacing(game, player));
   }
 
-  private ItemDefinition equippedHandDefinition(Player player) {
+  private ItemDefinition equippedHandDefinition(Player player)
+      {
     if (player == null) {
       return null;
     }
     ItemDefinition equippedWeapon = player.getEquipment().getEquippedWeapon();
-    if (equippedWeapon == null || !equippedWeapon.isHandEquipable()) {
+    if (equippedWeapon == null || !equippedWeapon.isHandEquipable())
+    {
       return null;
     }
     return equippedWeapon;
   }
 
-  private Facing aimFacing(GameView game, Player player) {
+  private Facing aimFacing(GameView game, Player player)
+  {
     double deltaX = mouseWorldX(game) - player.getX();
     double deltaY = mouseWorldY(game) - player.getY();
-    if (Math.abs(deltaX) <= 0.001 && Math.abs(deltaY) <= 0.001) {
+    if (Math.abs(deltaX) <= 0.001 && Math.abs(deltaY) <= 0.001)
+    {
       return player.getFacing();
     }
     return facingFromDelta(deltaX, deltaY);
   }
 
-  private double worldToCanvasX(GameView game, double worldX) {
+  private double worldToCanvasX(GameView game, double worldX)
+      {
     return worldX - game.getCameraCenterWorldX() + GameConfig.SCREEN_CENTER_X;
   }
 
-  private double worldToCanvasY(GameView game, double worldY) {
+  private double worldToCanvasY(GameView game, double worldY)
+    {
     return worldY - game.getCameraCenterWorldY() + GameConfig.SCREEN_CENTER_Y;
   }
 
-  private Facing facingFromDelta(double deltaX, double deltaY) {
+  private Facing facingFromDelta(double deltaX, double deltaY)
+    {
     if (Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
       return deltaX < 0 ? Facing.LEFT : Facing.RIGHT;
     }
@@ -1065,9 +1200,11 @@ public class GameRenderer {
     return Facing.DOWN_RIGHT;
   }
 
-  private void drawDebugMenu(Graphics2D g2, GameView game) {
+  private void drawDebugMenu(Graphics2D g2, GameView game)
+  {
     DebugOptions debug = game.getDebugOptions();
-    if (!game.getTrainingHudView().active() || debug == null || !debug.isMenuOpen()) {
+    if (!game.getTrainingHudView().active() || debug == null || !debug.isMenuOpen())
+    {
       return;
     }
     java.awt.Stroke previousStroke = g2.getStroke();
@@ -1096,14 +1233,16 @@ public class GameRenderer {
     g2.setStroke(previousStroke);
   }
 
-  private void drawDebugSwitch(Graphics2D g2, DebugOptions debug, int row, String label) {
+  private void drawDebugSwitch(Graphics2D g2, DebugOptions debug, int row, String label)
+    {
     boolean enabled = debug.isRowEnabled(row);
     int y = DebugOptions.FIRST_ROW_Y + row * DebugOptions.ROW_HEIGHT;
     g2.setColor(enabled ? this.debugSwitchOnColor : this.debugSwitchOffColor);
     g2.fillRect(DebugOptions.SWITCH_X, y, DebugOptions.SWITCH_SIZE, DebugOptions.SWITCH_SIZE);
     g2.setColor(enabled ? Color.WHITE : Color.GRAY);
     g2.drawRect(DebugOptions.SWITCH_X, y, DebugOptions.SWITCH_SIZE, DebugOptions.SWITCH_SIZE);
-    if (enabled) {
+    if (enabled)
+    {
       g2.drawLine(DebugOptions.SWITCH_X + 4, y + 9, DebugOptions.SWITCH_X + 8, y + 13);
       g2.drawLine(DebugOptions.SWITCH_X + 8, y + 13, DebugOptions.SWITCH_X + 15, y + 4);
     }
@@ -1111,18 +1250,22 @@ public class GameRenderer {
       DebugOptions.TEXT_X, y + 14, false);
   }
 
-  private void drawEquipment(Graphics2D g2, GameView game) {
+  private void drawEquipment(Graphics2D g2, GameView game)
+      {
     EquipmentHudView equipmentHud = game.getEquipmentHudView();
-    if (!equipmentHud.visible()) {
+    if (!equipmentHud.visible())
+    {
       return;
     }
     drawEquipmentPanel(g2, equipmentHud);
-    if (equipmentHud.selectorOpen()) {
+    if (equipmentHud.selectorOpen())
+    {
       drawEquipmentWeaponList(g2, equipmentHud);
     }
   }
 
-  private void drawEquipmentPanel(Graphics2D g2, EquipmentHudView equipmentHud) {
+  private void drawEquipmentPanel(Graphics2D g2, EquipmentHudView equipmentHud)
+      {
     int x = equipmentHud.panelX();
     int y = equipmentHud.panelY();
     int width = equipmentHud.panelWidth();
@@ -1138,7 +1281,8 @@ public class GameRenderer {
     drawEquipmentSelector(g2, equipmentHud);
   }
 
-  private void drawEquipmentSelector(Graphics2D g2, EquipmentHudView equipmentHud) {
+  private void drawEquipmentSelector(Graphics2D g2, EquipmentHudView equipmentHud)
+    {
     ItemDefinition weapon = equipmentHud.equippedWeapon();
     int x = equipmentHud.selectorX();
     int y = equipmentHud.selectorY();
@@ -1148,7 +1292,8 @@ public class GameRenderer {
     g2.fillRect(x, y, width, height);
     g2.setColor(this.equipmentBorderColor);
     g2.drawRect(x, y, width, height);
-    if (weapon != null) {
+    if (weapon != null)
+    {
       drawEquipmentWeaponSprite(g2, weapon, x + 8, y + 8, width - 16, 38);
       String damageText = "Daño: " + formatDamage(weapon.getProjectileDamage());
       TextRenderer.draw(g2, this.debugFont, damageText, Color.LIGHT_GRAY,
@@ -1156,7 +1301,8 @@ public class GameRenderer {
     }
   }
 
-  private void drawEquipmentWeaponList(Graphics2D g2, EquipmentHudView equipmentHud) {
+  private void drawEquipmentWeaponList(Graphics2D g2, EquipmentHudView equipmentHud)
+      {
     java.util.List<ItemDefinition> weapons = equipmentHud.weapons();
     int x = equipmentHud.listX();
     int y = equipmentHud.listY();
@@ -1166,7 +1312,8 @@ public class GameRenderer {
     g2.fillRect(x, y, width, rowHeight * weapons.size());
     g2.setColor(this.equipmentBorderColor);
     g2.drawRect(x, y, width, rowHeight * weapons.size());
-    for (int i = 0; i < weapons.size(); i++) {
+    for (int i = 0; i < weapons.size(); i++)
+    {
       ItemDefinition weapon = weapons.get(i);
       int rowY = y + i * rowHeight;
       boolean selected = weapon == equipmentHud.equippedWeapon();
@@ -1178,11 +1325,13 @@ public class GameRenderer {
     }
   }
 
-  private Color equipmentRowColor(int index) {
+  private Color equipmentRowColor(int index)
+      {
     return index % 2 == 0 ? this.equipmentEvenRowColor : this.equipmentOddRowColor;
   }
 
-  private void drawEquipmentWeaponSprite(Graphics2D g2, ItemDefinition weapon, int x, int y, int maxWidth, int maxHeight) {
+  private void drawEquipmentWeaponSprite(Graphics2D g2, ItemDefinition weapon, int x, int y, int maxWidth, int maxHeight)
+  {
     BufferedImage sprite = this.assets.getImage(weapon.getSpritePath());
     int drawWidth = Math.max(1, weapon.getHeldDrawWidth());
     int drawHeight = Math.max(1, weapon.getHeldDrawHeight());
@@ -1194,11 +1343,13 @@ public class GameRenderer {
     g2.drawImage(sprite, drawX, drawY, fittedWidth, fittedHeight, null);
   }
 
-  private String formatDamage(double damage) {
+  private String formatDamage(double damage)
+    {
     return Math.abs(damage - Math.round(damage)) < 0.001 ? Integer.toString((int) Math.round(damage)) : String.format(java.util.Locale.US, "%.1f", damage);
   }
 
-  private void drawDebugTrajectorySlider(Graphics2D g2, DebugOptions debug) {
+  private void drawDebugTrajectorySlider(Graphics2D g2, DebugOptions debug)
+    {
     int y = DebugOptions.TRAJECTORY_SLIDER_Y;
     TextRenderer.draw(g2, this.debugFont, "Trayectorias: " + debug.getBulletTrajectoryLimit(), Color.WHITE,
       DebugOptions.SWITCH_X, y + 5, false);
@@ -1218,9 +1369,11 @@ public class GameRenderer {
     g2.fillRect(knobX - 5, y + 14, 10, 22);
   }
 
-  private void drawDebugAndUi(Graphics2D g2, GameView game) {
+  private void drawDebugAndUi(Graphics2D g2, GameView game)
+    {
     Player player = game.getPlayer();
-    if (game.isSpectating()) {
+    if (game.isSpectating())
+    {
       return;
     }
     if (player.getTakingDamage()) {
@@ -1229,11 +1382,13 @@ public class GameRenderer {
     }
   }
 
-  private void drawInfoMessages(Graphics2D g2, GameView game) {
+  private void drawInfoMessages(Graphics2D g2, GameView game)
+      {
     int drawY = GameConfig.SCREEN_HEIGHT - 22;
     for (int i = 0; i < game.getInfoMessageSlotCount(); i++) {
       String message = game.getInfoMessage(i);
-      if (message == null || game.getInfoMessageTicks(i) <= 0) {
+      if (message == null || game.getInfoMessageTicks(i) <= 0)
+      {
         continue;
       }
       int width = g2.getFontMetrics(this.infoMessageFont).stringWidth(message);
@@ -1244,7 +1399,8 @@ public class GameRenderer {
     }
   }
 
-  private void drawSettingsOverlay(Graphics2D g2, GameView game) {
+  private void drawSettingsOverlay(Graphics2D g2, GameView game)
+      {
     int offsetY = game.getSettingsOverlayOffsetY();
     g2.setColor(GameTheme.TRANSPARENT_BLACK);
     g2.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
@@ -1261,18 +1417,21 @@ public class GameRenderer {
     drawResolutionSlider(g2, game, offsetY);
     drawSettingsButton(g2, game, "FULLSCREEN: " + (game.isPendingFullscreen() ? "ON" : "OFF"), GameConfig.SETTINGS_FULLSCREEN_BUTTON_Y + offsetY);
     drawSettingsButton(g2, game, "RESUME", GameConfig.SETTINGS_RESUME_BUTTON_Y + offsetY);
-    if (game.getTrainingHudView().active()) {
+    if (game.getTrainingHudView().active())
+    {
       drawSettingsDebugButton(g2, game);
     }
     drawSettingsButton(g2, game, "MAIN MENU", GameConfig.SETTINGS_MENU_BUTTON_Y + offsetY);
     drawSettingsButton(g2, game, "QUIT", GameConfig.SETTINGS_QUIT_BUTTON_Y + offsetY);
-    if (!game.getSettingsMessage().isEmpty()) {
+    if (!game.getSettingsMessage().isEmpty())
+      {
       int messageX = TextRenderer.centeredX(g2, this.settingsFont, game.getSettingsMessage(), GameConfig.SCREEN_CENTER_X);
       TextRenderer.draw(g2, this.settingsFont, game.getSettingsMessage(), Color.YELLOW, messageX, GameConfig.SETTINGS_PANEL_Y + GameConfig.SETTINGS_PANEL_HEIGHT - 22 + offsetY, MENU_TEXT_STYLE);
     }
   }
 
-  private void drawSlider(Graphics2D g2, String label, int y, double value) {
+  private void drawSlider(Graphics2D g2, String label, int y, double value)
+      {
     TextRenderer.draw(g2, this.settingsFont, label, Color.WHITE, GameConfig.SETTINGS_PANEL_X + 55, y + 6, MENU_TEXT_STYLE);
     g2.setColor(Color.BLACK);
     g2.fillRect(GameConfig.SETTINGS_SLIDER_X - 2, y - 2, GameConfig.SETTINGS_SLIDER_WIDTH + 4, 12);
@@ -1285,14 +1444,16 @@ public class GameRenderer {
     g2.fillRect(knobX - 5, y - 6, 10, 20);
   }
 
-  private void drawResolutionSlider(Graphics2D g2, GameView game, int offsetY) {
+  private void drawResolutionSlider(Graphics2D g2, GameView game, int offsetY)
+    {
     drawSlider(g2, "Res", GameConfig.SETTINGS_RESOLUTION_SLIDER_Y + offsetY, game.getWindowResolutionSliderValue());
     String label = game.getWindowResolutionLabel();
     int labelX = TextRenderer.centeredX(g2, this.settingsFont, label, GameConfig.SETTINGS_SLIDER_X + GameConfig.SETTINGS_SLIDER_WIDTH / 2);
     TextRenderer.draw(g2, this.settingsFont, label, Color.WHITE, labelX, GameConfig.SETTINGS_RESOLUTION_SLIDER_Y + 36 + offsetY, MENU_TEXT_STYLE);
   }
 
-  private void drawSettingsDebugButton(Graphics2D g2, GameView game) {
+  private void drawSettingsDebugButton(Graphics2D g2, GameView game)
+    {
     boolean hovered = game.isSettingsDebugButtonHovered();
     int x = game.getSettingsDebugButtonX();
     int y = game.getSettingsDebugButtonY();
@@ -1308,11 +1469,13 @@ public class GameRenderer {
     TextRenderer.draw(g2, this.settingsButtonFont, text, hovered ? Color.YELLOW : Color.WHITE, textX, y + 28, MENU_TEXT_STYLE);
   }
 
-  private void drawSettingsButton(Graphics2D g2, GameView game, String text, int y) {
+  private void drawSettingsButton(Graphics2D g2, GameView game, String text, int y)
+    {
     drawSettingsButton(g2, game, text, y, true);
   }
 
-  private void drawSettingsButton(Graphics2D g2, GameView game, String text, int y, boolean enabled) {
+  private void drawSettingsButton(Graphics2D g2, GameView game, String text, int y, boolean enabled)
+    {
     boolean hovered = enabled && game.getInput().getMouseX() >= GameConfig.SETTINGS_BUTTON_X
       && game.getInput().getMouseX() <= GameConfig.SETTINGS_BUTTON_X + GameConfig.SETTINGS_BUTTON_WIDTH
       && game.getInput().getMouseY() >= y

@@ -35,7 +35,8 @@ public class EnemySystem {
     this.combatRandom = new Random(seedHash ^ 0xC2B2AE35);
   }
 
-  public void clear() {
+  public void clear()
+    {
     this.enemies.clear();
     this.flameBurstEffects.clear();
     this.combatFloatingTexts.clear();
@@ -43,32 +44,39 @@ public class EnemySystem {
     this.collectedDeadEnemies.clear();
   }
 
-  public void addEnemy(Enemy enemy) {
+  public void addEnemy(Enemy enemy)
+    {
     if (enemy != null && this.enemies.size() < MAX_ENEMIES) {
       this.enemies.add(enemy);
     }
   }
 
-  public boolean removeEnemy(Enemy enemy) {
+  public boolean removeEnemy(Enemy enemy)
+      {
     return this.enemies.remove(enemy);
   }
 
-  public int enemyCount() {
+  public int enemyCount()
+    {
     return this.enemies.size();
   }
 
-  public void trimEnemiesToCount(int desiredCount) {
+  public void trimEnemiesToCount(int desiredCount)
+    {
     int safeCount = Math.max(0, desiredCount);
-    while (this.enemies.size() > safeCount) {
+    while (this.enemies.size() > safeCount)
+    {
       this.enemies.remove(this.enemies.size() - 1);
     }
   }
 
-  public int removeByTypeAndMinimumAnimationTicks(EnemyType type, int animationTicks) {
+  public int removeByTypeAndMinimumAnimationTicks(EnemyType type, int animationTicks)
+      {
     int removedCount = 0;
     for (int i = this.enemies.size() - 1; i >= 0; i--) {
       Enemy enemy = this.enemies.get(i);
-      if (enemy.getType() == type && enemy.getAnimationTicks() >= animationTicks) {
+      if (enemy.getType() == type && enemy.getAnimationTicks() >= animationTicks)
+      {
         this.enemies.remove(i);
         removedCount++;
       }
@@ -76,20 +84,24 @@ public class EnemySystem {
     return removedCount;
   }
 
-  public void update(GameMap map, Player player) {
+  public void update(GameMap map, Player player)
+        {
     if (map == null || player == null) {
       updateFlameBurstEffects();
       updateCombatFloatingTexts();
       return;
     }
-    for (int i = this.enemies.size() - 1; i >= 0; i--) {
+    for (int i = this.enemies.size() - 1; i >= 0; i--)
+      {
       Enemy enemy = this.enemies.get(i);
-      if (enemy.isDead()) {
+      if (enemy.isDead())
+      {
         this.enemies.remove(i);
         continue;
       }
       enemy.update(map, player);
-      if (enemy.isDead()) {
+      if (enemy.isDead())
+        {
         this.enemies.remove(i);
       }
     }
@@ -98,23 +110,28 @@ public class EnemySystem {
     updateCombatFloatingTexts();
   }
 
-  private void resolveEnemyCollisions(GameMap map) {
+  private void resolveEnemyCollisions(GameMap map)
+        {
     int count = this.enemies.size();
-    for (int i = 0; i < count - 1; i++) {
+    for (int i = 0; i < count - 1; i++)
+    {
       Enemy first = this.enemies.get(i);
-      for (int j = i + 1; j < count; j++) {
+      for (int j = i + 1; j < count; j++)
+      {
         resolveEnemyCollision(map, first, this.enemies.get(j), i, j);
       }
     }
   }
 
-  private void resolveEnemyCollision(GameMap map, Enemy first, Enemy second, int firstIndex, int secondIndex) {
+  private void resolveEnemyCollision(GameMap map, Enemy first, Enemy second, int firstIndex, int secondIndex)
+        {
     int minimumDistance = first.getType().getCollisionRadius() + second.getType().getCollisionRadius();
     double deltaX = second.getCollisionX() - first.getCollisionX();
     double deltaY = second.getCollisionY() - first.getCollisionY();
     double distanceSquared = deltaX * deltaX + deltaY * deltaY;
     double minimumDistanceSquared = minimumDistance * minimumDistance;
-    if (distanceSquared >= minimumDistanceSquared) {
+    if (distanceSquared >= minimumDistanceSquared)
+    {
       return;
     }
     double distance;
@@ -126,7 +143,8 @@ public class EnemySystem {
       distance = Math.sqrt(distanceSquared);
     }
     double pushDistance = Math.min((minimumDistance - distance) * 0.5, ENEMY_COLLISION_MAX_PUSH_PIXELS);
-    if (pushDistance <= 0.0) {
+    if (pushDistance <= 0.0)
+      {
       return;
     }
     double normalX = deltaX / distance;
@@ -135,7 +153,8 @@ public class EnemySystem {
     second.pushBy(map, normalX * pushDistance, normalY * pushDistance);
   }
 
-  public void damageEnemy(Enemy enemy, double amount, Player sourcePlayer, ItemDefinition weapon) {
+  public void damageEnemy(Enemy enemy, double amount, Player sourcePlayer, ItemDefinition weapon)
+    {
     if (enemy == null || amount <= 0.0) {
       return;
     }
@@ -152,15 +171,18 @@ public class EnemySystem {
     enemy.damage(finalDamage, sourcePlayer);
   }
 
-  private void recordHitSound(Enemy enemy) {
+  private void recordHitSound(Enemy enemy)
+      {
     String hitSoundPath = enemy.getType().getHitSoundPath();
-    if (hitSoundPath == null || hitSoundPath.isEmpty()) {
+    if (hitSoundPath == null || hitSoundPath.isEmpty())
+    {
       return;
     }
     this.hitSounds.add(new EnemyHitSound(hitSoundPath, enemy.getWorldX(), enemy.getWorldY()));
   }
 
-  private boolean isCriticalHit(Player sourcePlayer, ItemDefinition weapon) {
+  private boolean isCriticalHit(Player sourcePlayer, ItemDefinition weapon)
+    {
     if (sourcePlayer == null || weapon == null || !weapon.canCrit()) {
       return false;
     }
@@ -168,11 +190,14 @@ public class EnemySystem {
     return critChancePercent > 0 && this.combatRandom.nextInt(100) < critChancePercent;
   }
 
-  public void collectDeadEnemies() {
+  public void collectDeadEnemies()
+    {
     this.collectedDeadEnemies.clear();
-    for (int i = this.enemies.size() - 1; i >= 0; i--) {
+    for (int i = this.enemies.size() - 1; i >= 0; i--)
+    {
       Enemy enemy = this.enemies.get(i);
-      if (!enemy.isDead()) {
+      if (!enemy.isDead())
+      {
         continue;
       }
       this.collectedDeadEnemies.add(enemy);
@@ -180,51 +205,62 @@ public class EnemySystem {
     }
   }
 
-  public List<Enemy> getCollectedDeadEnemies() {
+  public List<Enemy> getCollectedDeadEnemies()
+      {
     return this.collectedDeadEnemies;
   }
 
-  public void clearCollectedDeadEnemies() {
+  public void clearCollectedDeadEnemies()
+  {
     this.collectedDeadEnemies.clear();
   }
 
-  private void updateFlameBurstEffects() {
+  private void updateFlameBurstEffects()
+    {
     for (int i = this.flameBurstEffects.size() - 1; i >= 0; i--) {
       FlameBurstEffect effect = this.flameBurstEffects.get(i);
       effect.update();
-      if (effect.isExpired()) {
+      if (effect.isExpired())
+      {
         this.flameBurstEffects.remove(i);
       }
     }
   }
 
-  private void updateCombatFloatingTexts() {
+  private void updateCombatFloatingTexts()
+        {
     for (int i = this.combatFloatingTexts.size() - 1; i >= 0; i--) {
       CombatFloatingText text = this.combatFloatingTexts.get(i);
       text.update();
-      if (text.isExpired()) {
+      if (text.isExpired())
+      {
         this.combatFloatingTexts.remove(i);
       }
     }
   }
 
-  public List<Enemy> getEnemies() {
+  public List<Enemy> getEnemies()
+        {
     return Collections.unmodifiableList(this.enemies);
   }
 
-  public List<FlameBurstEffect> getFlameBurstEffects() {
+  public List<FlameBurstEffect> getFlameBurstEffects()
+    {
     return this.flameBurstEffects;
   }
 
-  public List<CombatFloatingText> getCombatFloatingTexts() {
+  public List<CombatFloatingText> getCombatFloatingTexts()
+  {
     return this.combatFloatingTexts;
   }
 
-  public List<EnemyHitSound> getHitSounds() {
+  public List<EnemyHitSound> getHitSounds()
+  {
     return this.hitSounds;
   }
 
-  public void clearHitSounds() {
+  public void clearHitSounds()
+  {
     this.hitSounds.clear();
   }
 }

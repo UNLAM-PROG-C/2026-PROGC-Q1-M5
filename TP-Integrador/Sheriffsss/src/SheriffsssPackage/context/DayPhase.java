@@ -8,11 +8,13 @@ public enum DayPhase {
 
   private final String displayName;
 
-  DayPhase(String displayName) {
+  DayPhase(String displayName)
+  {
     this.displayName = displayName;
   }
 
-  public String getDisplayName() {
+  public String getDisplayName()
+  {
     return this.displayName;
   }
 }

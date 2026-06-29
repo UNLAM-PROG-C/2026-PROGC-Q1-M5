@@ -157,7 +157,8 @@ public final class TrainingMode {
   private boolean debugUsed;
   private TutorialPhase tutorialPhase = TutorialPhase.AIM;
 
-  public TrainingMode(Game game, EnemySystem enemySystem, int sessionSeedHash) {
+  public TrainingMode(Game game, EnemySystem enemySystem, int sessionSeedHash)
+ {
     this.game = game;
     this.enemySystem = enemySystem;
     this.sessionSeedHash = sessionSeedHash;
@@ -187,7 +188,8 @@ public final class TrainingMode {
       && tileY >= INTERIOR_ORIGIN_Y && tileY < INTERIOR_ORIGIN_Y + INTERIOR_TILES;
   }
 
-  private static boolean isPerimeterFenceTile(int tileX, int tileY) {
+  private static boolean isPerimeterFenceTile(int tileX, int tileY)
+  {
     if (isInsideInnerArena(tileX, tileY)) {
       return false;
     }
@@ -195,7 +197,8 @@ public final class TrainingMode {
       && tileY >= INTERIOR_ORIGIN_Y - 1 && tileY <= INTERIOR_ORIGIN_Y + INTERIOR_TILES;
   }
 
-  private void scatterWildernessVegetation(GameMap arena) {
+  private void scatterWildernessVegetation(GameMap arena)
+  {
     double p = GameConfig.TRAINING_WILDERNESS_PROP_PER_TILE;
     for (int tileY = 0; tileY < ARENA_TILES_HIGH; tileY++) {
       for (int tileX = 0; tileX < ARENA_TILES_WIDE; tileX++) {
@@ -216,7 +219,8 @@ public final class TrainingMode {
     }
   }
 
-  private void placePerimeterFence(GameMap arena) {
+  private void placePerimeterFence(GameMap arena)
+            {
     for (int tileY = 0; tileY < ARENA_TILES_HIGH; tileY++) {
       for (int tileX = 0; tileX < ARENA_TILES_WIDE; tileX++) {
         if (!isPerimeterFenceTile(tileX, tileY)) {
@@ -227,7 +231,8 @@ public final class TrainingMode {
     }
   }
 
-  private void placeWildernessTree(GameMap arena, Random r, int rootTileX, int rootTileY) {
+  private void placeWildernessTree(GameMap arena, Random r, int rootTileX, int rootTileY)
+        {
     if (!canPlaceWildernessTree(arena, rootTileX, rootTileY)) {
       return;
     }
@@ -235,7 +240,8 @@ public final class TrainingMode {
     arena.placeObjectRect(type, rootTileX, rootTileY, borderTreeSolidMask(), borderTreeAboveMask());
   }
 
-  private boolean canPlaceWildernessTree(GameMap arena, int rootTileX, int rootTileY) {
+  private boolean canPlaceWildernessTree(GameMap arena, int rootTileX, int rootTileY)
+    {
     if (rootTileX < 0 || rootTileY < 0 || rootTileX + BORDER_TREE_WIDTH_TILES > ARENA_TILES_WIDE
       || rootTileY + BORDER_TREE_HEIGHT_TILES > ARENA_TILES_HIGH) {
       return false;
@@ -251,32 +257,38 @@ public final class TrainingMode {
     return true;
   }
 
-  private boolean[] borderTreeSolidMask() {
+  private boolean[] borderTreeSolidMask()
+  {
     boolean[] solid = new boolean[BORDER_TREE_WIDTH_TILES * BORDER_TREE_HEIGHT_TILES];
     Arrays.fill(solid, true);
     return solid;
   }
 
-  private boolean[] borderTreeAboveMask() {
+  private boolean[] borderTreeAboveMask()
+    {
     boolean[] above = new boolean[BORDER_TREE_WIDTH_TILES * BORDER_TREE_HEIGHT_TILES];
     Arrays.fill(above, true);
     return above;
   }
 
-  private void setPlayerSpawnFromTile(int centerTileX, int centerTileY) {
+  private void setPlayerSpawnFromTile(int centerTileX, int centerTileY)
+    {
     this.playerSpawnWorldX = tileToWorldCenter(centerTileX);
     this.playerSpawnWorldY = tileToWorldCenter(centerTileY);
   }
 
-  private static int tileToWorldCenter(int tile) {
+  private static int tileToWorldCenter(int tile)
+    {
     return tile * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
   }
 
-  private static boolean isInsideArenaBounds(int tileX, int tileY) {
+  private static boolean isInsideArenaBounds(int tileX, int tileY)
+  {
     return isInsideInnerArena(tileX, tileY);
   }
 
-  private void placeCenterFence(GameMap arena, int centerTileX, int centerTileY) {
+  private void placeCenterFence(GameMap arena, int centerTileX, int centerTileY)
+    {
     for (int tileX = centerTileX - CENTER_FENCE_HALF_SIZE_TILES;
         tileX <= centerTileX + CENTER_FENCE_HALF_SIZE_TILES;
         tileX++) {
@@ -285,20 +297,23 @@ public final class TrainingMode {
     }
     for (int tileY = centerTileY - CENTER_FENCE_HALF_SIZE_TILES + 1;
         tileY < centerTileY + CENTER_FENCE_HALF_SIZE_TILES;
-        tileY++) {
+        tileY++)
+      {
       placeCenterFenceTile(arena, centerTileX - CENTER_FENCE_HALF_SIZE_TILES, tileY);
       placeCenterFenceTile(arena, centerTileX + CENTER_FENCE_HALF_SIZE_TILES, tileY);
     }
   }
 
-  private void placeCenterFenceTile(GameMap arena, int tileX, int tileY) {
+  private void placeCenterFenceTile(GameMap arena, int tileX, int tileY)
+      {
     if (!isInsideArenaBounds(tileX, tileY)) {
       return;
     }
     arena.placeSingleObject(MapObjectType.WOODEN_FENCE, tileX, tileY, true, false);
   }
 
-  private void placeDecorations(GameMap arena) {
+  private void placeDecorations(GameMap arena)
+    {
     int loX = INTERIOR_ORIGIN_X;
     int hiX = INTERIOR_ORIGIN_X + INTERIOR_TILES;
     int loY = INTERIOR_ORIGIN_Y;
@@ -307,7 +322,8 @@ public final class TrainingMode {
     for (int attempt = 0; attempt < RANDOM_SPAWN_ATTEMPTS && placed < DECORATION_COUNT; attempt++) {
       int tileX = this.terrainRandom.nextInt(loX, hiX);
       int tileY = this.terrainRandom.nextInt(loY, hiY);
-      if (isInsideCenterFence(tileX, tileY) || !arena.canPlaceObject(tileX, tileY)) {
+      if (isInsideCenterFence(tileX, tileY) || !arena.canPlaceObject(tileX, tileY))
+      {
         continue;
       }
       arena.placeSingleObject(MapObjectType.DRY_BUSH, tileX, tileY, false, false);
@@ -315,16 +331,19 @@ public final class TrainingMode {
     }
   }
 
-  public void start() {
+  public void start()
+      {
     this.targetSpawnRandom.setSeed(~this.sessionSeedHash);
     spawnInitialEnemies();
   }
 
-  public void shutdown() {
+  public void shutdown()
+    {
     this.tutorialThread.skip();
     try {
       this.tutorialThread.join(TUTORIAL_JOIN_TIMEOUT_MS);
-    } catch (InterruptedException ignored) {
+    } catch (InterruptedException ignored)
+    {
       Thread.currentThread().interrupt();
     }
     saveControls();
@@ -332,7 +351,8 @@ public final class TrainingMode {
 
   // === Enemy spawn / sync ===
 
-  private void spawnInitialEnemies() {
+  private void spawnInitialEnemies()
+      {
     this.enemySystem.clear();
     this.enemySystem.addEnemy(createEnemy());
     this.lastEnemyCount = this.enemySystem.enemyCount();
@@ -357,12 +377,14 @@ public final class TrainingMode {
     this.tutorialPhase = TutorialPhase.AIM;
   }
 
-  private Enemy createEnemy() {
+  private Enemy createEnemy()
+    {
     int[] spawn = randomArenaSpawn();
     return this.enemyFactory.createTrainingTarget(spawn[0], spawn[1], ENEMY_INITIAL_DAY_COUNT);
   }
 
-  private int[] randomArenaSpawn() {
+  private int[] randomArenaSpawn()
+    {
     int loX = INTERIOR_ORIGIN_X;
     int hiX = INTERIOR_ORIGIN_X + INTERIOR_TILES;
     int loY = INTERIOR_ORIGIN_Y;
@@ -372,27 +394,32 @@ public final class TrainingMode {
       int tileY = this.targetSpawnRandom.nextInt(loY, hiY);
       int worldX = tileToWorldCenter(tileX);
       int worldY = tileToWorldCenter(tileY);
-      if (!isInsideCenterFence(tileX, tileY) && (this.arena == null || this.arena.canPlaceObject(tileX, tileY))) {
+      if (!isInsideCenterFence(tileX, tileY) && (this.arena == null || this.arena.canPlaceObject(tileX, tileY)))
+      {
         return new int[] { worldX, worldY };
       }
     }
     return new int[] { tileToWorldCenter(INTERIOR_CENTER_TILE_X), tileToWorldCenter(INTERIOR_CENTER_TILE_Y) };
   }
 
-  private boolean isInsideCenterFence(int tileX, int tileY) {
+  private boolean isInsideCenterFence(int tileX, int tileY)
+    {
     int centerTileX = INTERIOR_CENTER_TILE_X;
     int centerTileY = INTERIOR_CENTER_TILE_Y;
     return Math.abs(tileX - centerTileX) <= CENTER_FENCE_HALF_SIZE_TILES
       && Math.abs(tileY - centerTileY) <= CENTER_FENCE_HALF_SIZE_TILES;
   }
 
-  private void syncEnemyCountToControls(int replacementCount) {
+  private void syncEnemyCountToControls(int replacementCount)
+    {
     int desired = this.controls.getEnemyCount();
-    while (replacementCount > 0 && this.enemySystem.enemyCount() < desired) {
+    while (replacementCount > 0 && this.enemySystem.enemyCount() < desired)
+    {
       this.enemySystem.addEnemy(createEnemy());
       replacementCount--;
     }
-    if (this.enemySystem.enemyCount() < desired) {
+    if (this.enemySystem.enemyCount() < desired)
+      {
       if (this.spawnCooldownTicks > 0) {
         this.spawnCooldownTicks--;
         return;
@@ -404,26 +431,31 @@ public final class TrainingMode {
     this.lastEnemyCount = this.enemySystem.enemyCount();
   }
 
-  public void resetArena() {
+  public void resetArena()
+      {
     spawnInitialEnemies();
   }
 
   // === Update tick ===
 
-  public void update(Player player, GameInput input, ProjectileSystem projectileSystem) {
+  public void update(Player player, GameInput input, ProjectileSystem projectileSystem)
+    {
     markDebugUsedIfNeeded();
-    if (this.sessionFinished) {
+    if (this.sessionFinished)
+    {
       handleFinalInput(input);
       return;
     }
-    if (player != null && player.isDead()) {
+    if (player != null && player.isDead())
+      {
       handleDeadInput(input);
       return;
     }
     readPanelInput(input);
     updateTutorialFlow(projectileSystem);
     updateHintAlpha();
-    if (isWaitingForFirstShot()) {
+    if (isWaitingForFirstShot())
+      {
       return;
     }
     updateProjectileFailures(projectileSystem);
@@ -435,7 +467,8 @@ public final class TrainingMode {
     syncEnemyCountToControls(replacementCount);
   }
 
-  public void notifyShotFired() {
+  public void notifyShotFired()
+    {
     this.shotFired = true;
     this.shotsFired++;
     if (this.tutorialPhase != TutorialPhase.NORMAL) {
@@ -443,15 +476,18 @@ public final class TrainingMode {
     }
   }
 
-  public boolean isSessionFinished() {
+  public boolean isSessionFinished()
+  {
     return this.sessionFinished;
   }
 
-  public boolean isWaitingForFirstShot() {
+  public boolean isWaitingForFirstShot()
+  {
     return this.tutorialPhase == TutorialPhase.AIM;
   }
 
-  public TrainingHudSnapshot hudSnapshot(Player player) {
+  public TrainingHudSnapshot hudSnapshot(Player player)
+  {
     TrainingHudSnapshotConfig config = new TrainingHudSnapshotConfig()
       .withStats(this.displayedFailures, this.aciertos, precisionText())
       .withTimer(timerText(), this.tutorialPhase == TutorialPhase.NORMAL)
@@ -467,7 +503,8 @@ public final class TrainingMode {
 
   private void updateTutorialFlow(ProjectileSystem projectileSystem) {
     int projectileCount = projectileSystem == null ? 0 : projectileSystem.getProjectiles().size();
-    if (this.tutorialPhase == TutorialPhase.AIM && (this.shotFired || projectileCount > this.lastProjectileCount)) {
+    if (this.tutorialPhase == TutorialPhase.AIM && (this.shotFired || projectileCount > this.lastProjectileCount))
+    {
       this.tutorialPhase = TutorialPhase.TARGETS;
       this.targetHintTicks = 0;
       this.hintFadeShotSteps = 0;
@@ -483,7 +520,8 @@ public final class TrainingMode {
         startTargetLifetime();
         return;
       }
-      if (this.targetHintHit && this.targetHintTicks >= TARGET_HINT_MIN_TICKS) {
+      if (this.targetHintHit && this.targetHintTicks >= TARGET_HINT_MIN_TICKS)
+        {
         this.tutorialPhase = TutorialPhase.TIMER_NOTICE;
         this.targetHintTicks = 0;
         this.hintFadeShotSteps = 0;
@@ -498,14 +536,17 @@ public final class TrainingMode {
     }
   }
 
-  private void markDebugUsedIfNeeded() {
+  private void markDebugUsedIfNeeded()
+        {
     DebugOptions debug = this.game == null ? null : this.game.getDebugOptions();
-    if (debug != null && debug.hasAnyModeEnabled()) {
+    if (debug != null && debug.hasAnyModeEnabled())
+    {
       this.debugUsed = true;
     }
   }
 
-  private void startTargetLifetime() {
+  private void startTargetLifetime()
+  {
     if (this.targetLifetimeRunning) {
       return;
     }
@@ -513,29 +554,35 @@ public final class TrainingMode {
     resetTargetAnimationTicks();
   }
 
-  private void resetTargetAnimationTicks() {
+  private void resetTargetAnimationTicks()
+    {
     java.util.List<Enemy> enemies = this.enemySystem.getEnemies();
-    for (int i = 0; i < enemies.size(); i++) {
+    for (int i = 0; i < enemies.size(); i++)
+    {
       Enemy enemy = enemies.get(i);
-      if (enemy.getType() == EnemyType.DIANA) {
+      if (enemy.getType() == EnemyType.DIANA)
+      {
         enemy.restoreTransientState(0, enemy.getFacing());
       }
     }
   }
 
-  private void handleDeadInput(GameInput input) {
+  private void handleDeadInput(GameInput input)
+        {
     drainPanelInputWhileDead(input);
     drainEndActionKeys(input);
     handleEndScreenClick(input, deathBoxX(), deathBoxY(), DEATH_BOX_WIDTH, DEATH_RESTART_BUTTON_Y, DEATH_EXIT_BUTTON_Y);
   }
 
-  private void handleFinalInput(GameInput input) {
+  private void handleFinalInput(GameInput input)
+    {
     drainPanelInputWhileDead(input);
     drainEndActionKeys(input);
     handleEndScreenClick(input, finalBoxX(), finalBoxY(), FINAL_BOX_WIDTH, FINAL_RESTART_BUTTON_Y, FINAL_EXIT_BUTTON_Y);
   }
 
-  private void drainEndActionKeys(GameInput input) {
+  private void drainEndActionKeys(GameInput input)
+    {
     input.consumeTrainingReset();
     input.consumeTrainingBackToMenu();
   }
@@ -546,67 +593,80 @@ public final class TrainingMode {
       int boxY,
       int boxWidth,
       int restartButtonY,
-      int exitButtonY) {
+      int exitButtonY)
+    {
     if (!input.consumePrimaryClick() || this.game == null) {
       return;
     }
     int mouseX = input.getMouseX();
     int mouseY = input.getMouseY();
     int buttonX = endButtonX(boxX, boxWidth);
-    if (isInsideButton(mouseX, mouseY, buttonX, boxY + restartButtonY)) {
+    if (isInsideButton(mouseX, mouseY, buttonX, boxY + restartButtonY))
+    {
       this.game.restartTraining();
       return;
     }
-    if (isInsideButton(mouseX, mouseY, buttonX, boxY + exitButtonY)) {
+    if (isInsideButton(mouseX, mouseY, buttonX, boxY + exitButtonY))
+      {
       this.game.exitTrainingToMenu();
     }
   }
 
-  private static boolean isInsideButton(int mouseX, int mouseY, int buttonX, int buttonY) {
+  private static boolean isInsideButton(int mouseX, int mouseY, int buttonX, int buttonY)
+      {
     return mouseX >= buttonX && mouseX <= buttonX + END_BUTTON_WIDTH
       && mouseY >= buttonY && mouseY <= buttonY + END_BUTTON_HEIGHT;
   }
 
-  private void drainPanelInputWhileDead(GameInput input) {
+  private void drainPanelInputWhileDead(GameInput input)
+  {
     input.consumeTrainingIncrement();
     input.consumeTrainingDecrement();
     input.consumeTrainingSkipTutorial();
   }
 
-  private void readPanelInput(GameInput input) {
+  private void readPanelInput(GameInput input)
+    {
     if (input.consumeTrainingIncrement()) {
       this.controls.incCount();
     }
-    if (input.consumeTrainingDecrement()) {
+    if (input.consumeTrainingDecrement())
+      {
       this.controls.decCount();
     }
-    if (input.consumeTrainingReset()) {
+    if (input.consumeTrainingReset())
+      {
       resetArena();
     }
-    if (input.consumeTrainingSkipTutorial()) {
+    if (input.consumeTrainingSkipTutorial())
+      {
       this.tutorialThread.skip();
     }
   }
 
-  private void updateSessionTimer(ProjectileSystem projectileSystem) {
+  private void updateSessionTimer(ProjectileSystem projectileSystem)
+      {
     if (this.sessionTicksRemaining <= 0) {
       finishSession(projectileSystem);
       return;
     }
     playCountdownSoundIfNeeded();
     this.sessionTicksRemaining--;
-    if (this.sessionTicksRemaining <= 0) {
+    if (this.sessionTicksRemaining <= 0)
+      {
       finishSession(projectileSystem);
     }
   }
 
-  private void finishSession(ProjectileSystem projectileSystem) {
+  private void finishSession(ProjectileSystem projectileSystem)
+      {
     countPredictedFinalProjectileFailures(projectileSystem);
     updateDisplayedTrainingStats();
     this.sessionFinished = true;
   }
 
-  private void playCountdownSoundIfNeeded() {
+  private void playCountdownSoundIfNeeded()
+    {
     if (this.countdownSoundPlayed || this.sessionTicksRemaining != COUNTDOWN_SOUND_TICKS_REMAINING) {
       return;
     }
@@ -614,13 +674,16 @@ public final class TrainingMode {
     this.game.getAudio().playOnce(COUNTDOWN_SOUND_PATH, COUNTDOWN_SOUND_GAIN_DB);
   }
 
-  private int awardScoreForDestroyedTargets() {
+  private int awardScoreForDestroyedTargets()
+    {
     int destroyedCount = playerDestroyedTargetCount();
-    if (destroyedCount > 0) {
+    if (destroyedCount > 0)
+    {
       this.aciertos += destroyedCount;
       playHitMilestoneSounds();
       updateDisplayedTrainingStats();
-      if (this.tutorialPhase == TutorialPhase.TARGETS) {
+      if (this.tutorialPhase == TutorialPhase.TARGETS)
+      {
         this.targetHintHit = true;
       }
     }
@@ -628,13 +691,16 @@ public final class TrainingMode {
     return destroyedCount;
   }
 
-  private int playerDestroyedTargetCount() {
+  private int playerDestroyedTargetCount()
+    {
     int count = 0;
     Player player = this.game == null ? null : this.game.getPlayer();
     java.util.List<Enemy> deadEnemies = this.enemySystem.getCollectedDeadEnemies();
-    for (int i = 0; i < deadEnemies.size(); i++) {
+    for (int i = 0; i < deadEnemies.size(); i++)
+    {
       Enemy enemy = deadEnemies.get(i);
-      if (player != null && enemy.getType() == EnemyType.DIANA && enemy.getLastDamageSourcePlayer() == player) {
+      if (player != null && enemy.getType() == EnemyType.DIANA && enemy.getLastDamageSourcePlayer() == player)
+      {
         count++;
       }
     }
@@ -642,47 +708,56 @@ public final class TrainingMode {
     return count;
   }
 
-  private void playHitMilestoneSounds() {
+  private void playHitMilestoneSounds()
+    {
     while (this.aciertos >= this.nextHitSoundMilestone) {
       this.game.getAudio().playOnce(HIT_MILESTONE_SOUND_PATH, COUNTDOWN_SOUND_GAIN_DB);
       this.nextHitSoundMilestone += 10;
     }
   }
 
-  private int removeExpiredTargets() {
+  private int removeExpiredTargets()
+      {
     if (!this.targetLifetimeRunning) {
       return 0;
     }
     int removedCount = this.enemySystem.removeByTypeAndMinimumAnimationTicks(EnemyType.DIANA, TARGET_LIFETIME_TICKS);
-    if (removedCount > 0) {
+    if (removedCount > 0)
+    {
       this.lastEnemyCount = Math.max(0, this.lastEnemyCount - removedCount);
     }
     return removedCount;
   }
 
-  private int damageTargetsOverTime() {
+  private int damageTargetsOverTime()
+      {
     if (!this.targetLifetimeRunning) {
       return 0;
     }
     java.util.List<Enemy> enemies = this.enemySystem.getEnemies();
-    for (int i = 0; i < enemies.size(); i++) {
+    for (int i = 0; i < enemies.size(); i++)
+    {
       Enemy enemy = enemies.get(i);
       if (enemy.getType() == EnemyType.DIANA
           && !enemy.isDead()
           && enemy.getAnimationTicks() > 0
-          && enemy.getAnimationTicks() % TARGET_DECAY_INTERVAL_TICKS == 0) {
+          && enemy.getAnimationTicks() % TARGET_DECAY_INTERVAL_TICKS == 0)
+      {
         enemy.damage(TARGET_DECAY_DAMAGE);
       }
     }
     return 0;
   }
 
-  private int removeDeadTargets() {
+  private int removeDeadTargets()
+        {
     java.util.List<Enemy> enemies = this.enemySystem.getEnemies();
     int removedCount = 0;
-    for (int i = enemies.size() - 1; i >= 0; i--) {
+    for (int i = enemies.size() - 1; i >= 0; i--)
+    {
       Enemy enemy = enemies.get(i);
-      if (enemy.getType() == EnemyType.DIANA && enemy.isDead()) {
+      if (enemy.getType() == EnemyType.DIANA && enemy.isDead())
+      {
         this.enemySystem.removeEnemy(enemy);
         removedCount++;
       }
@@ -690,37 +765,44 @@ public final class TrainingMode {
     return removedCount;
   }
 
-  private void updateProjectileFailures(ProjectileSystem projectileSystem) {
+  private void updateProjectileFailures(ProjectileSystem projectileSystem)
+        {
     if (projectileSystem == null) {
       return;
     }
     java.util.List<Projectile> projectiles = projectileSystem.getProjectiles();
     int newFailures = 0;
-    for (int i = 0; i < projectiles.size(); i++) {
+    for (int i = 0; i < projectiles.size(); i++)
+    {
       Projectile projectile = projectiles.get(i);
       if (projectile == null || projectile.isCountedTrainingFailure()
-        || isWorldInsideTrainingPerimeter(projectile.getWorldX(), projectile.getWorldY())) {
+        || isWorldInsideTrainingPerimeter(projectile.getWorldX(), projectile.getWorldY()))
+      {
         continue;
       }
       projectile.markCountedTrainingFailure();
       newFailures++;
     }
-    if (newFailures > 0) {
+    if (newFailures > 0)
+      {
       this.fallos += newFailures;
       updateDisplayedTrainingStats();
     }
   }
 
-  private void countPredictedFinalProjectileFailures(ProjectileSystem projectileSystem) {
+  private void countPredictedFinalProjectileFailures(ProjectileSystem projectileSystem)
+      {
     if (projectileSystem == null) {
       return;
     }
     java.util.List<Projectile> projectiles = projectileSystem.getProjectiles();
     int predictedFailures = 0;
-    for (int i = 0; i < projectiles.size(); i++) {
+    for (int i = 0; i < projectiles.size(); i++)
+    {
       Projectile projectile = projectiles.get(i);
       if (projectile == null || projectile.isCountedTrainingFailure()
-        || !isWorldInsideTrainingPerimeter(projectile.getWorldX(), projectile.getWorldY())) {
+        || !isWorldInsideTrainingPerimeter(projectile.getWorldX(), projectile.getWorldY()))
+      {
         continue;
       }
       if (projectileTrajectoryWouldHitTarget(projectile)) {
@@ -729,12 +811,14 @@ public final class TrainingMode {
       projectile.markCountedTrainingFailure();
       predictedFailures++;
     }
-    if (predictedFailures > 0) {
+    if (predictedFailures > 0)
+      {
       this.fallos += predictedFailures;
     }
   }
 
-  private boolean projectileTrajectoryWouldHitTarget(Projectile projectile) {
+  private boolean projectileTrajectoryWouldHitTarget(Projectile projectile)
+  {
     double startX = projectile.getPreciseWorldX();
     double startY = projectile.getPreciseWorldY();
     double velocityX = projectile.getVelocityX();
@@ -742,20 +826,24 @@ public final class TrainingMode {
     double maxTicks = Math.min(
       projectile.getLifeTicks(),
       ticksUntilTrajectoryLeavesTrainingPerimeter(startX, startY, velocityX, velocityY));
-    if (maxTicks <= 0.0) {
+    if (maxTicks <= 0.0)
+    {
       return false;
     }
     double endX = startX + velocityX * maxTicks;
     double endY = startY + velocityY * maxTicks;
     java.util.List<Enemy> enemies = this.enemySystem.getEnemies();
     int projectilePadding = Math.max(projectile.getType().getDrawWidth(), projectile.getType().getDrawHeight()) / 2;
-    for (int i = 0; i < enemies.size(); i++) {
+    for (int i = 0; i < enemies.size(); i++)
+    {
       Enemy enemy = enemies.get(i);
-      if (enemy == null || enemy.isDead()) {
+      if (enemy == null || enemy.isDead())
+      {
         continue;
       }
       int hitRadius = enemy.getType().getCollisionRadius() + projectilePadding;
-      if (segmentIntersectsCircle(startX, startY, endX, endY, enemy.getWorldX(), enemy.getWorldY(), hitRadius)) {
+      if (segmentIntersectsCircle(startX, startY, endX, endY, enemy.getWorldX(), enemy.getWorldY(), hitRadius))
+      {
         return true;
       }
     }
@@ -766,20 +854,25 @@ public final class TrainingMode {
       double startX,
       double startY,
       double velocityX,
-      double velocityY) {
+      double velocityY)
+  {
     double left = getFailurePerimeterLeftWorldX();
     double right = left + getFailurePerimeterWidthWorld();
     double top = getFailurePerimeterTopWorldY();
     double bottom = top + getFailurePerimeterHeightWorld();
     double maxTicks = Double.POSITIVE_INFINITY;
-    if (velocityX > 0.0) {
+    if (velocityX > 0.0)
+    {
       maxTicks = Math.min(maxTicks, (right - startX) / velocityX);
-    } else if (velocityX < 0.0) {
+    } else if (velocityX < 0.0)
+      {
       maxTicks = Math.min(maxTicks, (left - startX) / velocityX);
     }
-    if (velocityY > 0.0) {
+    if (velocityY > 0.0)
+      {
       maxTicks = Math.min(maxTicks, (bottom - startY) / velocityY);
-    } else if (velocityY < 0.0) {
+    } else if (velocityY < 0.0)
+      {
       maxTicks = Math.min(maxTicks, (top - startY) / velocityY);
     }
     return Double.isFinite(maxTicks) ? Math.max(0.0, maxTicks) : 0.0;
@@ -792,7 +885,8 @@ public final class TrainingMode {
       double endY,
       double centerX,
       double centerY,
-      double radius) {
+      double radius)
+      {
     double segmentX = endX - startX;
     double segmentY = endY - startY;
     double lengthSquared = segmentX * segmentX + segmentY * segmentY;
@@ -810,36 +904,43 @@ public final class TrainingMode {
     return deltaX * deltaX + deltaY * deltaY <= radius * radius;
   }
 
-  private String precisionText() {
+  private String precisionText()
+    {
     return this.displayedPrecisionPercent + "%";
   }
 
-  private void updateDisplayedTrainingStats() {
+  private void updateDisplayedTrainingStats()
+  {
     int effectiveShots = effectiveShotsFired();
     this.displayedFailures = this.fallos;
-    if (effectiveShots <= 0) {
+    if (effectiveShots <= 0)
+    {
       this.displayedPrecisionPercent = 0;
       return;
     }
     this.displayedPrecisionPercent = (int) Math.round((this.aciertos * 100.0) / effectiveShots);
   }
 
-  private int effectiveShotsFired() {
+  private int effectiveShotsFired()
+    {
     DebugOptions debug = this.game == null ? null : this.game.getDebugOptions();
-    if (debug != null && debug.shouldForceTrainingPerfectAccuracy()) {
+    if (debug != null && debug.shouldForceTrainingPerfectAccuracy())
+    {
       return this.aciertos;
     }
     return this.shotsFired;
   }
 
-  private static boolean isWorldInsideTrainingPerimeter(int worldX, int worldY) {
+  private static boolean isWorldInsideTrainingPerimeter(int worldX, int worldY)
+  {
     int tileX = Math.floorDiv(worldX, GameConfig.TILE_SIZE);
     int tileY = Math.floorDiv(worldY, GameConfig.TILE_SIZE);
     return tileX >= INTERIOR_ORIGIN_X && tileX < INTERIOR_ORIGIN_X + INTERIOR_TILES
       && tileY >= INTERIOR_ORIGIN_Y && tileY < INTERIOR_ORIGIN_Y + INTERIOR_TILES;
   }
 
-  private int finalScore() {
+  private int finalScore()
+    {
     double multiplicador = 1;
     if (this.displayedPrecisionPercent < 100) {
       multiplicador = 1;
@@ -854,38 +955,46 @@ public final class TrainingMode {
     return (seconds / 60) + ":" + (seconds % 60 < 10 ? "0" : "") + (seconds % 60);
   }
 
-  private int outerFenceScreenCenterX() {
+  private int outerFenceScreenCenterX()
+    {
     return tileToWorldCenter(INTERIOR_CENTER_TILE_X) - this.game.getCameraCenterWorldX() + GameConfig.SCREEN_CENTER_X;
   }
 
-  private int outerFenceBottomScreenY() {
+  private int outerFenceBottomScreenY()
+    {
     int bottomFenceWorldY = (INTERIOR_ORIGIN_Y + INTERIOR_TILES + 1) * GameConfig.TILE_SIZE;
     return bottomFenceWorldY - this.game.getCameraCenterWorldY() + GameConfig.SCREEN_CENTER_Y;
   }
 
-  private int trainingPromptBaselineY() {
+  private int trainingPromptBaselineY()
+    {
     return Math.min(outerFenceBottomScreenY() + HINT_BASELINE_BELOW_OUTER_FENCE_BOTTOM,
       GameConfig.SCREEN_HEIGHT - HINT_BOTTOM_SCREEN_MARGIN);
   }
 
-  private float hintAlpha() {
+  private float hintAlpha()
+    {
     return Math.max(0.0f, HINT_START_ALPHA - this.hintFadeShotSteps * HINT_SHOT_ALPHA_STEP);
   }
 
-  private void updateHintAlpha() {
+  private void updateHintAlpha()
+    {
     float targetAlpha = hintAlpha();
-    if (this.displayedHintAlpha <= targetAlpha) {
+    if (this.displayedHintAlpha <= targetAlpha)
+    {
       this.displayedHintAlpha = targetAlpha;
       return;
     }
     this.displayedHintAlpha = Math.max(targetAlpha, this.displayedHintAlpha - HINT_ALPHA_FADE_STEP);
   }
 
-  private boolean isHintFullyFaded() {
+  private boolean isHintFullyFaded()
+    {
     return hintAlpha() <= 0.0f && this.displayedHintAlpha <= 0.0f;
   }
 
-  private String currentHintText() {
+  private String currentHintText()
+    {
     if (this.tutorialPhase == TutorialPhase.TIMER_NOTICE) {
       return TIMER_NOTICE_TEXT;
     }
@@ -898,7 +1007,8 @@ public final class TrainingMode {
     return "";
   }
 
-  private static int deathBoxX() {
+  private static int deathBoxX()
+  {
     return (GameConfig.SCREEN_WIDTH - DEATH_BOX_WIDTH) / 2;
   }
 
@@ -906,7 +1016,8 @@ public final class TrainingMode {
     return GameConfig.SCREEN_HEIGHT / 2 + DEATH_BOX_Y_OFFSET_FROM_CENTER;
   }
 
-  private static int finalBoxX() {
+  private static int finalBoxX()
+  {
     return (GameConfig.SCREEN_WIDTH - FINAL_BOX_WIDTH) / 2;
   }
 
@@ -920,85 +1031,104 @@ public final class TrainingMode {
 
   // === Persistencia ===
 
-  private void loadControls() {
+  private void loadControls()
+  {
     File file = new File(CONFIG_PATH);
     if (!file.exists()) {
       return;
     }
-    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(file)))
+    {
       String line;
       while ((line = reader.readLine()) != null) {
         applyConfigLine(line);
       }
-    } catch (IOException ignored) {
+    } catch (IOException ignored)
+        {
     }
   }
 
-  private void applyConfigLine(String line) {
+  private void applyConfigLine(String line)
+  {
     int separator = line.indexOf(CONFIG_KEY_VALUE_SEPARATOR);
-    if (separator < 0) {
+    if (separator < 0)
+    {
       return;
     }
     String key = line.substring(0, separator).trim();
     String value = line.substring(separator + 1).trim();
-    if (CONFIG_KEY_COUNT.equals(key)) {
+    if (CONFIG_KEY_COUNT.equals(key))
+    {
       applyCountValue(value);
     }
   }
 
-  private void applyCountValue(String value) {
+  private void applyCountValue(String value)
+      {
     try {
       this.controls.setEnemyCount(Integer.parseInt(value));
-    } catch (NumberFormatException ignored) {
+    } catch (NumberFormatException ignored)
+      {
     }
   }
 
-  private void saveControls() {
+  private void saveControls()
+  {
     File file = new File(CONFIG_PATH);
     ensureParentDirExists(file);
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
       writer.write(CONFIG_KEY_COUNT + CONFIG_KEY_VALUE_SEPARATOR + this.controls.getEnemyCount());
       writer.newLine();
-    } catch (IOException ignored) {
+    } catch (IOException ignored)
+      {
     }
   }
 
-  private static void ensureParentDirExists(File file) {
+  private static void ensureParentDirExists(File file)
+  {
     File parent = file.getParentFile();
-    if (parent != null && !parent.exists()) {
+    if (parent != null && !parent.exists())
+    {
       parent.mkdirs();
     }
   }
 
   // === Public state ===
 
-  public int getPlayerSpawnWorldX() {
+  public int getPlayerSpawnWorldX()
+      {
     return this.playerSpawnWorldX;
   }
 
-  public int getPlayerSpawnWorldY() {
+  public int getPlayerSpawnWorldY()
+  {
     return this.playerSpawnWorldY;
   }
 
-  public int getFailurePerimeterLeftWorldX() {
+  public int getFailurePerimeterLeftWorldX()
+  {
     return INTERIOR_ORIGIN_X * GameConfig.TILE_SIZE;
   }
 
-  public int getFailurePerimeterTopWorldY() {
+  public int getFailurePerimeterTopWorldY()
+  {
     return INTERIOR_ORIGIN_Y * GameConfig.TILE_SIZE;
   }
 
-  public int getFailurePerimeterWidthWorld() {
+  public int getFailurePerimeterWidthWorld()
+  {
     return INTERIOR_TILES * GameConfig.TILE_SIZE;
   }
 
-  public int getFailurePerimeterHeightWorld() {
+  public int getFailurePerimeterHeightWorld()
+  {
     return INTERIOR_TILES * GameConfig.TILE_SIZE;
   }
 
   // === Tutorial steps ===
 
-  private static List<TutorialStep> buildSteps() {
+  private static List<TutorialStep> buildSteps()
+  {
     return Arrays.asList(
       new TutorialStep(
         TutorialEventType.FIRST_MOVEMENT,

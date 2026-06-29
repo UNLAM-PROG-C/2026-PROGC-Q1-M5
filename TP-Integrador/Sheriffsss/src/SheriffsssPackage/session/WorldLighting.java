@@ -13,20 +13,23 @@ public class WorldLighting {
 	public static final int MAX_DARKNESS_ALPHA = 225;
 	private static final Debuff[] DEBUFFS = Debuff.values();
 
-	public int resolveDarknessAlpha(GameMap map, int tileX, int tileY, DayNightCycle cycle) {
+	public int resolveDarknessAlpha(GameMap map, int tileX, int tileY, DayNightCycle cycle)
+ {
 		double light = Math.max(cycle.getAmbientLight(), resolveLocalLight(map, tileX, tileY));
 		light = Math.max(0.0, Math.min(1.0, light));
 		return (int) ((1.0 - light) * MAX_DARKNESS_ALPHA);
 	}
 
-	public int resolveDarknessAlpha(GameMap map, Player player, int tileX, int tileY, DayNightCycle cycle) {
+	public int resolveDarknessAlpha(GameMap map, Player player, int tileX, int tileY, DayNightCycle cycle)
+  {
 		double light = Math.max(cycle.getAmbientLight(), resolveLocalLight(map, tileX, tileY));
 		light = Math.max(light, resolveHeldLight(map, player, tileX, tileY));
 		light = Math.max(0.0, Math.min(1.0, light));
 		return (int) ((1.0 - light) * MAX_DARKNESS_ALPHA);
 	}
 
-	public double resolveDynamicLight(GameMap map, int sourceWorldX, int sourceWorldY, int tileX, int tileY, int radiusTiles, double intensity) {
+	public double resolveDynamicLight(GameMap map, int sourceWorldX, int sourceWorldY, int tileX, int tileY, int radiusTiles, double intensity)
+  {
 		if (map == null) {
 			return 0.0;
 		}
@@ -35,20 +38,23 @@ public class WorldLighting {
 		return contribution(radiusTiles, intensity, tileX - sourceTileX, tileY - sourceTileY);
 	}
 
-	public boolean hasEnemyDebuffLights(List<Enemy> enemies) {
+	public boolean hasEnemyDebuffLights(List<Enemy> enemies)
+  {
 		if (enemies == null) {
 			return false;
 		}
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy enemy = enemies.get(i);
-			if (enemy != null && !enemy.isDead() && enemy.hasLightEmittingDebuff()) {
+			if (enemy != null && !enemy.isDead() && enemy.hasLightEmittingDebuff())
+   {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public double resolveEnemyDebuffLight(GameMap map, List<Enemy> enemies, int tileX, int tileY) {
+	public double resolveEnemyDebuffLight(GameMap map, List<Enemy> enemies, int tileX, int tileY)
+ {
 		if (map == null || enemies == null) {
 			return 0.0;
 		}
@@ -57,18 +63,21 @@ public class WorldLighting {
 		int tileCenterWorldY = tileY * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy enemy = enemies.get(i);
-			if (enemy == null || enemy.isDead() || !enemy.hasLightEmittingDebuff()) {
+			if (enemy == null || enemy.isDead() || !enemy.hasLightEmittingDebuff())
+   {
 				continue;
 			}
 			int deltaX = tileCenterWorldX - enemy.getWorldX();
 			int deltaY = tileCenterWorldY - enemy.getWorldY();
-			for (int debuffIndex = 0; debuffIndex < DEBUFFS.length; debuffIndex++) {
+			for (int debuffIndex = 0; debuffIndex < DEBUFFS.length; debuffIndex++)
+   {
 				Debuff debuff = DEBUFFS[debuffIndex];
 				if (!enemy.hasDebuff(debuff)) {
 					continue;
 				}
 				bestLight = Math.max(bestLight, contributionPixels(debuff.getLightRadiusTiles() * GameConfig.TILE_SIZE, debuff.getLightIntensity(), deltaX, deltaY));
-				if (bestLight >= 1.0) {
+				if (bestLight >= 1.0)
+    {
 					return 1.0;
 				}
 			}
@@ -76,16 +85,19 @@ public class WorldLighting {
 		return bestLight;
 	}
 
-	private double resolveHeldLight(GameMap map, Player player, int tileX, int tileY) {
+	private double resolveHeldLight(GameMap map, Player player, int tileX, int tileY)
+ {
 		if (player == null) {
 			return 0.0;
 		}
 		ItemDefinition definition = player.getEquipment().getEquippedWeapon();
-		if (definition == null) {
+		if (definition == null)
+  {
 			return 0.0;
 		}
 		int radius = definition.getLightRadiusTiles();
-		if (radius <= 0) {
+		if (radius <= 0)
+  {
 			return 0.0;
 		}
 		double intensity = definition.getLightIntensity();
@@ -94,7 +106,8 @@ public class WorldLighting {
 		return contribution(radius, intensity, tileX - sourceX, tileY - sourceY);
 	}
 
-	private double resolveLocalLight(GameMap map, int tileX, int tileY) {
+	private double resolveLocalLight(GameMap map, int tileX, int tileY)
+  {
 		double bestLight = 0.0;
 		int radius = GameConfig.MAX_LIGHT_RADIUS_TILES;
 		for (int sourceX = tileX - radius; sourceX <= tileX + radius; sourceX++) {
@@ -106,11 +119,13 @@ public class WorldLighting {
 				bestLight = Math.max(bestLight, contribution(tileType.getLightRadiusTiles(), tileType.getLightIntensity(), tileX - sourceX, tileY - sourceY));
 
 				MapObject mapObject = map.getObject(sourceX, sourceY);
-				if (mapObject != null) {
+				if (mapObject != null)
+    {
 					MapObjectType objectType = mapObject.getType();
 					bestLight = Math.max(bestLight, contribution(objectType.getLightRadiusTiles(), objectType.getLightIntensity(), tileX - sourceX, tileY - sourceY));
 				}
-				if (bestLight >= 1.0) {
+				if (bestLight >= 1.0)
+     {
 					return 1.0;
 				}
 			}
@@ -118,7 +133,8 @@ public class WorldLighting {
 		return bestLight;
 	}
 
-	private double contribution(int radiusTiles, double intensity, int deltaX, int deltaY) {
+	private double contribution(int radiusTiles, double intensity, int deltaX, int deltaY)
+ {
 		if (radiusTiles <= 0 || intensity <= 0.0) {
 			return 0.0;
 		}
@@ -130,7 +146,8 @@ public class WorldLighting {
 		return intensity * (1.0 - distanceSquared / (double) radiusSquared);
 	}
 
-	private double contributionPixels(int radiusPixels, double intensity, int deltaX, int deltaY) {
+	private double contributionPixels(int radiusPixels, double intensity, int deltaX, int deltaY)
+ {
 		if (radiusPixels <= 0 || intensity <= 0.0) {
 			return 0.0;
 		}

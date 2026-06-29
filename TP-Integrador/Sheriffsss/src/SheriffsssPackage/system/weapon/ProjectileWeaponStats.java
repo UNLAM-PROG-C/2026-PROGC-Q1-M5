@@ -10,7 +10,8 @@ final class ProjectileWeaponStats {
 	private final int lifeTicks;
 
 	ProjectileWeaponStats(ProjectileType projectileType, int ammoDefinitionId, double damage, double speedPixels,
-		double knockbackStrengthPixels, int cooldownTicks, int lifeTicks) {
+		double knockbackStrengthPixels, int cooldownTicks, int lifeTicks)
+ {
 		this.projectileType = projectileType;
 		this.ammoDefinitionId = ammoDefinitionId;
 		this.damage = damage;
@@ -20,31 +21,38 @@ final class ProjectileWeaponStats {
 		this.lifeTicks = lifeTicks;
 	}
 
-	ProjectileType getProjectileType() {
+	ProjectileType getProjectileType()
+ {
 		return this.projectileType;
 	}
 
-	int getAmmoDefinitionId() {
+	int getAmmoDefinitionId()
+ {
 		return this.ammoDefinitionId;
 	}
 
-	double getDamage(ProjectileStatModifiers modifiers) {
+	double getDamage(ProjectileStatModifiers modifiers)
+ {
 		return Math.max(0.0, this.damage + modifiers.getDamage());
 	}
 
-	double getSpeedPixels(ProjectileStatModifiers modifiers) {
+	double getSpeedPixels(ProjectileStatModifiers modifiers)
+  {
 		return Math.max(0.0, this.speedPixels + modifiers.getSpeedPixels());
 	}
 
-	double getKnockbackStrengthPixels(ProjectileStatModifiers modifiers) {
+	double getKnockbackStrengthPixels(ProjectileStatModifiers modifiers)
+  {
 		return Math.max(0.0, this.knockbackStrengthPixels + modifiers.getKnockbackStrengthPixels());
 	}
 
-	int getCooldownTicks(ProjectileStatModifiers modifiers) {
+	int getCooldownTicks(ProjectileStatModifiers modifiers)
+  {
 		return Math.max(1, this.cooldownTicks + modifiers.getCooldownTicks());
 	}
 
-	int getLifeTicks(ProjectileStatModifiers modifiers) {
+	int getLifeTicks(ProjectileStatModifiers modifiers)
+  {
 		return Math.max(1, this.lifeTicks + modifiers.getLifeTicks());
 	}
 }

@@ -4,9 +4,11 @@ import SheriffsssPackage.context.GameConfig;
 
 
 public enum Debuff {
-  BURN(GameConfig.TARGET_FPS * 5, 3, 0.34) {
+  BURN(GameConfig.TARGET_FPS * 5, 3, 0.34)
+  {
     @Override
-    public void update(Enemy enemy) {
+    public void update(Enemy enemy)
+    {
       enemy.damageFromDebuff(this, enemy.resolveDebuffDamage(this, 1.2 / GameConfig.TARGET_FPS));
     }
   };
@@ -15,7 +17,8 @@ public enum Debuff {
   private final int lightRadiusTiles;
   private final double lightIntensity;
 
-  Debuff(int durationTicks) {
+  Debuff(int durationTicks)
+      {
     this(durationTicks, 0, 0.0);
   }
 
@@ -25,18 +28,22 @@ public enum Debuff {
     this.lightIntensity = Math.max(0.0, lightIntensity);
   }
 
-  public int getDurationTicks() {
+  public int getDurationTicks()
+    {
     return this.durationTicks;
   }
 
-  public int getLightRadiusTiles() {
+  public int getLightRadiusTiles()
+  {
     return this.lightRadiusTiles;
   }
 
-  public double getLightIntensity() {
+  public double getLightIntensity()
+  {
     return this.lightIntensity;
   }
 
-  public void update(Enemy enemy) {
+  public void update(Enemy enemy)
+  {
   }
 }

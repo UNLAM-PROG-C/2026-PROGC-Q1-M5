@@ -23,7 +23,8 @@ public enum MapObjectType {
 	private final int collisionHeight;
 	private static final MapObjectType[] VALUES = values();
 
-	MapObjectType(int id, int footprintWidth, int footprintHeight, String spritePath, Color minimapColor) {
+	MapObjectType(int id, int footprintWidth, int footprintHeight, String spritePath, Color minimapColor)
+ {
 		this(id, footprintWidth, footprintHeight, spritePath, minimapColor, GameConfig.TILE_SIZE, GameConfig.TILE_SIZE);
 	}
 
@@ -37,19 +38,31 @@ public enum MapObjectType {
 		this.collisionHeight = Math.max(1, collisionHeight);
 	}
 
-	public int getId() { return this.id; }
-	public int getFootprintWidth() { return this.footprintWidth; }
-	public int getFootprintHeight() { return this.footprintHeight; }
-	public String getSpritePath() { return this.spritePath; }
-	public int getCollisionWidth() { return this.collisionWidth; }
-	public int getCollisionHeight() { return this.collisionHeight; }
-	public boolean isBreakable() { return false; }
-	public double getDurability() { return 0.0; }
-	public int getLightRadiusTiles() { return 0; }
-	public double getLightIntensity() { return 0.0; }
-	public Color resolveMinimapColor(int drawIndex) { return this.minimapColor; }
+	public int getId()
+  { return this.id; }
+	public int getFootprintWidth()
+ { return this.footprintWidth; }
+	public int getFootprintHeight()
+ { return this.footprintHeight; }
+	public String getSpritePath()
+ { return this.spritePath; }
+	public int getCollisionWidth()
+ { return this.collisionWidth; }
+	public int getCollisionHeight()
+ { return this.collisionHeight; }
+	public boolean isBreakable()
+ { return false; }
+	public double getDurability()
+ { return 0.0; }
+	public int getLightRadiusTiles()
+ { return 0; }
+	public double getLightIntensity()
+ { return 0.0; }
+	public Color resolveMinimapColor(int drawIndex)
+ { return this.minimapColor; }
 
-	public static int getMaxFootprintWidth() {
+	public static int getMaxFootprintWidth()
+ {
 		int maxWidth = 1;
 		for (MapObjectType type : VALUES) {
 			maxWidth = Math.max(maxWidth, type.footprintWidth);
@@ -57,7 +70,8 @@ public enum MapObjectType {
 		return maxWidth;
 	}
 
-	public static int getMaxFootprintHeight() {
+	public static int getMaxFootprintHeight()
+   {
 		int maxHeight = 1;
 		for (MapObjectType type : VALUES) {
 			maxHeight = Math.max(maxHeight, type.footprintHeight);

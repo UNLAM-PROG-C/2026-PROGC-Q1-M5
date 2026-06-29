@@ -11,7 +11,8 @@ public enum CursorType {
   private final int hotspotX;
   private final int hotspotY;
 
-  CursorType(String spritePath, String cursorName) {
+  CursorType(String spritePath, String cursorName)
+  {
     this(spritePath, cursorName, Hotspot.AUTO_CENTER, Hotspot.AUTO_CENTER);
   }
 
@@ -22,20 +23,24 @@ public enum CursorType {
     this.hotspotY = hotspotY;
   }
 
-  public String getSpritePath() {
+  public String getSpritePath()
+  {
     return this.spritePath;
   }
 
-  public String getCursorName() {
+  public String getCursorName()
+  {
     return this.cursorName;
   }
 
-  public int getHotspotX(int imageWidth) {
+  public int getHotspotX(int imageWidth)
+  {
     int x = this.hotspotX >= 0 ? this.hotspotX : imageWidth / 2;
     return Math.min(x, imageWidth - 1);
   }
 
-  public int getHotspotY(int imageHeight) {
+  public int getHotspotY(int imageHeight)
+    {
     int y = this.hotspotY >= 0 ? this.hotspotY : imageHeight / 2;
     return Math.min(y, imageHeight - 1);
   }

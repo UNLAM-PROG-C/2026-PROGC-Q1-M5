@@ -10,7 +10,8 @@ public class DayNightCycle {
 	private int dayCount = 1;
 	private int tickOfDay;
 
-	public void tick() {
+	public void tick()
+ {
 		this.tickOfDay++;
 		if (this.tickOfDay >= TICKS_PER_DAY) {
 			this.tickOfDay = 0;
@@ -18,23 +19,28 @@ public class DayNightCycle {
 		}
 	}
 
-	public void reset() {
+	public void reset()
+ {
 		this.dayCount = 1;
 		this.tickOfDay = 0;
 	}
 
-	public void setDayProgress(double progress) {
+	public void setDayProgress(double progress)
+ {
 		double clampedProgress = Math.max(0.0, Math.min(0.999, progress));
 		this.tickOfDay = Math.max(0, Math.min(TICKS_PER_DAY - 1, (int) Math.round(TICKS_PER_DAY * clampedProgress)));
 	}
 
-	public int getDayCount() {
+	public int getDayCount()
+  {
 		return this.dayCount;
 	}
 
-	public DayPhase getPhase() {
+	public DayPhase getPhase()
+ {
 		double progress = getDayProgress();
-		if (progress < MORNING_END) {
+		if (progress < MORNING_END)
+  {
 			return DayPhase.MORNING;
 		}
 		if (progress < AFTERNOON_END) {
@@ -46,26 +52,32 @@ public class DayNightCycle {
 		return DayPhase.NIGHT;
 	}
 
-	public double getAmbientLight() {
+	public double getAmbientLight()
+ {
 		double progress = getDayProgress();
-		if (progress < MORNING_END) {
+		if (progress < MORNING_END)
+  {
 			return lerp(0.82, 1.0, progress / MORNING_END);
 		}
-		if (progress < AFTERNOON_END) {
+		if (progress < AFTERNOON_END)
+   {
 			return 1.0;
 		}
 		if (progress < SUNSET_END) {
 			return lerp(1.0, 0.38, (progress - AFTERNOON_END) / (SUNSET_END - AFTERNOON_END));
 		}
-		if (progress < LATE_NIGHT_START) {
+		if (progress < LATE_NIGHT_START)
+   {
 			return lerp(0.38, 0.12, (progress - SUNSET_END) / (LATE_NIGHT_START - SUNSET_END));
 		}
 		return lerp(0.12, 0.82, (progress - LATE_NIGHT_START) / (1.0 - LATE_NIGHT_START));
 	}
 
-	public int getSunsetTintAlpha() {
+	public int getSunsetTintAlpha()
+   {
 		double progress = getDayProgress();
-		if (progress < AFTERNOON_END || progress >= SUNSET_END) {
+		if (progress < AFTERNOON_END || progress >= SUNSET_END)
+  {
 			return 0;
 		}
 		double sunsetProgress = (progress - AFTERNOON_END) / (SUNSET_END - AFTERNOON_END);
@@ -73,15 +85,18 @@ public class DayNightCycle {
 		return (int) (68 * peak);
 	}
 
-	public boolean isNaturallyBright() {
+	public boolean isNaturallyBright()
+  {
 		return getAmbientLight() >= 0.995;
 	}
 
-	private double getDayProgress() {
+	private double getDayProgress()
+  {
 		return this.tickOfDay / (double) TICKS_PER_DAY;
 	}
 
-	private double lerp(double start, double end, double amount) {
+	private double lerp(double start, double end, double amount)
+ {
 		return start + (end - start) * amount;
 	}
 }

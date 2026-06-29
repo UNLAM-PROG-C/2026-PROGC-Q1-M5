@@ -104,7 +104,8 @@ public final class GameConfig {
 	private GameConfig() {
 	}
 
-	public static void setViewportSize(int width, int height) {
+	public static void setViewportSize(int width, int height)
+ {
 		SCREEN_WIDTH = Math.max(1, width);
 		SCREEN_HEIGHT = Math.max(1, height);
 		SCREEN_CENTER_X = SCREEN_WIDTH / 2;
@@ -118,47 +119,59 @@ public final class GameConfig {
 		DEATH_SPECTATE_BUTTON_Y = SCREEN_CENTER_Y + 92;
 	}
 
-	public static void loadDisplayPreferences() {
+	public static void loadDisplayPreferences()
+  {
 		File file = new File(DISPLAY_CONFIG_PATH);
 		if (!file.exists()) {
 			return;
 		}
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(file)))
+  {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				applyDisplayConfigLine(line);
 			}
-		} catch (IOException ignored) {
+		} catch (IOException ignored)
+    {
 		}
 	}
 
-	private static void applyDisplayConfigLine(String line) {
+	private static void applyDisplayConfigLine(String line)
+ {
 		int separator = line.indexOf(DISPLAY_CONFIG_SEPARATOR);
-		if (separator < 0) {
+		if (separator < 0)
+  {
 			return;
 		}
 		String key = line.substring(0, separator).trim();
 		String value = line.substring(separator + 1).trim();
-		if (DISPLAY_CONFIG_FULLSCREEN.equals(key)) {
+		if (DISPLAY_CONFIG_FULLSCREEN.equals(key))
+  {
 			fullscreenPreferred = Boolean.parseBoolean(value);
-		} else if (DISPLAY_CONFIG_RESOLUTION.equals(key)) {
+		} else if (DISPLAY_CONFIG_RESOLUTION.equals(key))
+   {
 			applyResolutionValue(value);
-		} else if (DISPLAY_CONFIG_MUSIC_VOLUME.equals(key)) {
+		} else if (DISPLAY_CONFIG_MUSIC_VOLUME.equals(key))
+   {
 			musicVolume = parseVolume(value, musicVolume);
-		} else if (DISPLAY_CONFIG_SFX_VOLUME.equals(key)) {
+		} else if (DISPLAY_CONFIG_SFX_VOLUME.equals(key))
+   {
 			sfxVolume = parseVolume(value, sfxVolume);
 		}
 	}
 
-	private static double parseVolume(String value, double fallback) {
+	private static double parseVolume(String value, double fallback)
+   {
 		try {
 			return clamp01(Double.parseDouble(value));
-		} catch (NumberFormatException exception) {
+		} catch (NumberFormatException exception)
+   {
 			return fallback;
 		}
 	}
 
-	private static void applyResolutionValue(String value) {
+	private static void applyResolutionValue(String value)
+ {
 		for (int i = 0; i < WINDOW_RESOLUTIONS.length; i++) {
 			Dimension resolution = WINDOW_RESOLUTIONS[i];
 			if ((resolution.width + "x" + resolution.height).equals(value)) {
@@ -168,7 +181,8 @@ public final class GameConfig {
 		}
 	}
 
-	public static void saveDisplayPreferences() {
+	public static void saveDisplayPreferences()
+ {
 		File file = new File(DISPLAY_CONFIG_PATH);
 		ensureParentDirExists(file);
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -180,22 +194,27 @@ public final class GameConfig {
 			writer.newLine();
 			writer.write(DISPLAY_CONFIG_SFX_VOLUME + DISPLAY_CONFIG_SEPARATOR + sfxVolume);
 			writer.newLine();
-		} catch (IOException ignored) {
+		} catch (IOException ignored)
+   {
 		}
 	}
 
-	private static void ensureParentDirExists(File file) {
+	private static void ensureParentDirExists(File file)
+ {
 		File parent = file.getParentFile();
-		if (parent != null && !parent.exists()) {
+		if (parent != null && !parent.exists())
+  {
 			parent.mkdirs();
 		}
 	}
 
-	public static int getWindowResolutionIndex() {
+	public static int getWindowResolutionIndex()
+   {
 		return windowResolutionIndex;
 	}
 
-	public static Dimension getWindowResolution() {
+	public static Dimension getWindowResolution()
+ {
 		Dimension resolution = WINDOW_RESOLUTIONS[windowResolutionIndex];
 		return new Dimension(resolution.width, resolution.height);
 	}
@@ -204,46 +223,56 @@ public final class GameConfig {
 		return WINDOW_RESOLUTIONS.length;
 	}
 
-	public static String getWindowResolutionLabel() {
+	public static String getWindowResolutionLabel()
+ {
 		Dimension resolution = WINDOW_RESOLUTIONS[windowResolutionIndex];
 		return resolution.width + "x" + resolution.height;
 	}
 
-	public static String getWindowResolutionLabel(int index) {
+	public static String getWindowResolutionLabel(int index)
+ {
 		int clampedIndex = Math.max(0, Math.min(WINDOW_RESOLUTIONS.length - 1, index));
 		Dimension resolution = WINDOW_RESOLUTIONS[clampedIndex];
 		return resolution.width + "x" + resolution.height;
 	}
 
-	public static void setWindowResolutionIndex(int index) {
+	public static void setWindowResolutionIndex(int index)
+  {
 		windowResolutionIndex = Math.max(0, Math.min(WINDOW_RESOLUTIONS.length - 1, index));
 	}
 
-	public static boolean isFullscreenPreferred() {
+	public static boolean isFullscreenPreferred()
+  {
 		return fullscreenPreferred;
 	}
 
-	public static void setFullscreenPreferred(boolean fullscreenPreferred) {
+	public static void setFullscreenPreferred(boolean fullscreenPreferred)
+ {
 		GameConfig.fullscreenPreferred = fullscreenPreferred;
 	}
 
-	public static double getMusicVolume() {
+	public static double getMusicVolume()
+ {
 		return musicVolume;
 	}
 
-	public static void setMusicVolume(double musicVolume) {
+	public static void setMusicVolume(double musicVolume)
+ {
 		GameConfig.musicVolume = clamp01(musicVolume);
 	}
 
-	public static double getSfxVolume() {
+	public static double getSfxVolume()
+  {
 		return sfxVolume;
 	}
 
-	public static void setSfxVolume(double sfxVolume) {
+	public static void setSfxVolume(double sfxVolume)
+ {
 		GameConfig.sfxVolume = clamp01(sfxVolume);
 	}
 
-	private static double clamp01(double value) {
+	private static double clamp01(double value)
+  {
 		return Math.max(0.0, Math.min(1.0, value));
 	}
 

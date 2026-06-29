@@ -7,19 +7,23 @@ import SheriffsssPackage.session.GameSession;
 
 public final class TrainingLevel implements GameLevel {
   @Override
-  public LevelType type() {
+  public LevelType type()
+  {
     return LevelType.TRAINING;
   }
 
   @Override
-  public void enter(GameContext context, GameSession session, LevelStartOptions options) {
+  public void enter(GameContext context, GameSession session, LevelStartOptions options)
+  {
   }
 
   @Override
-  public void update(GameContext context, GameSession session) {
+  public void update(GameContext context, GameSession session)
+  {
   }
 
   @Override
-  public void exit(GameContext context, GameSession session) {
+  public void exit(GameContext context, GameSession session)
+  {
   }
 }
