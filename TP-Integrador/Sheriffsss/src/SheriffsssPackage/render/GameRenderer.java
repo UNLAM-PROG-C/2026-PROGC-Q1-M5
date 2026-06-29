@@ -94,6 +94,7 @@ public class GameRenderer
     worldRenderer.renderTiles(g2, map, game);
     worldRenderer.drawGroundObjects(g2, map);
     enemyRenderer.drawEnemies(g2, game);
+    worldRenderer.drawProjectiles(g2, game);
     effectsRenderer.drawFlameBurstEffects(g2, game);
 
     // Handle held item layering

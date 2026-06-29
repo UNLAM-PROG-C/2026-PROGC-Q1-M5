@@ -7,10 +7,14 @@ import SheriffsssPackage.session.MapObject;
 import SheriffsssPackage.session.MapObjectType;
 import SheriffsssPackage.session.Player;
 import SheriffsssPackage.session.TileType;
+import SheriffsssPackage.system.weapon.Projectile;
+import SheriffsssPackage.system.weapon.ProjectileType;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class WorldRenderer
 {
@@ -108,6 +112,30 @@ public class WorldRenderer
       && objectStartX <= this.camera.getEndTileX()
       && objectEndY >= this.camera.getStartTileY()
       && objectStartY <= this.camera.getEndTileY();
+  }
+
+  public void drawProjectiles(Graphics2D g2, GameView game)
+  {
+    List<Projectile> projectiles = game.getProjectiles();
+    for (int i = 0; i < projectiles.size(); i++)
+    {
+      Projectile projectile = projectiles.get(i);
+      ProjectileType type = projectile.getType();
+      int screenX = this.camera.worldToScreenX(projectile.getWorldX());
+      int screenY = this.camera.worldToScreenY(projectile.getWorldY());
+      int drawWidth = type.getDrawWidth();
+      int drawHeight = type.getDrawHeight();
+      if (screenX < -drawWidth || screenX > GameConfig.SCREEN_WIDTH + drawWidth
+        || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight)
+      {
+        continue;
+      }
+      BufferedImage sprite = this.assets.getImage(type.getSpritePath());
+      AffineTransform previousTransform = g2.getTransform();
+      g2.rotate(projectile.getAngleRadians() + type.getDrawAngleOffsetRadians(), screenX, screenY);
+      g2.drawImage(sprite, screenX - drawWidth / 2, screenY - drawHeight / 2, drawWidth, drawHeight, null);
+      g2.setTransform(previousTransform);
+    }
   }
 
   private Color getSunsetTintColor(int alpha) {

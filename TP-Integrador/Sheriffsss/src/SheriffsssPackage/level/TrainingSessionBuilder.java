@@ -13,7 +13,7 @@ import java.util.Random;
 
 public final class TrainingSessionBuilder {
   private static final String TRAINING_PLAYER_NAME = "Trainee";
-  private static final double TRAINING_DAY_PROGRESS = 1.0;
+  private static final double TRAINING_DAY_PROGRESS = 0.3;
   private static final int TRAINING_SEED_RADIX = 36;
   private static final int FNV_OFFSET_BASIS = 0x811C9DC5;
   private static final int FNV_PRIME = 0x01000193;
