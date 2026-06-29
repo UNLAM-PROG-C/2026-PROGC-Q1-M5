@@ -261,6 +261,11 @@ public final class TrainingScoreTracker
     this.shotsFired = shotsFired;
   }
 
+  public void incrementShotsFired()
+  {
+    this.shotsFired++;
+  }
+
   public int getDisplayedPrecisionPercent()
   {
     return this.displayedPrecisionPercent;

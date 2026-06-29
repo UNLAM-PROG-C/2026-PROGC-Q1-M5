@@ -1,10 +1,6 @@
 package SheriffsssPackage.context;
 
-import SheriffsssPackage.session.GameMap;
-import SheriffsssPackage.system.weapon.Projectile;
-
 import java.util.HashSet;
-import java.util.List;
 
 public class SpatialAudioSystem
 {
@@ -39,8 +35,7 @@ public class SpatialAudioSystem
     }
     try
     {
-      double distance = Math.sqrt(Math.pow(sourceWorldX - playerWorldX, 2.0) + Math.pow(sourceWorldY - playerWorldY, 2.0));
-      double volumeScale = spatialSfxVolumeScale(distance, sourceWorldX, sourceWorldY, playerWorldX, playerWorldY);
+      double volumeScale = spatialSfxVolumeScale(sourceWorldX, sourceWorldY, playerWorldX, playerWorldY);
       if (volumeScale > 0.0)
       {
         this.audio.playOnceUntilFinished(resourcePath, gainDb, volumeScale);
@@ -50,9 +45,23 @@ public class SpatialAudioSystem
     }
   }
 
-  public double spatialSfxVolumeScale(double distance, int sourceWorldX, int sourceWorldY, int playerWorldX, int playerWorldY)
+  public double spatialSfxVolumeScale(int sourceWorldX, int sourceWorldY, int playerWorldX, int playerWorldY)
   {
-    return Math.max(-96.0, -Math.log(Math.max(1.0, distance / 256.0)) * 8.685);
+    int deltaX = sourceWorldX - playerWorldX;
+    int deltaY = sourceWorldY - playerWorldY;
+    int fullRadius = GameConfig.SPATIAL_SFX_FULL_VOLUME_RADIUS_PIXELS;
+    int audibleRadius = GameConfig.SPATIAL_SFX_AUDIBLE_RADIUS_PIXELS;
+    int distanceSquared = deltaX * deltaX + deltaY * deltaY;
+    if (distanceSquared <= fullRadius * fullRadius)
+    {
+      return 1.0;
+    }
+    if (distanceSquared >= audibleRadius * audibleRadius || audibleRadius <= fullRadius)
+    {
+      return 0.0;
+    }
+    double distance = Math.sqrt(distanceSquared);
+    return Math.max(0.0, Math.min(1.0, 1.0 - (distance - fullRadius) / (audibleRadius - fullRadius)));
   }
 
   public void markSfxUnavailable(String path)

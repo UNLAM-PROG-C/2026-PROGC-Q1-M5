@@ -205,6 +205,10 @@ public final class TrainingMode
   public void notifyShotFired()
   {
     this.shotFired = true;
+    if (this.scoreTracker != null)
+    {
+      this.scoreTracker.incrementShotsFired();
+    }
     if (this.tutorialController != null && this.tutorialController.getPhase() != TutorialPhase.NORMAL)
     {
       this.hintFadeShotSteps++;
