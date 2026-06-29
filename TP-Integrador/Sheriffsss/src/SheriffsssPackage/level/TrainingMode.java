@@ -17,20 +17,8 @@ import java.util.List;
 import java.util.Random;
 
 
-/**
- * Orquestador del modo entrenamiento. Coordina 7 sistemas:
- *   1. TrainingArenaBuilder - construcción de mapa
- *   2. TargetSpawnController - spawn y control de enemigos
- *   3. TrainingScoreTracker - scoring, precisión, proyectiles
- *   4. TrainingSessionTimer - temporizador de sesión
- *   5. TrainingTutorialController - flujo de tutorial y hints
- *   6. TrainingEndScreenHandler - manejo de pantallas finales
- *   7. TrainingConfigStore - persistencia de controles
- *
- * TrainingMode mantiene ~300-400 líneas y delega responsabilidades específicas
- * a cada subsistema. El update() sincroniza el flujo general del juego.
- */
-public final class TrainingMode {
+public final class TrainingMode
+{
   // --- Arena constants ---
   private static final int ARENA_TILES_WIDE = GameConfig.TRAINING_ARENA_TILES_WIDE;
   private static final int ARENA_TILES_HIGH = GameConfig.TRAINING_ARENA_TILES_HIGH;
@@ -38,14 +26,17 @@ public final class TrainingMode {
   private static final int INTERIOR_ORIGIN_X = (ARENA_TILES_WIDE - INTERIOR_TILES) / 2;
   private static final int INTERIOR_ORIGIN_Y = (ARENA_TILES_HIGH - INTERIOR_TILES) / 2;
 
-  // --- HUD data constants ---
+  // --- HUD / hint constants ---
   private static final String AIM_HINT_TEXT = "Apunta con el mouse y dispara con click";
   private static final String TARGET_HINT_TEXT = "Disparale a las dianas para acumular puntos";
   private static final String TIMER_NOTICE_TEXT = "Tenes 60 segundos antes de que termine tu entrenamiento";
   private static final float HINT_START_ALPHA = 1.0f;
+  private static final float HINT_SHOT_ALPHA_STEP = 0.2f;
   private static final float HINT_ALPHA_FADE_STEP = 0.035f;
   private static final int HINT_BASELINE_BELOW_OUTER_FENCE_BOTTOM = GameConfig.TILE_SIZE + 28;
   private static final int HINT_BOTTOM_SCREEN_MARGIN = 18;
+  private static final int TARGET_HINT_MIN_TICKS = GameConfig.TARGET_FPS * 3;
+  private static final int TIMER_NOTICE_TICKS = GameConfig.TARGET_FPS * 5;
 
   // --- Tutorial join timeout ---
   private static final long TUTORIAL_JOIN_TIMEOUT_MS = 200L;
@@ -56,6 +47,7 @@ public final class TrainingMode {
   private final EnemySystem enemySystem;
   private final EnemyFactory enemyFactory = new EnemyFactory();
   private final TrainingControls controls = new TrainingControls();
+  private final int sessionSeedHash;
 
   // === Delegated systems ===
   private final TrainingArenaBuilder arenaBuilder;
@@ -67,137 +59,170 @@ public final class TrainingMode {
   private final TrainingConfigStore configStore;
   private final TutorialThread tutorialThread;
 
-  // === State ===
-  private GameMap arena;
+  // === Tutorial / hint state ===
   private int lastProjectileCount;
   private boolean shotFired;
+  private int targetHintTicks;
+  private int hintFadeShotSteps;
+  private float displayedHintAlpha = HINT_START_ALPHA;
+  private boolean targetHintHit;
+
+  // === Misc state ===
+  private GameMap arena;
   private boolean debugUsed;
 
-  public TrainingMode(Game game, EnemySystem enemySystem, int sessionSeedHash) {
+  public TrainingMode(Game game, EnemySystem enemySystem, int sessionSeedHash)
+  {
     this.game = game;
-    this.session = null; // Will be set later via initializeSystems()
+    this.session = null;
     this.enemySystem = enemySystem;
+    this.sessionSeedHash = sessionSeedHash;
     this.tutorialThread = new TutorialThread(buildSteps());
 
-    // Initialize config store first to load saved controls
     this.configStore = new TrainingConfigStore(this.controls);
     this.configStore.loadControls();
 
-    // Initialize core subsystems (can be done immediately)
     this.arenaBuilder = new TrainingArenaBuilder();
 
-    // Placeholder initializations for systems that need GameSession
     this.spawnController = null;
     this.scoreTracker = null;
     this.sessionTimer = null;
     this.tutorialController = null;
     this.endScreenHandler = null;
 
-    // State initialization
     this.lastProjectileCount = 0;
     this.shotFired = false;
+    this.targetHintTicks = 0;
+    this.hintFadeShotSteps = 0;
+    this.displayedHintAlpha = HINT_START_ALPHA;
+    this.targetHintHit = false;
     this.debugUsed = false;
   }
 
-  /**
-   * Initialize remaining systems after GameSession is available.
-   * Call this after buildArena() and before start().
-   */
-  public void initializeSystems(GameSession session, ProjectileSystem projectileSystem,
-      GameInput input) {
-    if (this.spawnController != null) {
-      return; // Already initialized
+  public void initializeSystems(GameSession session, ProjectileSystem projectileSystem, GameInput input)
+  {
+    if (this.spawnController != null)
+    {
+      return;
     }
 
     this.session = session;
 
-    // Initialize remaining subsystems
     this.spawnController = new TargetSpawnController(session, this.enemySystem, this.enemyFactory,
         this.arena, this.controls);
     this.scoreTracker = new TrainingScoreTracker(
-        this.game, session, this.enemySystem, projectileSystem, this.arena, null);
+        this.game, session, this.enemySystem, projectileSystem, this.arena,
+        this.game != null ? this.game.getShotFeedback() : null);
     this.sessionTimer = new TrainingSessionTimer(GameConfig.TARGET_FPS * 60,
         this.game != null ? this.game.getAudio() : null);
-    this.tutorialController = new TrainingTutorialController(null);
+    this.tutorialController = new TrainingTutorialController(
+        this.game != null ? this.game.getMusicController() : null);
     this.endScreenHandler = new TrainingEndScreenHandler(input, this.controls, this.game,
         this.tutorialThread, this::resetArena);
   }
 
   // === Lifecycle ===
 
-  public GameMap buildArena() {
+  public GameMap buildArena()
+  {
     GameMap map = new GameMap(ARENA_TILES_WIDE, ARENA_TILES_HIGH);
-    this.arenaBuilder.buildArena(map, ARENA_TILES_WIDE, new Random(this.session.hashCode()));
+    this.arenaBuilder.buildArena(map, ARENA_TILES_WIDE, new Random(this.sessionSeedHash));
     this.arena = map;
     return map;
   }
 
-  public void start() {
+  public void start()
+  {
     this.spawnController.spawnInitialEnemies();
   }
 
-  public void shutdown() {
+  public void shutdown()
+  {
     this.tutorialThread.skip();
-    try {
+    try
+    {
       this.tutorialThread.join(TUTORIAL_JOIN_TIMEOUT_MS);
-    } catch (InterruptedException ignored) {
+    }
+    catch (InterruptedException ignored)
+    {
       Thread.currentThread().interrupt();
     }
     this.configStore.saveControls();
   }
 
-  public void resetArena() {
+  public void resetArena()
+  {
     this.spawnController.resetArena();
   }
 
   // === Update tick ===
 
-  public void update(Player player, GameInput input, ProjectileSystem projectileSystem) {
+  public void update(Player player, GameInput input, ProjectileSystem projectileSystem)
+  {
     markDebugUsedIfNeeded();
 
-    if (this.sessionTimer.isSessionFinished()) {
+    if (this.sessionTimer.isSessionFinished())
+    {
       this.endScreenHandler.handleFinalInput();
       return;
     }
 
-    if (player != null && player.isDead()) {
+    if (player != null && player.isDead())
+    {
       this.endScreenHandler.handleDeadInput();
       return;
     }
 
-    // Delegate to subsystems
     this.endScreenHandler.readPanelInput();
-    this.tutorialController.update();
+    updateTutorialFlow(projectileSystem);
+    updateHintAlpha();
 
-    if (isWaitingForFirstShot()) {
+    if (isWaitingForFirstShot())
+    {
       return;
     }
 
-    // Score and projectile tracking
     this.scoreTracker.updateProjectileFailures(projectileSystem);
+    boolean wasFinished = this.sessionTimer.isSessionFinished();
     this.sessionTimer.update(this.session);
+    if (!wasFinished && this.sessionTimer.isSessionFinished())
+    {
+      this.scoreTracker.countPredictedFinalProjectileFailures(projectileSystem);
+      this.scoreTracker.updateDisplayedTrainingStats();
+    }
 
-    // Spawn and target lifecycle
     int replacementCount = this.scoreTracker.awardScoreForDestroyedTargets();
+    if (this.scoreTracker.isTargetHintHit())
+    {
+      this.targetHintHit = true;
+    }
     replacementCount += this.scoreTracker.damageTargetsOverTime();
     replacementCount += this.scoreTracker.removeDeadTargets();
     replacementCount += this.scoreTracker.removeExpiredTargets();
     this.spawnController.syncEnemyCountToControls(replacementCount);
   }
 
-  public void notifyShotFired() {
+  public void notifyShotFired()
+  {
     this.shotFired = true;
+    if (this.tutorialController != null && this.tutorialController.getPhase() != TutorialPhase.NORMAL)
+    {
+      this.hintFadeShotSteps++;
+    }
   }
 
-  public boolean isSessionFinished() {
+  public boolean isSessionFinished()
+  {
     return this.sessionTimer.isSessionFinished();
   }
 
-  public boolean isWaitingForFirstShot() {
+  public boolean isWaitingForFirstShot()
+  {
     return this.tutorialController.getPhase() == TutorialPhase.AIM;
   }
 
-  public TrainingHudSnapshot hudSnapshot(Player player) {
+  public TrainingHudSnapshot hudSnapshot(Player player)
+  {
     TrainingHudSnapshotConfig config = new TrainingHudSnapshotConfig()
       .withStats(
         this.scoreTracker.getFallos(),
@@ -205,7 +230,7 @@ public final class TrainingMode {
         this.scoreTracker.precisionText())
       .withTimer(timerText(), this.tutorialController.getPhase() == TutorialPhase.NORMAL)
       .withHint(
-        this.tutorialController.hintAlpha(),
+        this.displayedHintAlpha,
         currentHintText(),
         outerFenceScreenCenterX(),
         trainingPromptBaselineY())
@@ -222,49 +247,138 @@ public final class TrainingMode {
     return new TrainingHudSnapshot(config);
   }
 
-  private void markDebugUsedIfNeeded() {
+  // === Tutorial flow ===
+
+  private void updateTutorialFlow(ProjectileSystem projectileSystem)
+  {
+    int projectileCount = projectileSystem == null ? 0 : projectileSystem.getProjectiles().size();
+    TutorialPhase phase = this.tutorialController.getPhase();
+
+    if (phase == TutorialPhase.AIM && (this.shotFired || projectileCount > this.lastProjectileCount))
+    {
+      setPhase(TutorialPhase.TARGETS);
+      this.targetHintTicks = 0;
+      this.hintFadeShotSteps = 0;
+      this.displayedHintAlpha = HINT_START_ALPHA;
+      this.targetHintHit = false;
+      phase = TutorialPhase.TARGETS;
+    }
+    this.shotFired = false;
+    this.lastProjectileCount = projectileCount;
+
+    if (phase == TutorialPhase.TARGETS)
+    {
+      this.targetHintTicks++;
+      if (isHintFullyFaded())
+      {
+        setPhase(TutorialPhase.NORMAL);
+        startTargetLifetime();
+        return;
+      }
+      if (this.targetHintHit && this.targetHintTicks >= TARGET_HINT_MIN_TICKS)
+      {
+        setPhase(TutorialPhase.TIMER_NOTICE);
+        this.targetHintTicks = 0;
+        this.hintFadeShotSteps = 0;
+        this.displayedHintAlpha = HINT_START_ALPHA;
+      }
+    }
+    else if (phase == TutorialPhase.TIMER_NOTICE)
+    {
+      this.targetHintTicks++;
+      if (isHintFullyFaded() || this.targetHintTicks >= TIMER_NOTICE_TICKS)
+      {
+        setPhase(TutorialPhase.NORMAL);
+        startTargetLifetime();
+      }
+    }
+  }
+
+  private void setPhase(TutorialPhase phase)
+  {
+    this.tutorialController.setPhase(phase);
+    this.scoreTracker.setTutorialPhase(phase);
+  }
+
+  private void startTargetLifetime()
+  {
+    this.scoreTracker.setTargetLifetimeRunning(true);
+    this.tutorialController.startTargetLifetime();
+  }
+
+  private void updateHintAlpha()
+  {
+    float targetAlpha = Math.max(0.0f, HINT_START_ALPHA - this.hintFadeShotSteps * HINT_SHOT_ALPHA_STEP);
+    if (this.displayedHintAlpha <= targetAlpha)
+    {
+      this.displayedHintAlpha = targetAlpha;
+      return;
+    }
+    this.displayedHintAlpha = Math.max(targetAlpha, this.displayedHintAlpha - HINT_ALPHA_FADE_STEP);
+  }
+
+  private boolean isHintFullyFaded()
+  {
+    float targetAlpha = Math.max(0.0f, HINT_START_ALPHA - this.hintFadeShotSteps * HINT_SHOT_ALPHA_STEP);
+    return targetAlpha <= 0.0f && this.displayedHintAlpha <= 0.0f;
+  }
+
+  private void markDebugUsedIfNeeded()
+  {
     if (this.game != null && this.game.getDebugOptions() != null
-        && this.game.getDebugOptions().hasAnyModeEnabled()) {
+        && this.game.getDebugOptions().hasAnyModeEnabled())
+    {
       this.debugUsed = true;
     }
   }
 
-  private String timerText() {
+  // === HUD helpers ===
+
+  private String timerText()
+  {
     int seconds = Math.max(0,
       (this.sessionTimer.getSessionTimer() + GameConfig.TARGET_FPS - 1) / GameConfig.TARGET_FPS);
     return (seconds / 60) + ":" + (seconds % 60 < 10 ? "0" : "") + (seconds % 60);
   }
 
-  private int outerFenceScreenCenterX() {
+  private int outerFenceScreenCenterX()
+  {
     int interiorCenterTileX = INTERIOR_ORIGIN_X + INTERIOR_TILES / 2;
     return tileToWorldCenter(interiorCenterTileX) - this.game.getCameraCenterWorldX()
       + GameConfig.SCREEN_CENTER_X;
   }
 
-  private int outerFenceBottomScreenY() {
+  private int outerFenceBottomScreenY()
+  {
     int bottomFenceWorldY = (INTERIOR_ORIGIN_Y + INTERIOR_TILES + 1) * GameConfig.TILE_SIZE;
     return bottomFenceWorldY - this.game.getCameraCenterWorldY() + GameConfig.SCREEN_CENTER_Y;
   }
 
-  private int trainingPromptBaselineY() {
+  private int trainingPromptBaselineY()
+  {
     return Math.min(
       outerFenceBottomScreenY() + HINT_BASELINE_BELOW_OUTER_FENCE_BOTTOM,
       GameConfig.SCREEN_HEIGHT - HINT_BOTTOM_SCREEN_MARGIN);
   }
 
-  private static int tileToWorldCenter(int tile) {
+  private static int tileToWorldCenter(int tile)
+  {
     return tile * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
   }
 
-  private String currentHintText() {
+  private String currentHintText()
+  {
     TutorialPhase phase = this.tutorialController.getPhase();
-    if (phase == TutorialPhase.TIMER_NOTICE) {
+    if (phase == TutorialPhase.TIMER_NOTICE)
+    {
       return TIMER_NOTICE_TEXT;
     }
-    if (phase == TutorialPhase.AIM) {
+    if (phase == TutorialPhase.AIM)
+    {
       return AIM_HINT_TEXT;
     }
-    if (phase == TutorialPhase.TARGETS) {
+    if (phase == TutorialPhase.TARGETS)
+    {
       return TARGET_HINT_TEXT;
     }
     return "";
@@ -272,46 +386,44 @@ public final class TrainingMode {
 
   // === Public state accessors ===
 
-  public int getPlayerSpawnWorldX() {
+  public int getPlayerSpawnWorldX()
+  {
     return this.arenaBuilder.getPlayerSpawnWorldX();
   }
 
-  public int getPlayerSpawnWorldY() {
+  public int getPlayerSpawnWorldY()
+  {
     return this.arenaBuilder.getPlayerSpawnWorldY();
   }
 
-  public int getFailurePerimeterLeftWorldX() {
+  public int getFailurePerimeterLeftWorldX()
+  {
     return INTERIOR_ORIGIN_X * GameConfig.TILE_SIZE;
   }
 
-  public int getFailurePerimeterTopWorldY() {
+  public int getFailurePerimeterTopWorldY()
+  {
     return INTERIOR_ORIGIN_Y * GameConfig.TILE_SIZE;
   }
 
-  public int getFailurePerimeterWidthWorld() {
+  public int getFailurePerimeterWidthWorld()
+  {
     return INTERIOR_TILES * GameConfig.TILE_SIZE;
   }
 
-  public int getFailurePerimeterHeightWorld() {
+  public int getFailurePerimeterHeightWorld()
+  {
     return INTERIOR_TILES * GameConfig.TILE_SIZE;
   }
 
   // === Tutorial steps ===
 
-  private static List<TutorialStep> buildSteps() {
+  private static List<TutorialStep> buildSteps()
+  {
     return Arrays.asList(
-      new TutorialStep(
-        TutorialEventType.FIRST_MOVEMENT,
-        600L,
-        15000L),
-      new TutorialStep(
-        TutorialEventType.FIRST_SHOT,
-        600L,
-        20000L),
-      new TutorialStep(
-        TutorialEventType.FIRST_KILL,
-        600L,
-        30000L)
+      new TutorialStep(TutorialEventType.FIRST_MOVEMENT, 600L, 15000L),
+      new TutorialStep(TutorialEventType.FIRST_SHOT, 600L, 20000L),
+      new TutorialStep(TutorialEventType.FIRST_KILL, 600L, 30000L)
     );
   }
 }

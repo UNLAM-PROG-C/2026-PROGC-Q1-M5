@@ -115,7 +115,7 @@ public class HeldItemRenderer
     g2.drawRect(screenX, screenY, barWidth, barHeight);
   }
 
-  private void applyHeldItemRotation(Graphics2D g2, ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int drawY,
+  public void applyHeldItemRotation(Graphics2D g2, ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int drawY,
     int itemWidth, int itemHeight, double baseAngle, double recoilAngle)
   {
     double centerX = drawX + itemWidth / 2.0;
@@ -225,7 +225,7 @@ public class HeldItemRenderer
     return rotateY(anchorX, anchorY, centerX, centerY, drawConfig.getBaseAngle(facing));
   }
 
-  private double toolSwing(int toolUseTicks, int toolUseDurationTicks)
+  public double toolSwing(int toolUseTicks, int toolUseDurationTicks)
   {
     int duration = Math.max(1, toolUseDurationTicks);
     if (duration <= 1)
@@ -234,5 +234,77 @@ public class HeldItemRenderer
     }
     double progress = Math.max(0.0, Math.min(1.0, toolUseTicks / (double) (duration - 1)));
     return Math.sin(progress * Math.PI);
+  }
+
+  public ItemDefinition equippedHandDefinition(Player player)
+  {
+    if (player == null)
+    {
+      return null;
+    }
+    ItemDefinition equippedWeapon = player.getEquipment().getEquippedWeapon();
+    if (equippedWeapon == null || !equippedWeapon.isHandEquipable())
+    {
+      return null;
+    }
+    return equippedWeapon;
+  }
+
+  public double mouseWorldX(GameView game)
+  {
+    return game.getCameraCenterWorldX() + (game.getInput().getMouseX() - GameConfig.SCREEN_CENTER_X) / game.getCameraZoom();
+  }
+
+  public double mouseWorldY(GameView game)
+  {
+    return game.getCameraCenterWorldY() + (game.getInput().getMouseY() - GameConfig.SCREEN_CENTER_Y) / game.getCameraZoom();
+  }
+
+  public double weaponOriginWorldX(GameView game)
+  {
+    Player player = game.getPlayer();
+    ItemDefinition definition = equippedHandDefinition(player);
+    if (player == null || definition == null)
+    {
+      return game.getCameraCenterWorldX();
+    }
+    double deltaX = mouseWorldX(game) - player.getX();
+    double deltaY = mouseWorldY(game) - player.getY();
+    Facing facing = (Math.abs(deltaX) <= 0.001 && Math.abs(deltaY) <= 0.001) ? player.getFacing() : Facing.DOWN;
+    return game.heldItemOriginWorldX(player, definition, facing);
+  }
+
+  public double weaponOriginWorldY(GameView game)
+  {
+    Player player = game.getPlayer();
+    ItemDefinition definition = equippedHandDefinition(player);
+    if (player == null || definition == null)
+    {
+      return game.getCameraCenterWorldY();
+    }
+    double deltaX = mouseWorldX(game) - player.getX();
+    double deltaY = mouseWorldY(game) - player.getY();
+    Facing facing = (Math.abs(deltaX) <= 0.001 && Math.abs(deltaY) <= 0.001) ? player.getFacing() : Facing.DOWN;
+    return game.heldItemOriginWorldY(player, definition, facing);
+  }
+
+  public double weaponOriginCanvasX(Player player, ItemDefinition definition, GameView game)
+  {
+    return worldToCanvasX(game, weaponOriginWorldX(game));
+  }
+
+  public double weaponOriginCanvasY(Player player, ItemDefinition definition, GameView game)
+  {
+    return worldToCanvasY(game, weaponOriginWorldY(game));
+  }
+
+  public double worldToCanvasX(GameView game, double worldX)
+  {
+    return worldX - game.getCameraCenterWorldX() + GameConfig.SCREEN_CENTER_X;
+  }
+
+  public double worldToCanvasY(GameView game, double worldY)
+  {
+    return worldY - game.getCameraCenterWorldY() + GameConfig.SCREEN_CENTER_Y;
   }
 }

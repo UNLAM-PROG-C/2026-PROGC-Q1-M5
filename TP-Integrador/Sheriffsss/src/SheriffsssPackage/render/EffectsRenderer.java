@@ -14,7 +14,7 @@ public class EffectsRenderer
   private final Camera camera;
   private final Color[] flameBurstOuterColors = new Color[256];
   private final Color[] flameBurstCoreColors = new Color[256];
-  private final Color[] pickupTextComposites = new Composite[256];
+  private final Composite[] pickupTextComposites = new Composite[256];
   private final Color fireYellow = new Color(255, 218, 72, 210);
   private final Color fireOrange = new Color(255, 96, 18, 210);
   private final Font pickupTextFont = new Font("Arial", Font.BOLD, 16);

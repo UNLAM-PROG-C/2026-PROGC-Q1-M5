@@ -3,10 +3,12 @@ package SheriffsssPackage.render;
 import SheriffsssPackage.context.DebugBulletTrajectory;
 import SheriffsssPackage.context.DebugOptions;
 import SheriffsssPackage.context.GameConfig;
+import SheriffsssPackage.session.Facing;
 import SheriffsssPackage.session.GameMap;
 import SheriffsssPackage.session.MapObject;
 import SheriffsssPackage.session.Player;
 import SheriffsssPackage.system.enemy.Enemy;
+import SheriffsssPackage.system.weapon.ItemDefinition;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -180,13 +182,13 @@ public class DebugWorldRenderer
   private void drawDebugHeldItemSpritePerimeter(Graphics2D g2, GameView game)
   {
     Player player = game.getPlayer();
-    SheriffsssPackage.system.weapon.ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
+    ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
     if (definition == null)
     {
       return;
     }
-    SheriffsssPackage.system.weapon.ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
-    SheriffsssPackage.session.Facing facing = player.getFacing();
+    ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
+    Facing facing = player.getFacing();
     int itemWidth = definition.getHeldDrawWidth();
     int itemHeight = definition.getHeldDrawHeight();
     int drawX = GameConfig.SCREEN_CENTER_X + drawConfig.getBaseOffsetX(facing);
@@ -219,7 +221,7 @@ public class DebugWorldRenderer
   private void drawDebugWeaponOrigin(Graphics2D g2, GameView game)
   {
     Player player = game.getPlayer();
-    SheriffsssPackage.system.weapon.ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
+    ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
     if (definition == null) {
       return;
     }
@@ -235,7 +237,7 @@ public class DebugWorldRenderer
   private void drawDebugWeaponGripAnchor(Graphics2D g2, GameView game)
   {
     Player player = game.getPlayer();
-    SheriffsssPackage.system.weapon.ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
+    ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
     if (definition == null)
     {
       return;
@@ -252,7 +254,7 @@ public class DebugWorldRenderer
   private void drawDebugWeaponBarrelAnchor(Graphics2D g2, GameView game)
   {
     Player player = game.getPlayer();
-    SheriffsssPackage.system.weapon.ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
+    ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
     if (definition == null)
     {
       return;

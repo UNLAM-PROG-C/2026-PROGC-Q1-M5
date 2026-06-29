@@ -431,6 +431,7 @@ public class Game extends JPanel implements Runnable, GameView {
     {
     stopTrainingIfActive();
     this.trainingSessionBuilder.build(this, this.context, this.session, resetDebugOptions);
+    this.session.trainingMode().initializeSystems(this.session, this.projectileSystem, this.input);
     resetTrainingTransientState();
     this.state = State.PLAYING;
     this.input.consumeEscapePressed();
@@ -994,6 +995,16 @@ public class Game extends JPanel implements Runnable, GameView {
       isTrainingLevelActive(),
       trainingMode == null ? null : trainingMode.hudSnapshot(this.session.player()));
     return this.trainingHudView;
+  }
+
+  public ShotFeedback getShotFeedback()
+  {
+    return this.shotFeedback;
+  }
+
+  public MusicController getMusicController()
+  {
+    return this.musicController;
   }
 
   private boolean isRootMenuButtonHovered()

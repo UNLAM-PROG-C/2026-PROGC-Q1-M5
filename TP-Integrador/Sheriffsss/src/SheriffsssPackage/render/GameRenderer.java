@@ -8,7 +8,7 @@ import SheriffsssPackage.session.MapObject;
 import SheriffsssPackage.session.Player;
 import SheriffsssPackage.session.WorldLighting;
 
-import java.awt.AffineTransform;
+import java.awt.geom.AffineTransform;
 import java.awt.Graphics2D;
 
 public class GameRenderer
