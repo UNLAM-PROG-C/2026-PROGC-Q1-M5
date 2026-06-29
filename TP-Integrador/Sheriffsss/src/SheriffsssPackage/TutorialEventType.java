@@ -5,7 +5,7 @@ package SheriffsssPackage;
  * Comunicacion unidireccional: game loop -> tutorial thread.
  */
 public enum TutorialEventType {
-	FIRST_MOVEMENT,
-	FIRST_SHOT,
-	FIRST_KILL;
+  FIRST_MOVEMENT,
+  FIRST_SHOT,
+  FIRST_KILL;
 }

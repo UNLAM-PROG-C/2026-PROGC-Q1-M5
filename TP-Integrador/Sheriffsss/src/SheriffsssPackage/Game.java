@@ -219,7 +219,7 @@ public class Game extends JPanel implements Runnable, GameView {
 
   @Override
   public void run() {
-    double drawInterval = 1000000000.0 / GameConfig.TARGET_FPS;
+    double drawInterval = GameConfig.FRAME_INTERVAL_NS;
     double delta = 0.0;
     long lastTime = System.nanoTime();
 
