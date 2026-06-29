@@ -11,6 +11,8 @@ public class Enemy {
 	private static final int JUMP_REST_TICKS = 34;
 	private static final double KNOCKBACK_FRICTION = 0.82;
 	private static final double MIN_KNOCKBACK_SPEED = 0.08;
+	private static final double NEAR_ZERO_DISTANCE = 0.001;
+	private static final double JUMP_SPEED_MULTIPLIER = 2.9;
 	private static final Debuff[] DEBUFFS = Debuff.values();
 
 	private final EnemyType type;
@@ -69,24 +71,25 @@ public class Enemy {
  {
 		this.animationTicks++;
 		updateDebuffs();
-		if (this.attackCooldownTicks > 0)
-  {
+		if (this.attackCooldownTicks > 0) {
 			this.attackCooldownTicks--;
 		}
+		updateMovement(map, player);
+		applyKnockback(map);
+		attackPlayerIfInRange(player);
+	}
+
+	private void updateMovement(GameMap map, Player player)
+  {
 		double deltaX = player.getX() - this.x;
 		double deltaY = player.getFeetWorldY() - this.y;
 		updateFacing(deltaX, deltaY);
 		EnemyBehavior behavior = effectiveBehavior();
-		if (behavior == EnemyBehavior.STATIC)
-  {
-			// STATIC: no se mueve, pero sigue dañable y puede atacar si el jugador entra al rango.
-		} else if (behavior == EnemyBehavior.JUMPING) {
+		if (behavior == EnemyBehavior.JUMPING) {
 			updateJumpingMovement(map, deltaX, deltaY);
-		} else {
+		} else if (behavior != EnemyBehavior.STATIC) {
 			moveToward(map, deltaX, deltaY, this.speed);
 		}
-		applyKnockback(map);
-		attackPlayerIfInRange(player);
 	}
 
 	public void setBehaviorOverride(EnemyBehavior behavior)
@@ -122,20 +125,28 @@ public class Enemy {
 		double nearestDistanceSquared = Double.MAX_VALUE;
 		for (int i = 0; i < players.size(); i++) {
 			Player player = players.get(i);
-			if (player == null || player.getCurrentHP() <= 0.0)
-   {
+			if (!isValidTarget(player)) {
 				continue;
 			}
-			double deltaX = player.getX() - this.x;
-			double deltaY = player.getFeetWorldY() - this.y;
-			double distanceSquared = deltaX * deltaX + deltaY * deltaY;
-			if (distanceSquared < nearestDistanceSquared)
-   {
+			double distanceSquared = distanceSquaredTo(player);
+			if (distanceSquared < nearestDistanceSquared) {
 				nearest = player;
 				nearestDistanceSquared = distanceSquared;
 			}
 		}
 		return nearest;
+	}
+
+	private static boolean isValidTarget(Player player)
+  {
+		return player != null && player.getCurrentHP() > 0.0;
+	}
+
+	private double distanceSquaredTo(Player player)
+  {
+		double deltaX = player.getX() - this.x;
+		double deltaY = player.getFeetWorldY() - this.y;
+		return deltaX * deltaX + deltaY * deltaY;
 	}
 
 	private void updateDebuffs()
@@ -167,18 +178,21 @@ public class Enemy {
 			this.jumpTicks--;
 			return;
 		}
-		if (this.jumpRestTicks > 0)
-   {
+		if (this.jumpRestTicks > 0) {
 			this.jumpRestTicks--;
 			return;
 		}
-		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001)
+		startJump(deltaX, deltaY);
+	}
+
+	private void startJump(double deltaX, double deltaY)
   {
+		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+		double jumpSpeed = this.speed * JUMP_SPEED_MULTIPLIER;
+		if (length <= NEAR_ZERO_DISTANCE) {
 			this.jumpVelocityX = 0.0;
 			this.jumpVelocityY = 0.0;
 		} else {
-			double jumpSpeed = this.speed * 2.9;
 			this.jumpVelocityX = deltaX / length * jumpSpeed;
 			this.jumpVelocityY = deltaY / length * jumpSpeed;
 		}
@@ -189,8 +203,7 @@ public class Enemy {
 	private void moveToward(GameMap map, double deltaX, double deltaY, double movementSpeed)
  {
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001)
-  {
+		if (length <= NEAR_ZERO_DISTANCE) {
 			return;
 		}
 		moveWithCollision(map, deltaX / length * movementSpeed, deltaY / length * movementSpeed);
@@ -329,8 +342,7 @@ public class Enemy {
 		double deltaX = this.x - sourceX;
 		double deltaY = this.y - sourceY;
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001)
-  {
+		if (length <= NEAR_ZERO_DISTANCE) {
 			this.knockbackX = 0.0;
 			this.knockbackY = strength;
 			return;

@@ -14,14 +14,16 @@ public class Player {
 	public static final int HITBOX_HEIGHT = PLAYER_HEIGHT / 2;
 	private static final double KNOCKBACK_FRICTION = 0.80;
 	private static final double MIN_KNOCKBACK_SPEED = 0.12;
+	private static final double DEFAULT_MAX_HP = 100.0;
+	private static final double NEAR_ZERO_LENGTH = 0.001;
 
 	private final String name;
 	private final Equipment equipment = new Equipment();
 	private final BufferedImage[] sprites = new BufferedImage[Facing.values().length];
 	private final double speed;
 
-	private double maxHP = 100.0;
-	private double currentHP = 100.0;
+	private double maxHP = DEFAULT_MAX_HP;
+	private double currentHP = DEFAULT_MAX_HP;
 	private double knockbackX;
 	private double knockbackY;
 	private double moveCarryX;
@@ -152,23 +154,31 @@ public class Player {
 
 	private void moveWithCollision(GameMap map, double deltaX, double deltaY)
   {
-		int stepX = (int) Math.round(deltaX);
-		if (stepX != 0)
+		applyKnockbackAxisX(map, (int) Math.round(deltaX));
+		applyKnockbackAxisY(map, (int) Math.round(deltaY));
+	}
+
+	private void applyKnockbackAxisX(GameMap map, int stepX)
   {
-			this.x += stepX;
-			if (isHitboxBlocked(map)) {
-				this.x -= stepX;
-				this.knockbackX = 0.0;
-			}
+		if (stepX == 0) {
+			return;
 		}
-		int stepY = (int) Math.round(deltaY);
-		if (stepY != 0)
+		this.x += stepX;
+		if (isHitboxBlocked(map)) {
+			this.x -= stepX;
+			this.knockbackX = 0.0;
+		}
+	}
+
+	private void applyKnockbackAxisY(GameMap map, int stepY)
   {
-			this.y += stepY;
-			if (isHitboxBlocked(map)) {
-				this.y -= stepY;
-				this.knockbackY = 0.0;
-			}
+		if (stepY == 0) {
+			return;
+		}
+		this.y += stepY;
+		if (isHitboxBlocked(map)) {
+			this.y -= stepY;
+			this.knockbackY = 0.0;
 		}
 	}
 
@@ -182,14 +192,18 @@ public class Player {
 		double deltaX = this.x - sourceX;
 		double deltaY = getFeetWorldY() - sourceY;
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= 0.001)
-  {
-			this.knockbackX = 0.0;
-			this.knockbackY = strength;
+		if (length <= NEAR_ZERO_LENGTH) {
+			applyKnockbackDown(strength);
 			return;
 		}
 		this.knockbackX = deltaX / length * strength;
 		this.knockbackY = deltaY / length * strength;
+	}
+
+	private void applyKnockbackDown(double strength)
+  {
+		this.knockbackX = 0.0;
+		this.knockbackY = strength;
 	}
 
 	public void updateLinearVelocityFromPosition(int previousX, int previousY)
@@ -240,23 +254,23 @@ public class Player {
 
 	public void updateFacing(int moveX, int moveY)
  {
-		if (moveX < 0 && moveY < 0) {
-			this.facing = Facing.UP_LEFT;
-		} else if (moveX > 0 && moveY < 0) {
-			this.facing = Facing.UP_RIGHT;
-		} else if (moveX < 0 && moveY > 0) {
-			this.facing = Facing.DOWN_LEFT;
-		} else if (moveX > 0 && moveY > 0) {
-			this.facing = Facing.DOWN_RIGHT;
-		} else if (moveX < 0) {
-			this.facing = Facing.LEFT;
-		} else if (moveX > 0) {
-			this.facing = Facing.RIGHT;
-		} else if (moveY < 0) {
-			this.facing = Facing.UP;
-		} else if (moveY > 0) {
-			this.facing = Facing.DOWN;
+		if (moveX != 0 && moveY != 0) {
+			this.facing = facingDiagonal(moveX, moveY);
+		} else if (moveX != 0) {
+			this.facing = moveX < 0 ? Facing.LEFT : Facing.RIGHT;
+		} else if (moveY != 0) {
+			this.facing = moveY < 0 ? Facing.UP : Facing.DOWN;
 		}
+	}
+
+	private static Facing facingDiagonal(int moveX, int moveY)
+  {
+		boolean up = moveY < 0;
+		boolean left = moveX < 0;
+		if (up) {
+			return left ? Facing.UP_LEFT : Facing.UP_RIGHT;
+		}
+		return left ? Facing.DOWN_LEFT : Facing.DOWN_RIGHT;
 	}
 
 	public boolean shouldRenderHeldItem()

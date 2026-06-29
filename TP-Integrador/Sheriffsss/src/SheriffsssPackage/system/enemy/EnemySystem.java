@@ -17,6 +17,9 @@ public class EnemySystem {
   private static final int MAX_ENEMIES = 2000;
   private static final double ENEMY_COLLISION_EPSILON = 0.0001;
   private static final double ENEMY_COLLISION_MAX_PUSH_PIXELS = 4.0;
+  private static final double CRIT_DAMAGE_MULTIPLIER = 2.0;
+  private static final double COLLISION_TIEBREAK_LATERAL = 0.35;
+  private static final int PERCENT_MAX = 100;
   private static final Color CRIT_TEXT_COLOR = new Color(255, 45, 45);
 
   private final ArrayList<Enemy> enemies = new ArrayList<Enemy>(MAX_ENEMIES);
@@ -91,23 +94,25 @@ public class EnemySystem {
       updateCombatFloatingTexts();
       return;
     }
-    for (int i = this.enemies.size() - 1; i >= 0; i--)
-      {
+    updateEnemies(map, player);
+    resolveEnemyCollisions(map);
+    updateFlameBurstEffects();
+    updateCombatFloatingTexts();
+  }
+
+  private void updateEnemies(GameMap map, Player player)
+  {
+    for (int i = this.enemies.size() - 1; i >= 0; i--) {
       Enemy enemy = this.enemies.get(i);
-      if (enemy.isDead())
-      {
+      if (enemy.isDead()) {
         this.enemies.remove(i);
         continue;
       }
       enemy.update(map, player);
-      if (enemy.isDead())
-        {
+      if (enemy.isDead()) {
         this.enemies.remove(i);
       }
     }
-    resolveEnemyCollisions(map);
-    updateFlameBurstEffects();
-    updateCombatFloatingTexts();
   }
 
   private void resolveEnemyCollisions(GameMap map)
@@ -130,27 +135,32 @@ public class EnemySystem {
     double deltaY = second.getCollisionY() - first.getCollisionY();
     double distanceSquared = deltaX * deltaX + deltaY * deltaY;
     double minimumDistanceSquared = minimumDistance * minimumDistance;
-    if (distanceSquared >= minimumDistanceSquared)
-    {
+    if (distanceSquared >= minimumDistanceSquared) {
       return;
     }
+    double[] normal = computeCollisionNormal(deltaX, deltaY, distanceSquared, firstIndex, secondIndex);
+    double distance = normal[2];
+    double pushDistance = Math.min((minimumDistance - distance) * 0.5, ENEMY_COLLISION_MAX_PUSH_PIXELS);
+    if (pushDistance <= 0.0) {
+      return;
+    }
+    first.pushBy(map, -normal[0] * pushDistance, -normal[1] * pushDistance);
+    second.pushBy(map, normal[0] * pushDistance, normal[1] * pushDistance);
+  }
+
+  private static double[] computeCollisionNormal(
+      double deltaX, double deltaY, double distanceSquared,
+      int firstIndex, int secondIndex)
+  {
     double distance;
     if (distanceSquared <= ENEMY_COLLISION_EPSILON) {
       deltaX = ((firstIndex + secondIndex) & 1) == 0 ? 1.0 : -1.0;
-      deltaY = (firstIndex & 1) == 0 ? 0.35 : -0.35;
+      deltaY = (firstIndex & 1) == 0 ? COLLISION_TIEBREAK_LATERAL : -COLLISION_TIEBREAK_LATERAL;
       distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     } else {
       distance = Math.sqrt(distanceSquared);
     }
-    double pushDistance = Math.min((minimumDistance - distance) * 0.5, ENEMY_COLLISION_MAX_PUSH_PIXELS);
-    if (pushDistance <= 0.0)
-      {
-      return;
-    }
-    double normalX = deltaX / distance;
-    double normalY = deltaY / distance;
-    first.pushBy(map, -normalX * pushDistance, -normalY * pushDistance);
-    second.pushBy(map, normalX * pushDistance, normalY * pushDistance);
+    return new double[]{ deltaX / distance, deltaY / distance, distance };
   }
 
   public void damageEnemy(Enemy enemy, double amount, Player sourcePlayer, ItemDefinition weapon)
@@ -160,15 +170,20 @@ public class EnemySystem {
     }
     double finalDamage = amount;
     if (isCriticalHit(sourcePlayer, weapon)) {
-      finalDamage *= 2.0;
-      this.combatFloatingTexts.add(new CombatFloatingText(
-        enemy.getWorldX(),
-        enemy.getWorldY() - enemy.getType().getDrawHeight() / 2,
-        "CRIT",
-        CRIT_TEXT_COLOR));
+      finalDamage *= CRIT_DAMAGE_MULTIPLIER;
+      addCritFloatingText(enemy);
     }
     recordHitSound(enemy);
     enemy.damage(finalDamage, sourcePlayer);
+  }
+
+  private void addCritFloatingText(Enemy enemy)
+  {
+    this.combatFloatingTexts.add(new CombatFloatingText(
+      enemy.getWorldX(),
+      enemy.getWorldY() - enemy.getType().getDrawHeight() / 2,
+      "CRIT",
+      CRIT_TEXT_COLOR));
   }
 
   private void recordHitSound(Enemy enemy)
@@ -186,8 +201,8 @@ public class EnemySystem {
     if (sourcePlayer == null || weapon == null || !weapon.canCrit()) {
       return false;
     }
-    int critChancePercent = Math.max(0, Math.min(100, weapon.getBaseCritChancePercent()));
-    return critChancePercent > 0 && this.combatRandom.nextInt(100) < critChancePercent;
+    int critChancePercent = Math.max(0, Math.min(PERCENT_MAX, weapon.getBaseCritChancePercent()));
+    return critChancePercent > 0 && this.combatRandom.nextInt(PERCENT_MAX) < critChancePercent;
   }
 
   public void collectDeadEnemies()
