@@ -1,6 +1,8 @@
 package SheriffsssPackage.ui;
 
-import SheriffsssPackage.GameConfig;
+import SheriffsssPackage.context.GameConfig;
+
+
 
 public final class EquipmentMenuLayout {
   private static final int PANEL_WIDTH = 250;
@@ -13,7 +15,8 @@ public final class EquipmentMenuLayout {
   private static final int LIST_WIDTH = 330;
   private static final int LIST_ROW_HEIGHT = 56;
 
-  public int panelX() {
+  public int panelX()
+  {
     return (GameConfig.SCREEN_WIDTH - PANEL_WIDTH) / 2;
   }
 
@@ -25,51 +28,63 @@ public final class EquipmentMenuLayout {
     return PANEL_WIDTH;
   }
 
-  public int panelHeight() {
+  public int panelHeight()
+  {
     return PANEL_HEIGHT;
   }
 
-  public int selectorX() {
+  public int selectorX()
+  {
     return panelX() + SELECTOR_X_OFFSET;
   }
 
-  public int selectorY() {
+  public int selectorY()
+    {
     return panelY() + SELECTOR_Y_OFFSET;
   }
 
-  public int selectorWidth() {
+  public int selectorWidth()
+    {
     return SELECTOR_WIDTH;
   }
 
-  public int selectorHeight() {
+  public int selectorHeight()
+  {
     return SELECTOR_HEIGHT;
   }
 
-  public int listX() {
+  public int listX()
+  {
     return panelX() + PANEL_WIDTH + LIST_GAP;
   }
 
-  public int listY() {
+  public int listY()
+    {
     return selectorY();
   }
 
-  public int listWidth() {
+  public int listWidth()
+    {
     return LIST_WIDTH;
   }
 
-  public int listRowHeight() {
+  public int listRowHeight()
+  {
     return LIST_ROW_HEIGHT;
   }
 
-  public boolean isInsidePanel(int mouseX, int mouseY) {
+  public boolean isInsidePanel(int mouseX, int mouseY)
+  {
     return isInside(mouseX, mouseY, panelX(), panelY(), PANEL_WIDTH, PANEL_HEIGHT);
   }
 
-  public boolean isInsideSelector(int mouseX, int mouseY) {
+  public boolean isInsideSelector(int mouseX, int mouseY)
+    {
     return isInside(mouseX, mouseY, selectorX(), selectorY(), SELECTOR_WIDTH, SELECTOR_HEIGHT);
   }
 
-  public int weaponIndexAt(int mouseX, int mouseY, int rowCount) {
+  public int weaponIndexAt(int mouseX, int mouseY, int rowCount)
+    {
     if (!isInsideWeaponList(mouseX, mouseY, rowCount)) {
       return -1;
     }
@@ -80,7 +95,8 @@ public final class EquipmentMenuLayout {
     return isInside(mouseX, mouseY, listX(), listY(), LIST_WIDTH, rowCount * LIST_ROW_HEIGHT);
   }
 
-  private boolean isInside(int mouseX, int mouseY, int x, int y, int width, int height) {
+  private boolean isInside(int mouseX, int mouseY, int x, int y, int width, int height)
+    {
     return mouseX >= x && mouseX < x + width
       && mouseY >= y && mouseY < y + height;
   }

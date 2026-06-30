@@ -19,7 +19,8 @@ public final class TrainingHudSnapshot {
   private final int failurePerimeterWidthWorld;
   private final int failurePerimeterHeightWorld;
 
-  public TrainingHudSnapshot(TrainingHudSnapshotConfig config) {
+  public TrainingHudSnapshot(TrainingHudSnapshotConfig config)
+  {
     this.failures = config.failures();
     this.hits = config.hits();
     this.precisionText = config.precisionText();
@@ -39,71 +40,88 @@ public final class TrainingHudSnapshot {
     this.failurePerimeterHeightWorld = config.failurePerimeterHeightWorld();
   }
 
-  public int failures() {
+  public int failures()
+    {
     return this.failures;
   }
 
-  public int hits() {
+  public int hits()
+  {
     return this.hits;
   }
 
-  public String precisionText() {
+  public String precisionText()
+  {
     return this.precisionText;
   }
 
-  public String timerText() {
+  public String timerText()
+  {
     return this.timerText;
   }
 
-  public boolean timerVisible() {
+  public boolean timerVisible()
+  {
     return this.timerVisible;
   }
 
-  public float hintAlpha() {
+  public float hintAlpha()
+  {
     return this.hintAlpha;
   }
 
-  public String hintText() {
+  public String hintText()
+  {
     return this.hintText;
   }
 
-  public int hintCenterX() {
+  public int hintCenterX()
+  {
     return this.hintCenterX;
   }
 
-  public int hintBaselineY() {
+  public int hintBaselineY()
+  {
     return this.hintBaselineY;
   }
 
-  public boolean deathPromptVisible() {
+  public boolean deathPromptVisible()
+  {
     return this.deathPromptVisible;
   }
 
-  public boolean finalScreenVisible() {
+  public boolean finalScreenVisible()
+  {
     return this.finalScreenVisible;
   }
 
-  public int finalScore() {
+  public int finalScore()
+  {
     return this.finalScore;
   }
 
-  public boolean debugUsed() {
+  public boolean debugUsed()
+  {
     return this.debugUsed;
   }
 
-  public int failurePerimeterLeftWorldX() {
+  public int failurePerimeterLeftWorldX()
+  {
     return this.failurePerimeterLeftWorldX;
   }
 
-  public int failurePerimeterTopWorldY() {
+  public int failurePerimeterTopWorldY()
+  {
     return this.failurePerimeterTopWorldY;
   }
 
-  public int failurePerimeterWidthWorld() {
+  public int failurePerimeterWidthWorld()
+  {
     return this.failurePerimeterWidthWorld;
   }
 
-  public int failurePerimeterHeightWorld() {
+  public int failurePerimeterHeightWorld()
+  {
     return this.failurePerimeterHeightWorld;
   }
 }

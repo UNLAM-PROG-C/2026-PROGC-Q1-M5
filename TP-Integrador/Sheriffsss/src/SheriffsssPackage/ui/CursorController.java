@@ -1,7 +1,8 @@
 package SheriffsssPackage.ui;
 
-import SheriffsssPackage.CursorType;
-import SheriffsssPackage.State;
+import SheriffsssPackage.context.State;
+
+
 
 public final class CursorController {
   public CursorType resolve(
@@ -9,7 +10,8 @@ public final class CursorController {
       boolean hitMarkerActive,
       boolean rootMenuHovered,
       boolean menuSettingsHovered,
-      boolean gameSettingsHovered) {
+      boolean gameSettingsHovered)
+  {
     if (hitMarkerActive && state == State.PLAYING) {
       return CursorType.HIT_MARKER;
     }

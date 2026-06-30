@@ -1,5 +1,50 @@
 package SheriffsssPackage;
 
+import SheriffsssPackage.context.AssetManager;
+import SheriffsssPackage.context.AudioManager;
+import SheriffsssPackage.context.DayNightCycle;
+import SheriffsssPackage.context.DebugOptions;
+import SheriffsssPackage.context.GameConfig;
+import SheriffsssPackage.context.GameContext;
+import SheriffsssPackage.context.GameInput;
+import SheriffsssPackage.context.State;
+import SheriffsssPackage.level.LevelType;
+import SheriffsssPackage.level.TrainingMode;
+import SheriffsssPackage.level.TrainingSessionBuilder;
+import SheriffsssPackage.render.CombatFloatingText;
+import SheriffsssPackage.render.EquipmentHudView;
+import SheriffsssPackage.render.FlameBurstEffect;
+import SheriffsssPackage.render.GameRenderer;
+import SheriffsssPackage.render.GameView;
+import SheriffsssPackage.render.MenuRenderer;
+import SheriffsssPackage.render.TrainingHudView;
+import SheriffsssPackage.session.Equipment;
+import SheriffsssPackage.session.Facing;
+import SheriffsssPackage.session.GameMap;
+import SheriffsssPackage.session.GameSession;
+import SheriffsssPackage.session.MapObject;
+import SheriffsssPackage.session.Player;
+import SheriffsssPackage.system.MusicController;
+import SheriffsssPackage.system.PlayerMovementSystem;
+import SheriffsssPackage.system.ShotFeedback;
+import SheriffsssPackage.system.enemy.Enemy;
+import SheriffsssPackage.system.enemy.EnemyHitSound;
+import SheriffsssPackage.system.enemy.EnemySystem;
+import SheriffsssPackage.system.weapon.ItemDefinition;
+import SheriffsssPackage.system.weapon.Projectile;
+import SheriffsssPackage.system.weapon.ProjectileSystem;
+import SheriffsssPackage.system.weapon.ProjectileType;
+import SheriffsssPackage.system.weapon.WeaponType;
+import SheriffsssPackage.system.weapon.WeaponUseResult;
+import SheriffsssPackage.system.weapon.WeaponUseSystem;
+import SheriffsssPackage.ui.CursorController;
+import SheriffsssPackage.ui.CursorType;
+import SheriffsssPackage.ui.DisplaySettingsChange;
+import SheriffsssPackage.ui.DisplaySettingsController;
+import SheriffsssPackage.ui.EquipmentMenuController;
+import SheriffsssPackage.ui.EquipmentMenuLayout;
+
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,21 +55,6 @@ import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import SheriffsssPackage.context.GameContext;
-import SheriffsssPackage.level.LevelType;
-import SheriffsssPackage.render.EquipmentHudView;
-import SheriffsssPackage.render.TrainingHudView;
-import SheriffsssPackage.session.GameSession;
-import SheriffsssPackage.system.MusicController;
-import SheriffsssPackage.system.PlayerMovementSystem;
-import SheriffsssPackage.system.ShotFeedback;
-import SheriffsssPackage.system.WeaponUseResult;
-import SheriffsssPackage.system.WeaponUseSystem;
-import SheriffsssPackage.ui.CursorController;
-import SheriffsssPackage.ui.DisplaySettingsChange;
-import SheriffsssPackage.ui.DisplaySettingsController;
-import SheriffsssPackage.ui.EquipmentMenuController;
-import SheriffsssPackage.ui.EquipmentMenuLayout;
 
 public class Game extends JPanel implements Runnable, GameView {
   private static final long serialVersionUID = 1L;
@@ -103,7 +133,8 @@ public class Game extends JPanel implements Runnable, GameView {
     setCursor(this.assets.getCursor(CursorType.IDLE));
   }
 
-  public void startGame() {
+  public void startGame()
+    {
     if (this.shuttingDown || this.gameThread != null) {
       return;
     }
@@ -116,21 +147,25 @@ public class Game extends JPanel implements Runnable, GameView {
     this.window = window;
   }
 
-  public void applyInitialDisplaySettings() {
+  public void applyInitialDisplaySettings()
+  {
     applyFullscreen(this.displaySettingsController.fullscreen());
   }
 
   @Override
-  protected void paintComponent(Graphics g) {
+  protected void paintComponent(Graphics g)
+    {
     super.paintComponent(g);
     syncViewportSize();
     this.renderer.render((Graphics2D) g, this);
   }
 
-  private void syncViewportSize() {
+  private void syncViewportSize()
+    {
     int viewportWidth = getWidth() > 0 ? getWidth() : GameConfig.BASE_SCREEN_WIDTH;
     int viewportHeight = getHeight() > 0 ? getHeight() : GameConfig.BASE_SCREEN_HEIGHT;
-    if (viewportWidth == this.lastViewportWidth && viewportHeight == this.lastViewportHeight) {
+    if (viewportWidth == this.lastViewportWidth && viewportHeight == this.lastViewportHeight)
+    {
       return;
     }
     GameConfig.setViewportSize(viewportWidth, viewportHeight);
@@ -138,39 +173,47 @@ public class Game extends JPanel implements Runnable, GameView {
     this.lastViewportHeight = viewportHeight;
   }
 
-  private void updateFullscreenToggle() {
+  private void updateFullscreenToggle()
+    {
     if (!this.input.consumeFullscreenToggle()) {
       return;
     }
     setFullscreen(!this.displaySettingsController.fullscreen());
   }
 
-  private void setFullscreen(boolean fullscreen) {
+  private void setFullscreen(boolean fullscreen)
+    {
     this.displaySettingsController.applyImmediateFullscreen(fullscreen);
-    SwingUtilities.invokeLater(new Runnable() {
+    SwingUtilities.invokeLater(new Runnable()
+    {
       @Override
-      public void run() {
+      public void run()
+      {
         applyFullscreen(fullscreen);
       }
     });
   }
 
-  private void applyFullscreen(boolean fullscreen) {
+  private void applyFullscreen(boolean fullscreen)
+        {
     JFrame targetWindow = this.window;
     if (targetWindow == null) {
       targetWindow = (JFrame) SwingUtilities.getWindowAncestor(this);
       this.window = targetWindow;
     }
-    if (targetWindow == null) {
+    if (targetWindow == null)
+      {
       return;
     }
     boolean wasVisible = targetWindow.isVisible();
-    if (targetWindow.isDisplayable()) {
+    if (targetWindow.isDisplayable())
+    {
       targetWindow.dispose();
     }
     targetWindow.setUndecorated(fullscreen);
     targetWindow.setResizable(false);
-    if (fullscreen) {
+    if (fullscreen)
+      {
       targetWindow.pack();
       targetWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
     } else {
@@ -179,27 +222,32 @@ public class Game extends JPanel implements Runnable, GameView {
       targetWindow.pack();
       targetWindow.setLocationRelativeTo(null);
     }
-    if (wasVisible) {
+    if (wasVisible)
+      {
       targetWindow.setVisible(true);
     }
     targetWindow.revalidate();
     targetWindow.repaint();
     refreshViewportAfterWindowChange();
-    SwingUtilities.invokeLater(new Runnable() {
+    SwingUtilities.invokeLater(new Runnable()
+      {
       @Override
-      public void run() {
+      public void run()
+      {
         refreshViewportAfterWindowChange();
       }
     });
   }
 
-  private void applyWindowedResolution() {
+  private void applyWindowedResolution()
+        {
     JFrame targetWindow = this.window;
     if (targetWindow == null) {
       targetWindow = (JFrame) SwingUtilities.getWindowAncestor(this);
       this.window = targetWindow;
     }
-    if (targetWindow == null) {
+    if (targetWindow == null)
+      {
       return;
     }
     setPreferredSize(this.displaySettingsController.windowedSize());
@@ -210,7 +258,8 @@ public class Game extends JPanel implements Runnable, GameView {
     refreshViewportAfterWindowChange();
   }
 
-  private void refreshViewportAfterWindowChange() {
+  private void refreshViewportAfterWindowChange()
+    {
     syncViewportSize();
     revalidate();
     repaint();
@@ -218,17 +267,20 @@ public class Game extends JPanel implements Runnable, GameView {
   }
 
   @Override
-  public void run() {
+  public void run()
+    {
     double drawInterval = GameConfig.FRAME_INTERVAL_NS;
     double delta = 0.0;
     long lastTime = System.nanoTime();
 
-    while (!this.shuttingDown && Thread.currentThread() == this.gameThread) {
+    while (!this.shuttingDown && Thread.currentThread() == this.gameThread)
+    {
       long currentTime = System.nanoTime();
       delta += (currentTime - lastTime) / drawInterval;
       lastTime = currentTime;
 
-      while (delta >= 1.0) {
+      while (delta >= 1.0)
+      {
         updateGame();
         repaint();
         this.frameCount++;
@@ -237,7 +289,8 @@ public class Game extends JPanel implements Runnable, GameView {
     }
   }
 
-  private void updateGame() {
+  private void updateGame()
+        {
     if (this.shuttingDown) {
       return;
     }
@@ -246,23 +299,29 @@ public class Game extends JPanel implements Runnable, GameView {
     updateDebugMenuInput();
     if (this.state != State.PLAYING
         || this.session.player() == null
-        || this.session.player().isDead()) {
+        || this.session.player().isDead())
+    {
       this.input.consumeZoomWheelSteps();
       this.input.consumeZoomKeySteps();
     }
     this.shotFeedback.update();
-    if (this.state == State.MENU) {
+    if (this.state == State.MENU)
+      {
       updateMenu();
-    } else if (this.state == State.MENU_SETTINGS) {
+    } else if (this.state == State.MENU_SETTINGS)
+      {
       updateMenuSettings();
-    } else if (this.state == State.PLAYING) {
+    } else if (this.state == State.PLAYING)
+      {
       updatePlaying();
-    } else if (this.state == State.SETTINGS) {
+    } else if (this.state == State.SETTINGS)
+      {
       updateSettings();
     }
     if (isTrainingLevelActive() && this.session.trainingMode() != null
       && this.state == State.PLAYING
-      && this.session.player() != null) {
+      && this.session.player() != null)
+      {
       this.session.trainingMode().update(this.session.player(), this.input, this.projectileSystem);
     }
     updateInfoMessages();
@@ -270,19 +329,22 @@ public class Game extends JPanel implements Runnable, GameView {
     updateCursor();
   }
 
-  private void updateDebugMenuInput() {
+  private void updateDebugMenuInput()
+      {
     if (!isTrainingLevelActive()) {
       this.debugOptions.setMenuOpen(false);
       this.activeDebugTrajectorySlider = false;
       this.debugPanelPrimaryHeld = this.input.isPrimaryHeld();
       return;
     }
-    if (!this.debugOptions.isMenuOpen()) {
+    if (!this.debugOptions.isMenuOpen())
+      {
       this.activeDebugTrajectorySlider = false;
       this.debugPanelPrimaryHeld = this.input.isPrimaryHeld();
       return;
     }
-    if (!this.input.isPrimaryHeld()) {
+    if (!this.input.isPrimaryHeld())
+      {
       this.activeDebugTrajectorySlider = false;
       this.debugPanelPrimaryHeld = false;
       return;
@@ -292,10 +354,12 @@ public class Game extends JPanel implements Runnable, GameView {
       this.input.consumePrimaryClick();
       return;
     }
-    if (!this.debugPanelPrimaryHeld) {
+    if (!this.debugPanelPrimaryHeld)
+      {
       boolean handled = this.debugOptions.handleClick(this.input.getMouseX(), this.input.getMouseY());
       this.debugPanelPrimaryHeld = true;
-      if (handled) {
+      if (handled)
+      {
         equipRequestedTrainingDebugWeapon();
         this.input.consumePrimaryClick();
         this.activeDebugTrajectorySlider = this.debugOptions.isTrajectorySliderHovered(
@@ -305,19 +369,22 @@ public class Game extends JPanel implements Runnable, GameView {
     }
   }
 
-  private void equipRequestedTrainingDebugWeapon() {
+  private void equipRequestedTrainingDebugWeapon()
+        {
     if (!this.debugOptions.consumeUnlockAllWeaponsRequest()
         || this.session.player() == null
         || !isTrainingLevelActive()) {
       return;
     }
     this.trainingSessionBuilder.applyTrainingDebugLoadout(this.context, this.session.player());
-    if (this.debugOptions.shouldUnlockAllWeapons()) {
+    if (this.debugOptions.shouldUnlockAllWeapons())
+    {
       this.session.player().getEquipment().openMenu();
     }
   }
 
-  private void updateMenu() {
+  private void updateMenu()
+      {
     if (!this.input.consumePrimaryClick()) {
       return;
     }
@@ -325,22 +392,26 @@ public class Game extends JPanel implements Runnable, GameView {
       shutdownApplication();
       return;
     }
-    if (this.menuRenderer.isTrainingButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+    if (this.menuRenderer.isTrainingButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
+      {
       startTraining(true);
       return;
     }
-    if (this.menuRenderer.isTrainingSettingsButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+    if (this.menuRenderer.isTrainingSettingsButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
+      {
       openMenuSettings();
       return;
     }
   }
 
 
-  private void startTraining() {
+  private void startTraining()
+      {
     startTraining(false);
   }
 
-  private void startTraining(boolean resetDebugOptions) {
+  private void startTraining(boolean resetDebugOptions)
+    {
     stopTrainingIfActive();
     this.trainingSessionBuilder.build(this, this.context, this.session, resetDebugOptions);
     resetTrainingTransientState();
@@ -350,13 +421,15 @@ public class Game extends JPanel implements Runnable, GameView {
     this.session.trainingMode().start();
   }
 
-  private void resetTrainingTransientState() {
+  private void resetTrainingTransientState()
+    {
     this.projectileSystem.clear();
     resetLocalToolAnimation();
     this.toolTargetObject = null;
   }
 
-  private void stopTrainingIfActive() {
+  private void stopTrainingIfActive()
+    {
     if (this.session.trainingMode() != null) {
       this.session.trainingMode().shutdown();
       this.session.setTrainingMode(null);
@@ -364,25 +437,30 @@ public class Game extends JPanel implements Runnable, GameView {
     this.session.setActiveLevel(null);
   }
 
-  private boolean isTrainingSessionFinished() {
+  private boolean isTrainingSessionFinished()
+      {
     return isTrainingLevelActive() && this.session.trainingMode() != null
       && this.session.trainingMode().isSessionFinished();
   }
 
-  private boolean isTrainingWaitingForFirstShot() {
+  private boolean isTrainingWaitingForFirstShot()
+    {
     return isTrainingLevelActive() && this.session.trainingMode() != null
       && this.session.trainingMode().isWaitingForFirstShot();
   }
 
-  private boolean isTrainingLevelActive() {
+  private boolean isTrainingLevelActive()
+    {
     return this.session.activeLevel().type() == LevelType.TRAINING;
   }
 
-  public void restartTraining() {
+  public void restartTraining()
+    {
     startTraining();
   }
 
-  public void exitTrainingToMenu() {
+  public void exitTrainingToMenu()
+    {
     stopTrainingIfActive();
     this.session.setPlayer(null);
     this.session.setMap(null);
@@ -391,20 +469,23 @@ public class Game extends JPanel implements Runnable, GameView {
     this.input.clearMovement();
   }
 
-  private void updatePlaying() {
+  private void updatePlaying()
+    {
     if (isTrainingSessionFinished()) {
       clearToolTarget();
       resetLocalToolAnimation();
       return;
     }
-    if (this.input.consumeEscapePressed()) {
+    if (this.input.consumeEscapePressed())
+      {
       beginDisplaySettingsEdit();
       this.state = State.SETTINGS;
       this.displaySettingsController.clearMessage();
       clearToolTarget();
       return;
     }
-    if (this.input.consumeEquipmentToggle()) {
+    if (this.input.consumeEquipmentToggle())
+      {
       if (this.session.player() != null) {
         this.session.player().getEquipment().toggleMenu();
       }
@@ -417,7 +498,8 @@ public class Game extends JPanel implements Runnable, GameView {
 
     this.primaryGameplayPressedThisFrame = false;
     boolean primaryPressed = consumePrimaryGameplayClick();
-    if (primaryPressed && handleEquipmentClick(this.input.getMouseX(), this.input.getMouseY())) {
+    if (primaryPressed && handleEquipmentClick(this.input.getMouseX(), this.input.getMouseY()))
+        {
       primaryPressed = false;
       this.blockPrimaryGameplayUntilRelease = this.input.isPrimaryHeld();
     }
@@ -430,7 +512,8 @@ public class Game extends JPanel implements Runnable, GameView {
 
     int moveX = this.input.getMoveX();
     int moveY = this.input.getMoveY();
-    if (isTrainingWaitingForFirstShot()) {
+    if (isTrainingWaitingForFirstShot())
+      {
       moveX = 0;
       moveY = 0;
     }
@@ -444,7 +527,8 @@ public class Game extends JPanel implements Runnable, GameView {
     this.dayNightCycle.tick();
     this.enemySystem.update(this.session.map(), this.session.player());
 
-    if (this.session.player().getCurrentHP() <= 0.0) {
+    if (this.session.player().getCurrentHP() <= 0.0)
+    {
       this.session.player().die();
       returnToMenu();
       return;
@@ -454,11 +538,13 @@ public class Game extends JPanel implements Runnable, GameView {
     this.primaryGameplayPressedThisFrame = false;
   }
 
-  private void updateToolUse() {
+  private void updateToolUse()
+      {
     this.weaponUseSystem.updateProjectileWeaponCooldown(this.session.playerRuntime());
     this.usingTool = false;
     ItemDefinition selectedDefinition = this.session.player().getEquipment().getEquippedWeapon();
-    if (this.toolAnimationDefinition != null) {
+    if (this.toolAnimationDefinition != null)
+    {
       if (selectedDefinition == this.toolAnimationDefinition) {
         tickLocalToolAnimation(this.toolAnimationDefinition);
       } else {
@@ -466,11 +552,13 @@ public class Game extends JPanel implements Runnable, GameView {
       }
     }
     boolean primaryActive = isPrimaryGameplayHeld() || this.primaryGameplayPressedThisFrame;
-    if (!primaryActive) {
+    if (!primaryActive)
+        {
       clearToolTarget();
       return;
     }
-    if (selectedDefinition == null || !selectedDefinition.isProjectileWeapon()) {
+    if (selectedDefinition == null || !selectedDefinition.isProjectileWeapon())
+      {
       clearToolTarget();
       return;
     }
@@ -481,27 +569,31 @@ public class Game extends JPanel implements Runnable, GameView {
       selectedDefinition,
       screenToWorldX(this.input.getMouseX()),
       screenToWorldY(this.input.getMouseY()));
-    if (weaponUseResult.fired()) {
+    if (weaponUseResult.fired())
+      {
       handleWeaponUseResult(weaponUseResult);
       startLocalToolAnimation(selectedDefinition);
     }
     clearToolTarget();
   }
 
-  private boolean handleEquipmentClick(int mouseX, int mouseY) {
+  private boolean handleEquipmentClick(int mouseX, int mouseY)
+      {
     if (this.session.player() == null) {
       return false;
     }
     return this.equipmentMenuController.handleClick(this.session.player().getEquipment(), mouseX, mouseY);
   }
 
-  private void startLocalToolAnimation(ItemDefinition definition) {
+  private void startLocalToolAnimation(ItemDefinition definition)
+    {
     int baseDurationTicks = definition.getUseAnimationTicks();
     int durationTicks = this.session.player() == null
       ? baseDurationTicks
       : this.session.player().applyAttackSpeedToCooldown(baseDurationTicks);
     durationTicks = Math.max(1, durationTicks);
-    if (this.toolAnimationTicksRemaining <= 0 || this.toolAnimationDefinition != definition) {
+    if (this.toolAnimationTicksRemaining <= 0 || this.toolAnimationDefinition != definition)
+    {
       this.toolUseTicks = 0;
       this.toolAnimationTicksRemaining = durationTicks;
       this.toolAnimationDefinition = definition;
@@ -510,7 +602,8 @@ public class Game extends JPanel implements Runnable, GameView {
     this.toolUseDurationTicks = durationTicks;
   }
 
-  private void tickLocalToolAnimation(ItemDefinition definition) {
+  private void tickLocalToolAnimation(ItemDefinition definition)
+  {
     if (this.toolAnimationTicksRemaining <= 0 || this.toolAnimationDefinition != definition) {
       resetLocalToolAnimation();
       return;
@@ -519,12 +612,14 @@ public class Game extends JPanel implements Runnable, GameView {
     this.toolUseDurationTicks = Math.max(1, this.toolUseDurationTicks);
     this.toolUseTicks++;
     this.toolAnimationTicksRemaining--;
-    if (this.toolAnimationTicksRemaining <= 0) {
+    if (this.toolAnimationTicksRemaining <= 0)
+      {
       this.toolAnimationDefinition = null;
     }
   }
 
-  private void resetLocalToolAnimation() {
+  private void resetLocalToolAnimation()
+  {
     this.usingTool = false;
     this.toolUseTicks = 0;
     this.toolUseDurationTicks = 1;
@@ -532,9 +627,11 @@ public class Game extends JPanel implements Runnable, GameView {
     this.toolAnimationDefinition = null;
   }
 
-  private void handleWeaponUseResult(WeaponUseResult result) {
+  private void handleWeaponUseResult(WeaponUseResult result)
+  {
     this.shotFeedback.lockFacing();
-    if (isTrainingLevelActive()) {
+    if (isTrainingLevelActive())
+    {
       this.debugOptions.recordBulletTrajectory(
         result.startWorldX(),
         result.startWorldY(),
@@ -542,24 +639,29 @@ public class Game extends JPanel implements Runnable, GameView {
         result.aimWorldY());
     }
     playProjectileWeaponEffects(result);
-    if (isTrainingLevelActive() && this.session.trainingMode() != null) {
+    if (isTrainingLevelActive() && this.session.trainingMode() != null)
+      {
       this.session.trainingMode().notifyShotFired();
     }
   }
 
-  public int heldItemOriginWorldX(Player sourcePlayer, ItemDefinition definition, Facing facing) {
+  public int heldItemOriginWorldX(Player sourcePlayer, ItemDefinition definition, Facing facing)
+      {
     return this.weaponUseSystem.heldItemOriginWorldX(sourcePlayer, definition, facing);
   }
 
-  public int heldItemOriginWorldY(Player sourcePlayer, ItemDefinition definition, Facing facing) {
+  public int heldItemOriginWorldY(Player sourcePlayer, ItemDefinition definition, Facing facing)
+    {
     return this.weaponUseSystem.heldItemOriginWorldY(sourcePlayer, definition, facing);
   }
 
-  private void playProjectileWeaponEffects(WeaponUseResult result) {
+  private void playProjectileWeaponEffects(WeaponUseResult result)
+    {
     ItemDefinition weapon = result.weapon();
     ProjectileType type = result.projectileType();
     String fireSoundPath = weapon == null ? "" : weapon.getAttackSoundPath();
-    if (fireSoundPath != null && !fireSoundPath.isEmpty()) {
+    if (fireSoundPath != null && !fireSoundPath.isEmpty())
+    {
       String fallbackSoundPath = weapon != null && weapon.getWeaponType() == WeaponType.ARMA_DE_FUEGO
         ? DEFAULT_WEAPON_ATTACK_SOUND
         : "";
@@ -570,7 +672,8 @@ public class Game extends JPanel implements Runnable, GameView {
         result.startWorldX(),
         result.startWorldY());
     }
-    if (type != null && type.triggersMuzzleFlash()) {
+    if (type != null && type.triggersMuzzleFlash())
+      {
       this.shotFeedback.triggerMuzzleFlash(result.startWorldX(), result.startWorldY());
     }
   }
@@ -580,7 +683,8 @@ public class Game extends JPanel implements Runnable, GameView {
       String fallbackResourcePath,
       float gainDb,
       int sourceWorldX,
-      int sourceWorldY) {
+      int sourceWorldY)
+      {
     if (resourcePath == null || resourcePath.isEmpty()) {
       return;
     }
@@ -590,7 +694,8 @@ public class Game extends JPanel implements Runnable, GameView {
     }
     try {
       playPersistentSpatialSfx(resourcePath, gainDb, sourceWorldX, sourceWorldY);
-    } catch (IllegalStateException e) {
+    } catch (IllegalStateException e)
+      {
       this.unavailableSfxPaths.add(resourcePath);
       System.err.println("Unable to play audio resource " + resourcePath + ": " + e.getMessage());
       playFallbackPersistentSpatialSfx(resourcePath, fallbackResourcePath, gainDb, sourceWorldX, sourceWorldY);
@@ -602,7 +707,8 @@ public class Game extends JPanel implements Runnable, GameView {
       String fallbackResourcePath,
       float gainDb,
       int sourceWorldX,
-      int sourceWorldY) {
+      int sourceWorldY)
+      {
     if (fallbackResourcePath == null
         || fallbackResourcePath.isEmpty()
         || fallbackResourcePath.equals(failedResourcePath)) {
@@ -613,20 +719,24 @@ public class Game extends JPanel implements Runnable, GameView {
     }
     try {
       playPersistentSpatialSfx(fallbackResourcePath, gainDb, sourceWorldX, sourceWorldY);
-    } catch (IllegalStateException e) {
+    } catch (IllegalStateException e)
+      {
       this.unavailableSfxPaths.add(fallbackResourcePath);
       System.err.println("Unable to play fallback audio resource " + fallbackResourcePath + ": " + e.getMessage());
     }
   }
 
-  private void playPersistentSpatialSfx(String resourcePath, float gainDb, int sourceWorldX, int sourceWorldY) {
+  private void playPersistentSpatialSfx(String resourcePath, float gainDb, int sourceWorldX, int sourceWorldY)
+      {
     double volumeScale = spatialSfxVolumeScale(sourceWorldX, sourceWorldY);
-    if (volumeScale > 0.0) {
+    if (volumeScale > 0.0)
+    {
       this.audio.playOnceUntilFinished(resourcePath, gainDb, volumeScale);
     }
   }
 
-  private double spatialSfxVolumeScale(int sourceWorldX, int sourceWorldY) {
+  private double spatialSfxVolumeScale(int sourceWorldX, int sourceWorldY)
+      {
     if (this.session.player() == null || this.session.player().isDead()) {
       return 1.0;
     }
@@ -637,7 +747,8 @@ public class Game extends JPanel implements Runnable, GameView {
     int fullRadius = GameConfig.SPATIAL_SFX_FULL_VOLUME_RADIUS_PIXELS;
     int audibleRadius = GameConfig.SPATIAL_SFX_AUDIBLE_RADIUS_PIXELS;
     int distanceSquared = deltaX * deltaX + deltaY * deltaY;
-    if (distanceSquared <= fullRadius * fullRadius) {
+    if (distanceSquared <= fullRadius * fullRadius)
+    {
       return 1.0;
     }
     if (distanceSquared >= audibleRadius * audibleRadius || audibleRadius <= fullRadius) {
@@ -647,18 +758,22 @@ public class Game extends JPanel implements Runnable, GameView {
     return Math.max(0.0, Math.min(1.0, 1.0 - (distance - fullRadius) / (audibleRadius - fullRadius)));
   }
 
-  private void updateProjectiles() {
+  private void updateProjectiles()
+    {
     this.projectileSystem.update(this.session.map(), this.enemySystem);
-    if (this.projectileSystem.didHitTargetThisUpdate()) {
+    if (this.projectileSystem.didHitTargetThisUpdate())
+    {
       this.shotFeedback.triggerHitMarker();
     }
     playEnemyHitSounds();
     this.enemySystem.collectDeadEnemies();
   }
 
-  private void playEnemyHitSounds() {
+  private void playEnemyHitSounds()
+      {
     List<EnemyHitSound> hitSounds = this.enemySystem.getHitSounds();
-    for (int i = 0; i < hitSounds.size(); i++) {
+    for (int i = 0; i < hitSounds.size(); i++)
+    {
       EnemyHitSound hitSound = hitSounds.get(i);
       playPersistentSpatialSfxOrFallback(
         hitSound.getResourcePath(),
@@ -670,29 +785,34 @@ public class Game extends JPanel implements Runnable, GameView {
     this.enemySystem.clearHitSounds();
   }
 
-  private void clearToolTarget() {
+  private void clearToolTarget()
+      {
     if (this.toolTargetObject != null) {
       this.toolTargetObject.resetDurabilityDamage();
       this.toolTargetObject = null;
     }
   }
 
-  private void updateSettings() {
+  private void updateSettings()
+      {
     if (this.input.consumeEscapePressed()) {
       resumeFromSettings(false);
       return;
     }
     boolean primaryPressed = this.input.consumePrimaryClick();
-    if (primaryPressed) {
+    if (primaryPressed)
+      {
       this.displaySettingsController.selectHoveredSlider(
         isMusicSliderHovered(),
         isSfxSliderHovered(),
         isResolutionSliderHovered());
     }
-    if (!this.input.isPrimaryHeld()) {
+    if (!this.input.isPrimaryHeld())
+      {
       this.displaySettingsController.clearActiveSlider();
     }
-    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse())) {
+    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse()))
+      {
       return;
     }
     if (!primaryPressed) {
@@ -702,40 +822,48 @@ public class Game extends JPanel implements Runnable, GameView {
       this.debugOptions.toggleMenu();
       return;
     }
-    if (isFullscreenButtonHovered()) {
+    if (isFullscreenButtonHovered())
+      {
       this.displaySettingsController.togglePendingFullscreen();
       return;
     }
-    if (isResumeButtonHovered()) {
+    if (isResumeButtonHovered())
+      {
       resumeFromSettings(true);
       return;
     }
-    if (isExitToMenuButtonHovered()) {
+    if (isExitToMenuButtonHovered())
+      {
       applyPendingDisplaySettings();
       returnToMenu();
       return;
     }
-    if (isQuitButtonHovered()) {
+    if (isQuitButtonHovered())
+      {
       shutdownApplication();
     }
   }
 
-  private void updateMenuSettings() {
+  private void updateMenuSettings()
+      {
     if (this.input.consumeEscapePressed()) {
       closeMenuSettings();
       return;
     }
     boolean primaryPressed = this.input.consumePrimaryClick();
-    if (primaryPressed) {
+    if (primaryPressed)
+      {
       this.displaySettingsController.selectHoveredSlider(
         isMusicSliderHovered(),
         isSfxSliderHovered(),
         isResolutionSliderHovered());
     }
-    if (!this.input.isPrimaryHeld()) {
+    if (!this.input.isPrimaryHeld())
+      {
       this.displaySettingsController.clearActiveSlider();
     }
-    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse())) {
+    if (this.displaySettingsController.updateActiveSlider(this.audio, sliderValueFromMouse()))
+      {
       return;
     }
     if (primaryPressed
@@ -743,12 +871,14 @@ public class Game extends JPanel implements Runnable, GameView {
       this.displaySettingsController.togglePendingFullscreen();
       return;
     }
-    if (primaryPressed && this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+    if (primaryPressed && this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
+      {
       closeMenuSettings();
     }
   }
 
-  private boolean isMusicSliderHovered() {
+  private boolean isMusicSliderHovered()
+      {
     return isPointInside(
       settingsSliderInteractionX(),
       settingsSliderInteractionY(GameConfig.SETTINGS_MUSIC_SLIDER_Y) - 10,
@@ -756,7 +886,8 @@ public class Game extends JPanel implements Runnable, GameView {
       24);
   }
 
-  private boolean isSfxSliderHovered() {
+  private boolean isSfxSliderHovered()
+    {
     return isPointInside(
       settingsSliderInteractionX(),
       settingsSliderInteractionY(GameConfig.SETTINGS_SFX_SLIDER_Y) - 10,
@@ -764,7 +895,8 @@ public class Game extends JPanel implements Runnable, GameView {
       24);
   }
 
-  private boolean isResolutionSliderHovered() {
+  private boolean isResolutionSliderHovered()
+    {
     return isPointInside(
       settingsSliderInteractionX(),
       settingsSliderInteractionY(GameConfig.SETTINGS_RESOLUTION_SLIDER_Y) - 10,
@@ -772,32 +904,39 @@ public class Game extends JPanel implements Runnable, GameView {
       24);
   }
 
-  private boolean isFullscreenButtonHovered() {
+  private boolean isFullscreenButtonHovered()
+    {
     return isSettingsButtonHovered(GameConfig.SETTINGS_FULLSCREEN_BUTTON_Y);
   }
 
-  private boolean isDebugSettingsButtonHovered() {
+  private boolean isDebugSettingsButtonHovered()
+    {
     return isTrainingLevelActive()
       && isSettingsButtonHovered(GameConfig.SETTINGS_DEBUG_BUTTON_Y);
   }
 
-  private int settingsDebugButtonX() {
+  private int settingsDebugButtonX()
+    {
     return GameConfig.SETTINGS_BUTTON_X;
   }
 
-  private boolean isResumeButtonHovered() {
+  private boolean isResumeButtonHovered()
+  {
     return isSettingsButtonHovered(GameConfig.SETTINGS_RESUME_BUTTON_Y);
   }
 
-  private boolean isExitToMenuButtonHovered() {
+  private boolean isExitToMenuButtonHovered()
+    {
     return isSettingsButtonHovered(GameConfig.SETTINGS_MENU_BUTTON_Y);
   }
 
-  private boolean isQuitButtonHovered() {
+  private boolean isQuitButtonHovered()
+    {
     return isSettingsButtonHovered(GameConfig.SETTINGS_QUIT_BUTTON_Y);
   }
 
-  private boolean isSettingsButtonHovered(int baseY) {
+  private boolean isSettingsButtonHovered(int baseY)
+    {
     return isPointInside(
       GameConfig.SETTINGS_BUTTON_X,
       settingsOverlayY(baseY),
@@ -805,58 +944,68 @@ public class Game extends JPanel implements Runnable, GameView {
       GameConfig.SETTINGS_BUTTON_HEIGHT);
   }
 
-  private boolean isPointInside(int x, int y, int width, int height) {
+  private boolean isPointInside(int x, int y, int width, int height)
+    {
     return this.input.getMouseX() >= x && this.input.getMouseX() <= x + width
       && this.input.getMouseY() >= y && this.input.getMouseY() <= y + height;
   }
 
-  private double sliderValueFromMouse() {
+  private double sliderValueFromMouse()
+    {
     double value = (this.input.getMouseX() - settingsSliderInteractionX())
       / (double) GameConfig.SETTINGS_SLIDER_WIDTH;
     return Math.max(0.0, Math.min(1.0, value));
   }
 
-  private int settingsSliderInteractionX() {
+  private int settingsSliderInteractionX()
+    {
     if (this.state == State.MENU_SETTINGS) {
       return this.menuRenderer.getMenuOffsetX() + GameConfig.BASE_SCREEN_WIDTH / 2 - 90;
     }
     return GameConfig.SETTINGS_SLIDER_X;
   }
 
-  private int settingsSliderInteractionY(int baseY) {
+  private int settingsSliderInteractionY(int baseY)
+      {
     if (this.state == State.MENU_SETTINGS) {
       return this.menuRenderer.getMenuOffsetY() + baseY;
     }
     return settingsOverlayY(baseY);
   }
 
-  private int settingsOverlayY(int baseY) {
+  private int settingsOverlayY(int baseY)
+      {
     return baseY + settingsOverlayOffsetY();
   }
 
-  private int settingsOverlayOffsetY() {
+  private int settingsOverlayOffsetY()
+    {
     return isTrainingLevelActive() && this.state == State.SETTINGS
       ? GameConfig.TRAINING_SETTINGS_OVERLAY_Y_OFFSET
       : 0;
   }
 
-  private int screenToWorldX(int screenX) {
+  private int screenToWorldX(int screenX)
+    {
     return getCameraCenterWorldX()
       + (int) Math.round((screenX - GameConfig.SCREEN_CENTER_X) / this.session.cameraZoom());
   }
 
-  private int screenToWorldY(int screenY) {
+  private int screenToWorldY(int screenY)
+    {
     return getCameraCenterWorldY()
       + (int) Math.round((screenY - GameConfig.SCREEN_CENTER_Y) / this.session.cameraZoom());
   }
 
-  private void updateCameraZoomInput() {
+  private void updateCameraZoomInput()
+    {
     int wheelSteps = this.input.consumeZoomWheelSteps();
     int keySteps = this.input.consumeZoomKeySteps();
     int heldDirection = this.input.getZoomKeyDirection();
     if ((wheelSteps == 0 && keySteps == 0 && heldDirection == 0)
         || this.session.player() == null
-        || this.session.player().isDead()) {
+        || this.session.player().isDead())
+    {
       return;
     }
     setCameraZoom(this.session.cameraZoom()
@@ -865,11 +1014,13 @@ public class Game extends JPanel implements Runnable, GameView {
       - wheelSteps * GameConfig.CAMERA_ZOOM_STEP);
   }
 
-  private void setCameraZoom(double cameraZoom) {
+  private void setCameraZoom(double cameraZoom)
+    {
     this.session.setCameraZoom(Math.max(GameConfig.CAMERA_MIN_ZOOM, Math.min(GameConfig.CAMERA_MAX_ZOOM, cameraZoom)));
   }
 
-  private void returnToMenu() {
+  private void returnToMenu()
+    {
     this.musicController.stop(this.audio);
     this.audio.stopSfxLoop();
     stopTrainingIfActive();
@@ -884,21 +1035,24 @@ public class Game extends JPanel implements Runnable, GameView {
     this.state = State.MENU;
   }
 
-  private void openMenuSettings() {
+  private void openMenuSettings()
+    {
     this.displaySettingsController.clearMessage();
     this.displaySettingsController.clearActiveSlider();
     beginDisplaySettingsEdit();
     this.state = State.MENU_SETTINGS;
   }
 
-  private void closeMenuSettings() {
+  private void closeMenuSettings()
+    {
     applyPendingDisplaySettings();
     this.displaySettingsController.clearMessage();
     this.displaySettingsController.clearActiveSlider();
     this.state = State.MENU;
   }
 
-  public synchronized void shutdown() {
+  public synchronized void shutdown()
+    {
     if (this.shuttingDown) {
       return;
     }
@@ -911,12 +1065,14 @@ public class Game extends JPanel implements Runnable, GameView {
     GameConfig.saveDisplayPreferences();
   }
 
-  private void shutdownApplication() {
+  private void shutdownApplication()
+    {
     shutdown();
     System.exit(0);
   }
 
-  private void updateMusic() {
+  private void updateMusic()
+    {
     if (this.shuttingDown) {
       return;
     }
@@ -926,7 +1082,8 @@ public class Game extends JPanel implements Runnable, GameView {
       this.session.player());
   }
 
-  private void updateCursor() {
+  private void updateCursor()
+    {
     CursorType cursorType = this.cursorController.resolve(
       this.state,
       this.shotFeedback.hasHitMarker(),
@@ -936,7 +1093,8 @@ public class Game extends JPanel implements Runnable, GameView {
     setCursor(this.assets.getCursor(cursorType));
   }
 
-  private boolean isMenuSettingsControlHovered() {
+  private boolean isMenuSettingsControlHovered()
+    {
     return this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY())
       || isMusicSliderHovered()
       || isSfxSliderHovered()
@@ -944,7 +1102,8 @@ public class Game extends JPanel implements Runnable, GameView {
       || this.menuRenderer.isMenuFullscreenButtonHovered(this.input.getMouseX(), this.input.getMouseY());
   }
 
-  private boolean isGameSettingsControlHovered() {
+  private boolean isGameSettingsControlHovered()
+    {
     return isMusicSliderHovered()
       || isSfxSliderHovered()
       || isResolutionSliderHovered()
@@ -955,15 +1114,18 @@ public class Game extends JPanel implements Runnable, GameView {
       || isQuitButtonHovered();
   }
 
-  public long getFrameCount() {
+  public long getFrameCount()
+    {
     return this.frameCount;
   }
 
-  public DayNightCycle getDayNightCycle() {
+  public DayNightCycle getDayNightCycle()
+  {
     return this.dayNightCycle;
   }
 
-  private void updateInfoMessages() {
+  private void updateInfoMessages()
+  {
     for (int i = 0; i < INFO_MESSAGE_SLOTS; i++) {
       if (this.infoMessageTicks[i] > 0) {
         this.infoMessageTicks[i]--;
@@ -971,9 +1133,11 @@ public class Game extends JPanel implements Runnable, GameView {
     }
   }
 
-  private boolean consumePrimaryGameplayClick() {
+  private boolean consumePrimaryGameplayClick()
+  {
     boolean clicked = this.input.consumePrimaryClick();
-    if (!this.blockPrimaryGameplayUntilRelease) {
+    if (!this.blockPrimaryGameplayUntilRelease)
+    {
       return clicked;
     }
     if (!this.input.isPrimaryHeld()) {
@@ -982,74 +1146,111 @@ public class Game extends JPanel implements Runnable, GameView {
     return false;
   }
 
-  private boolean isPrimaryGameplayHeld() {
+  private boolean isPrimaryGameplayHeld()
+  {
     if (!this.blockPrimaryGameplayUntilRelease) {
       return this.input.isPrimaryHeld();
     }
-    if (!this.input.isPrimaryHeld()) {
+    if (!this.input.isPrimaryHeld())
+      {
       this.blockPrimaryGameplayUntilRelease = false;
     }
     return false;
   }
 
-  private void resumeFromSettings(boolean blockPrimaryGameplay) {
+  private void resumeFromSettings(boolean blockPrimaryGameplay)
+  {
     applyPendingDisplaySettings();
     this.state = State.PLAYING;
     this.displaySettingsController.clearMessage();
     this.displaySettingsController.clearActiveSlider();
-    if (blockPrimaryGameplay && this.input.isPrimaryHeld()) {
+    if (blockPrimaryGameplay && this.input.isPrimaryHeld())
+    {
       this.blockPrimaryGameplayUntilRelease = true;
     }
   }
 
-  private void beginDisplaySettingsEdit() {
+  private void beginDisplaySettingsEdit()
+  {
     this.displaySettingsController.beginEdit();
   }
 
-  private void applyPendingDisplaySettings() {
+  private void applyPendingDisplaySettings()
+    {
     DisplaySettingsChange change = this.displaySettingsController.applyPending();
-    if (change.fullscreenChanged()) {
+    if (change.fullscreenChanged())
+    {
       final boolean targetFullscreen = change.targetFullscreen();
-      SwingUtilities.invokeLater(new Runnable() { @Override public void run() { applyFullscreen(targetFullscreen); } });
-    } else if (!change.targetFullscreen() && change.resolutionChanged()) {
-      SwingUtilities.invokeLater(new Runnable() { @Override public void run() { applyWindowedResolution(); } });
+      SwingUtilities.invokeLater(new Runnable()
+      { @Override public void run()
+      { applyFullscreen(targetFullscreen); } });
+    } else if (!change.targetFullscreen() && change.resolutionChanged())
+      {
+      SwingUtilities.invokeLater(new Runnable()
+      { @Override public void run()
+      { applyWindowedResolution(); } });
     }
   }
 
-  public AssetManager getAssets() { return this.assets; }
-  public AudioManager getAudio() { return this.audio; }
-  public GameInput getInput() { return this.input; }
-  public DebugOptions getDebugOptions() { return this.debugOptions; }
-  public State getState() { return this.state; }
-  public GameMap getMap() { return this.session.map(); }
-  public Player getPlayer() { return this.session.player(); }
-  public int getCameraCenterWorldX() {
+  public AssetManager getAssets()
+      { return this.assets; }
+  public AudioManager getAudio()
+  { return this.audio; }
+  public GameInput getInput()
+  { return this.input; }
+  public DebugOptions getDebugOptions()
+  { return this.debugOptions; }
+  public State getState()
+  { return this.state; }
+  public GameMap getMap()
+  { return this.session.map(); }
+  public Player getPlayer()
+  { return this.session.player(); }
+  public int getCameraCenterWorldX()
+  {
     return this.session.player() == null
       ? GameConfig.SCREEN_CENTER_X
       : this.session.player().getX();
   }
 
-  public int getCameraCenterWorldY() {
+  public int getCameraCenterWorldY()
+    {
     return this.session.player() == null
       ? GameConfig.SCREEN_CENTER_Y
       : this.session.player().getY();
   }
-  public double getCameraZoom() { return this.session.cameraZoom(); }
-  public boolean isSpectating() { return false; }
-  public List<Enemy> getEnemies() { return this.enemySystem.getEnemies(); }
-  public List<Projectile> getProjectiles() { return this.projectileSystem.getProjectiles(); }
-  public List<FlameBurstEffect> getFlameBurstEffects() { return this.enemySystem.getFlameBurstEffects(); }
-  public List<CombatFloatingText> getCombatFloatingTexts() { return this.enemySystem.getCombatFloatingTexts(); }
-  public boolean isUsingTool() { return this.usingTool; }
-  public int getToolUseTicks() { return this.toolUseTicks; }
-  public int getToolUseDurationTicks() { return this.toolUseDurationTicks; }
-  public MapObject getToolTargetObject() { return this.toolTargetObject; }
-  public int getRevolverFlashTicks() { return this.shotFeedback.muzzleFlashTicks(); }
-  public int getRevolverFlashWorldX() { return this.shotFeedback.muzzleFlashWorldX(); }
-  public int getRevolverFlashWorldY() { return this.shotFeedback.muzzleFlashWorldY(); }
-  public int getRevolverFlashRadiusTiles() { return this.shotFeedback.muzzleFlashRadiusTiles(); }
-  public double getRevolverFlashIntensity() { return this.shotFeedback.muzzleFlashIntensity(); }
-  public double getEquippedPlayerAccuracy() {
+  public double getCameraZoom()
+    { return this.session.cameraZoom(); }
+  public boolean isSpectating()
+  { return false; }
+  public List<Enemy> getEnemies()
+  { return this.enemySystem.getEnemies(); }
+  public List<Projectile> getProjectiles()
+  { return this.projectileSystem.getProjectiles(); }
+  public List<FlameBurstEffect> getFlameBurstEffects()
+  { return this.enemySystem.getFlameBurstEffects(); }
+  public List<CombatFloatingText> getCombatFloatingTexts()
+  { return this.enemySystem.getCombatFloatingTexts(); }
+  public boolean isUsingTool()
+  { return this.usingTool; }
+  public int getToolUseTicks()
+  { return this.toolUseTicks; }
+  public int getToolUseDurationTicks()
+  { return this.toolUseDurationTicks; }
+  public MapObject getToolTargetObject()
+  { return this.toolTargetObject; }
+  public int getRevolverFlashTicks()
+  { return this.shotFeedback.muzzleFlashTicks(); }
+  public int getRevolverFlashWorldX()
+  { return this.shotFeedback.muzzleFlashWorldX(); }
+  public int getRevolverFlashWorldY()
+  { return this.shotFeedback.muzzleFlashWorldY(); }
+  public int getRevolverFlashRadiusTiles()
+  { return this.shotFeedback.muzzleFlashRadiusTiles(); }
+  public double getRevolverFlashIntensity()
+  { return this.shotFeedback.muzzleFlashIntensity(); }
+  public double getEquippedPlayerAccuracy()
+  {
     if (this.session.player() == null) {
       return 1.0;
     }
@@ -1060,7 +1261,8 @@ public class Game extends JPanel implements Runnable, GameView {
       weapon);
   }
 
-  public EquipmentHudView getEquipmentHudView() {
+  public EquipmentHudView getEquipmentHudView()
+    {
     boolean visible = this.session.player() != null
       && !this.session.player().isDead()
       && this.state != State.SETTINGS;
@@ -1068,23 +1270,38 @@ public class Game extends JPanel implements Runnable, GameView {
     this.equipmentHudView.update(equipment, this.equipmentMenuLayout, visible);
     return this.equipmentHudView;
   }
-  public int getInfoMessageSlotCount() { return INFO_MESSAGE_SLOTS; }
-  public String getInfoMessage(int index) { return this.infoMessages[index]; }
-  public int getInfoMessageTicks(int index) { return this.infoMessageTicks[index]; }
-  public String getSettingsMessage() { return this.displaySettingsController.message(); }
-  public boolean isPendingFullscreen() { return this.displaySettingsController.pendingFullscreen(); }
-  public boolean isDebugMenuOpen() { return this.debugOptions.isMenuOpen(); }
-  public boolean isSettingsDebugButtonHovered() { return isDebugSettingsButtonHovered(); }
-  public int getSettingsDebugButtonX() { return settingsDebugButtonX(); }
-  public int getSettingsDebugButtonY() { return settingsOverlayY(GameConfig.SETTINGS_DEBUG_BUTTON_Y); }
-  public int getSettingsDebugButtonWidth() { return GameConfig.SETTINGS_BUTTON_WIDTH; }
-  public int getSettingsDebugButtonHeight() { return GameConfig.SETTINGS_BUTTON_HEIGHT; }
-  public int getSettingsOverlayOffsetY() { return settingsOverlayOffsetY(); }
-  public double getWindowResolutionSliderValue() {
+  public int getInfoMessageSlotCount()
+    { return INFO_MESSAGE_SLOTS; }
+  public String getInfoMessage(int index)
+  { return this.infoMessages[index]; }
+  public int getInfoMessageTicks(int index)
+  { return this.infoMessageTicks[index]; }
+  public String getSettingsMessage()
+  { return this.displaySettingsController.message(); }
+  public boolean isPendingFullscreen()
+  { return this.displaySettingsController.pendingFullscreen(); }
+  public boolean isDebugMenuOpen()
+  { return this.debugOptions.isMenuOpen(); }
+  public boolean isSettingsDebugButtonHovered()
+  { return isDebugSettingsButtonHovered(); }
+  public int getSettingsDebugButtonX()
+  { return settingsDebugButtonX(); }
+  public int getSettingsDebugButtonY()
+  { return settingsOverlayY(GameConfig.SETTINGS_DEBUG_BUTTON_Y); }
+  public int getSettingsDebugButtonWidth()
+  { return GameConfig.SETTINGS_BUTTON_WIDTH; }
+  public int getSettingsDebugButtonHeight()
+  { return GameConfig.SETTINGS_BUTTON_HEIGHT; }
+  public int getSettingsOverlayOffsetY()
+  { return settingsOverlayOffsetY(); }
+  public double getWindowResolutionSliderValue()
+  {
     return this.displaySettingsController.windowResolutionSliderValue();
   }
-  public String getWindowResolutionLabel() { return this.displaySettingsController.windowResolutionLabel(); }
-  public TrainingHudView getTrainingHudView() {
+  public String getWindowResolutionLabel()
+    { return this.displaySettingsController.windowResolutionLabel(); }
+  public TrainingHudView getTrainingHudView()
+  {
     TrainingMode trainingMode = this.session.trainingMode();
     this.trainingHudView.update(
       isTrainingLevelActive(),
@@ -1092,10 +1309,12 @@ public class Game extends JPanel implements Runnable, GameView {
     return this.trainingHudView;
   }
 
-  private boolean isRootMenuButtonHovered() {
+  private boolean isRootMenuButtonHovered()
+    {
     int mouseX = this.input.getMouseX();
     int mouseY = this.input.getMouseY();
-    if (this.menuRenderer.isExitButtonHovered(mouseX, mouseY)) {
+    if (this.menuRenderer.isExitButtonHovered(mouseX, mouseY))
+    {
       return true;
     }
     return this.menuRenderer.isTrainingButtonHovered(mouseX, mouseY)

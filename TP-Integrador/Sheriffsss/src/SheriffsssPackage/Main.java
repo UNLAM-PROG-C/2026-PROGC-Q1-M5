@@ -9,19 +9,23 @@ import javax.swing.WindowConstants;
 
 public class Main {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args)
+ {
 		if (args != null && args.length > 0 && "--packaging-check".equals(args[0])) {
 			return;
 		}
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable()
+  {
 			@Override
-			public void run() {
+			public void run()
+   {
 				createAndShowGame();
 			}
 		});
 	}
 
-	private static void createAndShowGame() {
+	private static void createAndShowGame()
+    {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		window.setResizable(false);
@@ -33,7 +37,8 @@ public class Main {
 		Runtime.getRuntime().addShutdownHook(new Thread(game::shutdown, "SheriffsssGameShutdown"));
 		window.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent event) {
+			public void windowClosing(WindowEvent event)
+   {
 				game.shutdown();
 				window.dispose();
 				System.exit(0);

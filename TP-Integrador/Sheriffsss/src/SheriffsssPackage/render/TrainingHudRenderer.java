@@ -1,5 +1,8 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.context.GameConfig;
+
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
@@ -7,9 +10,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
-import SheriffsssPackage.GameConfig;
-import SheriffsssPackage.GameTheme;
-import SheriffsssPackage.TextRenderer;
 
 public final class TrainingHudRenderer {
   private static final TextRenderer.Style TEXT_STYLE = TextRenderer.Style.OUTLINED;
@@ -55,17 +55,20 @@ public final class TrainingHudRenderer {
       return;
     }
     drawStats(g2, snapshot);
-    if (snapshot.finalScreenVisible()) {
+    if (snapshot.finalScreenVisible())
+    {
       drawFinalScreen(g2, snapshot);
       return;
     }
     drawHint(g2, snapshot);
-    if (snapshot.deathPromptVisible()) {
+    if (snapshot.deathPromptVisible())
+      {
       drawDeathPrompt(g2);
     }
   }
 
-  private void drawStats(Graphics2D g2, TrainingHudSnapshot snapshot) {
+  private void drawStats(Graphics2D g2, TrainingHudSnapshot snapshot)
+      {
     TextRenderer.drawCentered(g2, BODY_FONT, "Fallos: " + snapshot.failures(), Color.WHITE,
       GameConfig.SCREEN_CENTER_X - FAILURE_TEXT_X_OFFSET, SIDE_STAT_BASELINE_Y, TEXT_STYLE);
     TextRenderer.drawCentered(g2, PRECISION_FONT, "Precision", Color.WHITE,
@@ -74,13 +77,15 @@ public final class TrainingHudRenderer {
       GameConfig.SCREEN_CENTER_X, PRECISION_TITLE_BASELINE_Y + PRECISION_VALUE_LINE_GAP, TEXT_STYLE);
     TextRenderer.drawCentered(g2, BODY_FONT, "Aciertos: " + snapshot.hits(), Color.WHITE,
       GameConfig.SCREEN_CENTER_X + HIT_TEXT_X_OFFSET, SIDE_STAT_BASELINE_Y, TEXT_STYLE);
-    if (snapshot.timerVisible()) {
+    if (snapshot.timerVisible())
+    {
       TextRenderer.drawCentered(g2, TIMER_FONT, snapshot.timerText(), Color.WHITE,
         snapshot.hintCenterX(), snapshot.hintBaselineY(), TEXT_STYLE);
     }
   }
 
-  private void drawHint(Graphics2D g2, TrainingHudSnapshot snapshot) {
+  private void drawHint(Graphics2D g2, TrainingHudSnapshot snapshot)
+      {
     if (snapshot.hintAlpha() <= 0.0f || snapshot.hintText().isEmpty()) {
       return;
     }
@@ -91,7 +96,8 @@ public final class TrainingHudRenderer {
     g2.setComposite(previousComposite);
   }
 
-  private void drawDeathPrompt(Graphics2D g2) {
+  private void drawDeathPrompt(Graphics2D g2)
+    {
     int boxX = deathBoxX();
     int boxY = deathBoxY();
     drawTranslucentBox(g2, boxX, boxY, DEATH_BOX_WIDTH, DEATH_BOX_HEIGHT, DEATH_BOX_BORDER_COLOR);
@@ -103,7 +109,8 @@ public final class TrainingHudRenderer {
       boxY + DEATH_EXIT_BUTTON_Y);
   }
 
-  private void drawFinalScreen(Graphics2D g2, TrainingHudSnapshot snapshot) {
+  private void drawFinalScreen(Graphics2D g2, TrainingHudSnapshot snapshot)
+    {
     int boxX = finalBoxX();
     int boxY = finalBoxY();
     drawTranslucentBox(g2, boxX, boxY, FINAL_BOX_WIDTH, FINAL_BOX_HEIGHT, Color.WHITE);
@@ -126,7 +133,8 @@ public final class TrainingHudRenderer {
       int y,
       int width,
       int height,
-      Color border) {
+      Color border)
+    {
     Composite previous = g2.getComposite();
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, BOX_BG_ALPHA));
     g2.setColor(BOX_BG_COLOR);
@@ -142,11 +150,13 @@ public final class TrainingHudRenderer {
       Font font,
       Color color,
       int boxX,
-      int baselineY) {
+      int baselineY)
+    {
     TextRenderer.drawCentered(g2, font, text, color, boxX + FINAL_BOX_WIDTH / 2, baselineY, TEXT_STYLE);
   }
 
-  private static void drawEndButton(Graphics2D g2, String text, int x, int y) {
+  private static void drawEndButton(Graphics2D g2, String text, int x, int y)
+    {
     g2.setColor(GameTheme.DIRT);
     g2.fillRect(x, y, END_BUTTON_WIDTH, END_BUTTON_HEIGHT);
     g2.setColor(Color.BLACK);
@@ -157,7 +167,8 @@ public final class TrainingHudRenderer {
     TextRenderer.draw(g2, TITLE_FONT, text, BODY_COLOR, textX, textY, TEXT_STYLE);
   }
 
-  private static int deathBoxX() {
+  private static int deathBoxX()
+    {
     return (GameConfig.SCREEN_WIDTH - DEATH_BOX_WIDTH) / 2;
   }
 
@@ -165,7 +176,8 @@ public final class TrainingHudRenderer {
     return GameConfig.SCREEN_HEIGHT / 2 + DEATH_BOX_Y_OFFSET_FROM_CENTER;
   }
 
-  private static int finalBoxX() {
+  private static int finalBoxX()
+  {
     return (GameConfig.SCREEN_WIDTH - FINAL_BOX_WIDTH) / 2;
   }
 

@@ -1,7 +1,9 @@
 package SheriffsssPackage.system;
 
-import SheriffsssPackage.GameMap;
-import SheriffsssPackage.Player;
+import SheriffsssPackage.session.GameMap;
+import SheriffsssPackage.session.Player;
+
+
 
 public final class PlayerMovementSystem {
   private static final double STRAIGHT_MOVE_SCALE = 1.0;
@@ -13,7 +15,8 @@ public final class PlayerMovementSystem {
       Player player,
       int moveX,
       int moveY,
-      boolean canUpdateFacing) {
+      boolean canUpdateFacing)
+  {
     double moveScale = normalizedMoveScale(moveX, moveY);
     int previousX = player.getX();
     int previousY = player.getY();
@@ -25,14 +28,16 @@ public final class PlayerMovementSystem {
     updateFacing(player, moveX, moveY, canUpdateFacing);
   }
 
-  private double normalizedMoveScale(int moveX, int moveY) {
+  private double normalizedMoveScale(int moveX, int moveY)
+    {
     if (moveX == 0 || moveY == 0) {
       return STRAIGHT_MOVE_SCALE;
     }
     return DIAGONAL_MOVE_SCALE;
   }
 
-  private void moveHorizontally(GameMap map, Player player, int direction, double moveScale) {
+  private void moveHorizontally(GameMap map, Player player, int direction, double moveScale)
+  {
     if (direction == 0) {
       player.consumeMoveDeltaX(0);
       return;
@@ -41,7 +46,8 @@ public final class PlayerMovementSystem {
     moveWithRollback(map, player, deltaX, 0);
   }
 
-  private void moveVertically(GameMap map, Player player, int direction, double moveScale) {
+  private void moveVertically(GameMap map, Player player, int direction, double moveScale)
+      {
     if (direction == 0) {
       player.consumeMoveDeltaY(0);
       return;
@@ -50,14 +56,17 @@ public final class PlayerMovementSystem {
     moveWithRollback(map, player, 0, deltaY);
   }
 
-  private void moveWithRollback(GameMap map, Player player, int deltaX, int deltaY) {
+  private void moveWithRollback(GameMap map, Player player, int deltaX, int deltaY)
+      {
     player.moveBy(deltaX, deltaY);
-    if (player.isHitboxBlocked(map)) {
+    if (player.isHitboxBlocked(map))
+    {
       player.moveBy(-deltaX, -deltaY);
     }
   }
 
-  private void updateFacing(Player player, int moveX, int moveY, boolean canUpdateFacing) {
+  private void updateFacing(Player player, int moveX, int moveY, boolean canUpdateFacing)
+      {
     if (canUpdateFacing) {
       player.updateFacing(moveX, moveY);
     }

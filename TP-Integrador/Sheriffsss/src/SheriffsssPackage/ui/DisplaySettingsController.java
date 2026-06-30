@@ -1,9 +1,11 @@
 package SheriffsssPackage.ui;
 
+import SheriffsssPackage.context.AudioManager;
+import SheriffsssPackage.context.GameConfig;
+
+
 import java.awt.Dimension;
 
-import SheriffsssPackage.AudioManager;
-import SheriffsssPackage.GameConfig;
 
 public final class DisplaySettingsController {
   private enum ActiveSlider {
@@ -29,12 +31,14 @@ public final class DisplaySettingsController {
     audio.setSfxVolume(GameConfig.getSfxVolume());
   }
 
-  public void beginEdit() {
+  public void beginEdit()
+    {
     this.pendingFullscreen = this.fullscreen;
     this.pendingWindowResolutionIndex = GameConfig.getWindowResolutionIndex();
   }
 
-  public DisplaySettingsChange applyPending() {
+  public DisplaySettingsChange applyPending()
+    {
     int currentResolutionIndex = GameConfig.getWindowResolutionIndex();
     boolean resolutionChanged = this.pendingWindowResolutionIndex != currentResolutionIndex;
     boolean fullscreenChanged = this.pendingFullscreen != this.fullscreen;
@@ -50,7 +54,8 @@ public final class DisplaySettingsController {
       this.windowedSize);
   }
 
-  public void applyImmediateFullscreen(boolean fullscreen) {
+  public void applyImmediateFullscreen(boolean fullscreen)
+    {
     this.fullscreen = fullscreen;
     this.pendingFullscreen = fullscreen;
     this.pendingWindowResolutionIndex = GameConfig.getWindowResolutionIndex();
@@ -58,22 +63,26 @@ public final class DisplaySettingsController {
     GameConfig.saveDisplayPreferences();
   }
 
-  public void clearMessage() {
+  public void clearMessage()
+    {
     this.message = "";
   }
 
-  public void clearActiveSlider() {
+  public void clearActiveSlider()
+  {
     this.activeSlider = ActiveSlider.NONE;
   }
 
-  public void togglePendingFullscreen() {
+  public void togglePendingFullscreen()
+  {
     this.pendingFullscreen = !this.pendingFullscreen;
   }
 
   public void selectHoveredSlider(
       boolean musicHovered,
       boolean sfxHovered,
-      boolean resolutionHovered) {
+      boolean resolutionHovered)
+  {
     if (musicHovered) {
       this.activeSlider = ActiveSlider.MUSIC;
     } else if (sfxHovered) {
@@ -85,56 +94,68 @@ public final class DisplaySettingsController {
     }
   }
 
-  public boolean updateActiveSlider(AudioManager audio, double sliderValue) {
+  public boolean updateActiveSlider(AudioManager audio, double sliderValue)
+  {
     if (this.activeSlider == ActiveSlider.NONE) {
       return false;
     }
     if (this.activeSlider == ActiveSlider.MUSIC) {
       setMusicVolume(audio, sliderValue);
-    } else if (this.activeSlider == ActiveSlider.SFX) {
+    } else if (this.activeSlider == ActiveSlider.SFX)
+      {
       setSfxVolume(audio, sliderValue);
-    } else if (this.activeSlider == ActiveSlider.RESOLUTION) {
+    } else if (this.activeSlider == ActiveSlider.RESOLUTION)
+      {
       setWindowResolutionFromSlider(sliderValue);
     }
     return true;
   }
 
-  public Dimension windowedSize() {
+  public Dimension windowedSize()
+      {
     return this.windowedSize;
   }
 
-  public boolean fullscreen() {
+  public boolean fullscreen()
+  {
     return this.fullscreen;
   }
 
-  public boolean pendingFullscreen() {
+  public boolean pendingFullscreen()
+  {
     return this.pendingFullscreen;
   }
 
-  public String message() {
+  public String message()
+  {
     return this.message;
   }
 
-  public double windowResolutionSliderValue() {
+  public double windowResolutionSliderValue()
+  {
     int maxIndex = Math.max(1, GameConfig.getWindowResolutionCount() - 1);
     return this.pendingWindowResolutionIndex / (double) maxIndex;
   }
 
-  public String windowResolutionLabel() {
+  public String windowResolutionLabel()
+    {
     return GameConfig.getWindowResolutionLabel(this.pendingWindowResolutionIndex);
   }
 
-  private void setMusicVolume(AudioManager audio, double volume) {
+  private void setMusicVolume(AudioManager audio, double volume)
+    {
     audio.setMusicVolume(volume);
     GameConfig.setMusicVolume(audio.getMusicVolume());
   }
 
-  private void setSfxVolume(AudioManager audio, double volume) {
+  private void setSfxVolume(AudioManager audio, double volume)
+    {
     audio.setSfxVolume(volume);
     GameConfig.setSfxVolume(audio.getSfxVolume());
   }
 
-  private void setWindowResolutionFromSlider(double sliderValue) {
+  private void setWindowResolutionFromSlider(double sliderValue)
+    {
     int maxIndex = GameConfig.getWindowResolutionCount() - 1;
     int index = (int) Math.round(sliderValue * maxIndex);
     this.pendingWindowResolutionIndex = Math.max(0, Math.min(maxIndex, index));
