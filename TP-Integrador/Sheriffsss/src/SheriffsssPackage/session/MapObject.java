@@ -2,66 +2,66 @@ package SheriffsssPackage.session;
 
 public class MapObject
 {
-	private final MapObjectType type;
-	private final int rootTileX;
-	private final int rootTileY;
-	private final int drawIndex;
-	private final boolean solid;
-	private final boolean abovePlayer;
-	private double durabilityDamage;
+  private final MapObjectType type;
+  private final int rootTileX;
+  private final int rootTileY;
+  private final int drawIndex;
+  private final boolean solid;
+  private final boolean abovePlayer;
+  private double durabilityDamage;
 
-	public MapObject(MapObjectType type, int rootTileX, int rootTileY, int drawIndex, boolean solid, boolean abovePlayer)
+  public MapObject(MapObjectType type, int rootTileX, int rootTileY, int drawIndex, boolean solid, boolean abovePlayer)
  {
-		this.type = type;
-		this.rootTileX = rootTileX;
-		this.rootTileY = rootTileY;
-		this.drawIndex = drawIndex;
-		this.solid = solid;
-		this.abovePlayer = abovePlayer;
-	}
+    this.type = type;
+    this.rootTileX = rootTileX;
+    this.rootTileY = rootTileY;
+    this.drawIndex = drawIndex;
+    this.solid = solid;
+    this.abovePlayer = abovePlayer;
+  }
 
-	public MapObjectType getType()
+  public MapObjectType getType()
  {
-		return this.type;
-	}
+    return this.type;
+  }
 
-	public int getRootTileX()
+  public int getRootTileX()
  {
-		return this.rootTileX;
-	}
+    return this.rootTileX;
+  }
 
-	public int getRootTileY()
+  public int getRootTileY()
  {
-		return this.rootTileY;
-	}
+    return this.rootTileY;
+  }
 
-	public int getDrawIndex()
+  public int getDrawIndex()
  {
-		return this.drawIndex;
-	}
+    return this.drawIndex;
+  }
 
-	public boolean isSolid()
+  public boolean isSolid()
  {
-		return this.solid;
-	}
+    return this.solid;
+  }
 
-	public boolean isAbovePlayer()
+  public boolean isAbovePlayer()
  {
-		return this.abovePlayer;
-	}
+    return this.abovePlayer;
+  }
 
-	public double getDurabilityDamage()
+  public double getDurabilityDamage()
  {
-		return this.durabilityDamage;
-	}
+    return this.durabilityDamage;
+  }
 
-	public void resetDurabilityDamage()
+  public void resetDurabilityDamage()
  {
-		this.durabilityDamage = 0.0;
-	}
+    this.durabilityDamage = 0.0;
+  }
 
-	public boolean isRootCell(int tileX, int tileY)
+  public boolean isRootCell(int tileX, int tileY)
  {
-		return this.rootTileX == tileX && this.rootTileY == tileY;
-	}
+    return this.rootTileX == tileX && this.rootTileY == tileY;
+  }
 }

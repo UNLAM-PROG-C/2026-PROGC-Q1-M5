@@ -22,6 +22,8 @@ public class EnemySystem
   private static final double COLLISION_TIEBREAK_LATERAL = 0.35;
   private static final int PERCENT_MAX = 100;
   private static final Color CRIT_TEXT_COLOR = new Color(255, 45, 45);
+  private static final int COMBAT_RANDOM_SEED_XOR = 0xC2B2AE35;
+  private static final double PUSH_FORCE_FACTOR = 0.5;
 
   private final ArrayList<Enemy> enemies = new ArrayList<Enemy>(MAX_ENEMIES);
   private final ArrayList<FlameBurstEffect> flameBurstEffects = new ArrayList<FlameBurstEffect>();
@@ -37,7 +39,7 @@ public class EnemySystem
     this.combatFloatingTexts.clear();
     this.hitSounds.clear();
     this.collectedDeadEnemies.clear();
-    this.combatRandom = new Random(seedHash ^ 0xC2B2AE35);
+    this.combatRandom = new Random(seedHash ^ COMBAT_RANDOM_SEED_XOR);
   }
 
   public void clear()
@@ -149,7 +151,7 @@ public class EnemySystem
     }
     double[] normal = computeCollisionNormal(deltaX, deltaY, distanceSquared, firstIndex, secondIndex);
     double distance = normal[2];
-    double pushDistance = Math.min((minimumDistance - distance) * 0.5, ENEMY_COLLISION_MAX_PUSH_PIXELS);
+    double pushDistance = Math.min((minimumDistance - distance) * PUSH_FORCE_FACTOR, ENEMY_COLLISION_MAX_PUSH_PIXELS);
     if (pushDistance <= 0.0)
     {
       return;

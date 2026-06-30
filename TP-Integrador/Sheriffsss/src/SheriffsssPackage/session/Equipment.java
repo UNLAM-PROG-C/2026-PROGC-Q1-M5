@@ -11,142 +11,142 @@ import java.util.List;
 
 public class Equipment
 {
-	private final ArrayList<ItemDefinition> unlockedWeapons = new ArrayList<ItemDefinition>();
-	private ItemDefinition equippedWeapon;
-	private boolean menuOpen;
-	private boolean weaponSelectorOpen;
+  private final ArrayList<ItemDefinition> unlockedWeapons = new ArrayList<ItemDefinition>();
+  private ItemDefinition equippedWeapon;
+  private boolean menuOpen;
+  private boolean weaponSelectorOpen;
 
-	public void clear()
+  public void clear()
  {
-		this.unlockedWeapons.clear();
-		this.equippedWeapon = null;
-		this.menuOpen = false;
-		this.weaponSelectorOpen = false;
-	}
+    this.unlockedWeapons.clear();
+    this.equippedWeapon = null;
+    this.menuOpen = false;
+    this.weaponSelectorOpen = false;
+  }
 
-	public void resetToWeapon(ItemDefinition weapon)
+  public void resetToWeapon(ItemDefinition weapon)
  {
-		clear();
-		unlockWeapon(weapon);
-		equipWeapon(weapon);
-	}
+    clear();
+    unlockWeapon(weapon);
+    equipWeapon(weapon);
+  }
 
-	public boolean unlockWeapon(ItemDefinition weapon)
+  public boolean unlockWeapon(ItemDefinition weapon)
  {
-		if (!isFirearm(weapon) || this.unlockedWeapons.contains(weapon))
-		{
-			return false;
-		}
-		this.unlockedWeapons.add(weapon);
-		if (this.equippedWeapon == null)
+    if (!isFirearm(weapon) || this.unlockedWeapons.contains(weapon))
+    {
+      return false;
+    }
+    this.unlockedWeapons.add(weapon);
+    if (this.equippedWeapon == null)
   {
-			this.equippedWeapon = weapon;
-		}
-		return true;
-	}
+      this.equippedWeapon = weapon;
+    }
+    return true;
+  }
 
-	public int unlockWeapons(ItemDefinition[] weapons)
+  public int unlockWeapons(ItemDefinition[] weapons)
  {
-		if (weapons == null)
-		{
-			return 0;
-		}
-		int added = 0;
-		for (int i = 0; i < weapons.length; i++)
-		{
-			if (unlockWeapon(weapons[i]))
-			{
-				added++;
-			}
-		}
-		return added;
-	}
+    if (weapons == null)
+    {
+      return 0;
+    }
+    int added = 0;
+    for (int i = 0; i < weapons.length; i++)
+    {
+      if (unlockWeapon(weapons[i]))
+      {
+        added++;
+      }
+    }
+    return added;
+  }
 
-	public boolean equipWeapon(ItemDefinition weapon)
+  public boolean equipWeapon(ItemDefinition weapon)
  {
-		if (!this.unlockedWeapons.contains(weapon))
-		{
-			return false;
-		}
-		this.equippedWeapon = weapon;
-		this.weaponSelectorOpen = false;
-		return true;
-	}
+    if (!this.unlockedWeapons.contains(weapon))
+    {
+      return false;
+    }
+    this.equippedWeapon = weapon;
+    this.weaponSelectorOpen = false;
+    return true;
+  }
 
-	public ItemDefinition getEquippedWeapon()
+  public ItemDefinition getEquippedWeapon()
  {
-		return this.equippedWeapon;
-	}
+    return this.equippedWeapon;
+  }
 
-	public List<ItemDefinition> getUnlockedWeapons()
+  public List<ItemDefinition> getUnlockedWeapons()
  {
-		return Collections.unmodifiableList(this.unlockedWeapons);
-	}
+    return Collections.unmodifiableList(this.unlockedWeapons);
+  }
 
-	public List<ItemDefinition> getWeaponSelectionOrder()
+  public List<ItemDefinition> getWeaponSelectionOrder()
  {
-		ArrayList<ItemDefinition> orderedWeapons = new ArrayList<ItemDefinition>(this.unlockedWeapons);
-		Collections.sort(orderedWeapons, new Comparator<ItemDefinition>()
+    ArrayList<ItemDefinition> orderedWeapons = new ArrayList<ItemDefinition>(this.unlockedWeapons);
+    Collections.sort(orderedWeapons, new Comparator<ItemDefinition>()
   {
-			@Override
-			public int compare(ItemDefinition first, ItemDefinition second)
+      @Override
+      public int compare(ItemDefinition first, ItemDefinition second)
    {
-				if (first == equippedWeapon)
-				{
-					return -1;
-				}
-				if (second == equippedWeapon)
-				{
-					return 1;
-				}
-				return Integer.compare(first.getId(), second.getId());
-			}
-		});
-		return orderedWeapons;
-	}
+        if (first == equippedWeapon)
+        {
+          return -1;
+        }
+        if (second == equippedWeapon)
+        {
+          return 1;
+        }
+        return Integer.compare(first.getId(), second.getId());
+      }
+    });
+    return orderedWeapons;
+  }
 
-	public boolean hasUnlockedWeapons()
+  public boolean hasUnlockedWeapons()
  {
-		return !this.unlockedWeapons.isEmpty();
-	}
+    return !this.unlockedWeapons.isEmpty();
+  }
 
-	public boolean isWeaponSelectorOpen()
+  public boolean isWeaponSelectorOpen()
  {
-		return this.menuOpen && this.weaponSelectorOpen;
-	}
+    return this.menuOpen && this.weaponSelectorOpen;
+  }
 
-	public boolean isMenuOpen()
+  public boolean isMenuOpen()
  {
-		return this.menuOpen;
-	}
+    return this.menuOpen;
+  }
 
-	public void toggleMenu()
+  public void toggleMenu()
  {
-		this.menuOpen = !this.menuOpen;
-		if (!this.menuOpen)
-		{
-			this.weaponSelectorOpen = false;
-		}
-	}
+    this.menuOpen = !this.menuOpen;
+    if (!this.menuOpen)
+    {
+      this.weaponSelectorOpen = false;
+    }
+  }
 
-	public void openMenu()
+  public void openMenu()
  {
-		this.menuOpen = true;
-	}
+    this.menuOpen = true;
+  }
 
-	public void toggleWeaponSelector()
+  public void toggleWeaponSelector()
  {
-		this.menuOpen = true;
-		this.weaponSelectorOpen = !this.weaponSelectorOpen && hasUnlockedWeapons();
-	}
+    this.menuOpen = true;
+    this.weaponSelectorOpen = !this.weaponSelectorOpen && hasUnlockedWeapons();
+  }
 
-	public void closeWeaponSelector()
+  public void closeWeaponSelector()
  {
-		this.weaponSelectorOpen = false;
-	}
+    this.weaponSelectorOpen = false;
+  }
 
-	private boolean isFirearm(ItemDefinition weapon)
+  private boolean isFirearm(ItemDefinition weapon)
  {
-		return weapon != null && weapon.getWeaponType() == WeaponType.ARMA_DE_FUEGO;
-	}
+    return weapon != null && weapon.getWeaponType() == WeaponType.ARMA_DE_FUEGO;
+  }
 }

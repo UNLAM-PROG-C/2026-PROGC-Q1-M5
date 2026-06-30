@@ -2,45 +2,45 @@ package SheriffsssPackage.system.weapon;
 
 final class ProjectileStatModifiers
 {
-	static final ProjectileStatModifiers NONE = new ProjectileStatModifiers(0.0, 0.0, 0.0, 0, 0);
+  static final ProjectileStatModifiers NONE = new ProjectileStatModifiers(0.0, 0.0, 0.0, 0, 0);
 
-	private final double damage;
-	private final double speedPixels;
-	private final double knockbackStrengthPixels;
-	private final int cooldownTicks;
-	private final int lifeTicks;
+  private final double damage;
+  private final double speedPixels;
+  private final double knockbackStrengthPixels;
+  private final int cooldownTicks;
+  private final int lifeTicks;
 
-	ProjectileStatModifiers(double damage, double speedPixels, double knockbackStrengthPixels, int cooldownTicks, int lifeTicks)
-	{
-		this.damage = damage;
-		this.speedPixels = speedPixels;
-		this.knockbackStrengthPixels = knockbackStrengthPixels;
-		this.cooldownTicks = cooldownTicks;
-		this.lifeTicks = lifeTicks;
-	}
+  ProjectileStatModifiers(double damage, double speedPixels, double knockbackStrengthPixels, int cooldownTicks, int lifeTicks)
+  {
+    this.damage = damage;
+    this.speedPixels = speedPixels;
+    this.knockbackStrengthPixels = knockbackStrengthPixels;
+    this.cooldownTicks = cooldownTicks;
+    this.lifeTicks = lifeTicks;
+  }
 
-	double getDamage()
+  double getDamage()
  {
-		return this.damage;
-	}
+    return this.damage;
+  }
 
-	double getSpeedPixels()
+  double getSpeedPixels()
  {
-		return this.speedPixels;
-	}
+    return this.speedPixels;
+  }
 
-	double getKnockbackStrengthPixels()
+  double getKnockbackStrengthPixels()
  {
-		return this.knockbackStrengthPixels;
-	}
+    return this.knockbackStrengthPixels;
+  }
 
-	int getCooldownTicks()
+  int getCooldownTicks()
  {
-		return this.cooldownTicks;
-	}
+    return this.cooldownTicks;
+  }
 
-	int getLifeTicks()
+  int getLifeTicks()
  {
-		return this.lifeTicks;
-	}
+    return this.lifeTicks;
+  }
 }

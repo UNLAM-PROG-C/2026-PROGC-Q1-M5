@@ -13,6 +13,11 @@ import java.awt.Graphics2D;
 
 public class GameRenderer
 {
+  private static final int TOOL_BAR_WIDTH = 52;
+  private static final int TOOL_BAR_HEIGHT = 8;
+  private static final int TOOL_BAR_Y_ABOVE_OBJECT = 12;
+  private static final int TOOL_BAR_BORDER = 2;
+
   private final AssetManager assets;
   private final MenuRenderer menuRenderer;
   private final TrainingHudRenderer trainingHudRenderer;
@@ -139,13 +144,13 @@ public class GameRenderer
       return;
     }
     double remainingRatio = 1.0 - Math.min(1.0, targetObject.getDurabilityDamage() / durability);
-    int barWidth = 52;
-    int barHeight = 8;
+    int barWidth = TOOL_BAR_WIDTH;
+    int barHeight = TOOL_BAR_HEIGHT;
     int objectWidth = targetObject.getType().getFootprintWidth() * GameConfig.TILE_SIZE;
     int screenX = camera.tileToScreenX(targetObject.getRootTileX()) + objectWidth / 2 - barWidth / 2;
-    int screenY = camera.tileToScreenY(targetObject.getRootTileY()) - 12;
+    int screenY = camera.tileToScreenY(targetObject.getRootTileY()) - TOOL_BAR_Y_ABOVE_OBJECT;
     g2.setColor(java.awt.Color.BLACK);
-    g2.fillRect(screenX - 2, screenY - 2, barWidth + 4, barHeight + 4);
+    g2.fillRect(screenX - TOOL_BAR_BORDER, screenY - TOOL_BAR_BORDER, barWidth + TOOL_BAR_BORDER * 2, barHeight + TOOL_BAR_BORDER * 2);
     g2.setColor(java.awt.Color.RED);
     g2.fillRect(screenX, screenY, barWidth, barHeight);
     g2.setColor(java.awt.Color.GREEN);

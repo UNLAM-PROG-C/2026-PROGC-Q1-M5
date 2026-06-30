@@ -50,6 +50,7 @@ public final class TrainingHudRenderer
   private static final String EXIT_BUTTON_TEXT = "Salir";
   private static final String FINAL_TITLE_TEXT = "Entrenamiento terminado";
   private static final Color TITLE_COLOR = new Color(240, 220, 120);
+  private static final int BUTTON_TEXT_BASELINE_FUDGE = 4;
 
   public void render(Graphics2D g2, TrainingHudSnapshot snapshot)
   {
@@ -167,7 +168,7 @@ public final class TrainingHudRenderer
     g2.drawRect(x, y, END_BUTTON_WIDTH, END_BUTTON_HEIGHT);
     int textX = TextRenderer.centeredX(g2, TITLE_FONT, text, x + END_BUTTON_WIDTH / 2);
     FontMetrics metrics = g2.getFontMetrics();
-    int textY = y + (END_BUTTON_HEIGHT + metrics.getAscent()) / 2 - 4;
+    int textY = y + (END_BUTTON_HEIGHT + metrics.getAscent()) / 2 - BUTTON_TEXT_BASELINE_FUDGE;
     TextRenderer.draw(g2, TITLE_FONT, text, BODY_COLOR, textX, textY, TEXT_STYLE);
   }
 

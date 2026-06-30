@@ -40,6 +40,11 @@ public final class TrainingMode
 
   // --- Tutorial join timeout ---
   private static final long TUTORIAL_JOIN_TIMEOUT_MS = 200L;
+  private static final int SESSION_DURATION_SECONDS = 60;
+  private static final long TUTORIAL_STEP_TRIGGER_DELAY_MS = 600L;
+  private static final long TUTORIAL_FIRST_MOVEMENT_TIMEOUT_MS = 15000L;
+  private static final long TUTORIAL_FIRST_SHOT_TIMEOUT_MS = 20000L;
+  private static final long TUTORIAL_FIRST_KILL_TIMEOUT_MS = 30000L;
 
   // === Core subsystems ===
   private final Game game;
@@ -113,7 +118,7 @@ public final class TrainingMode
     this.scoreTracker = new TrainingScoreTracker(
         this.game, session, this.enemySystem, projectileSystem, this.arena,
         this.game != null ? this.game.getShotFeedback() : null);
-    this.sessionTimer = new TrainingSessionTimer(GameConfig.TARGET_FPS * 60,
+    this.sessionTimer = new TrainingSessionTimer(GameConfig.TARGET_FPS * SESSION_DURATION_SECONDS,
         this.game != null ? this.game.getAudio() : null);
     this.tutorialController = new TrainingTutorialController(
         this.game != null ? this.game.getMusicController() : null);
@@ -425,9 +430,9 @@ public final class TrainingMode
   private static List<TutorialStep> buildSteps()
   {
     return Arrays.asList(
-      new TutorialStep(TutorialEventType.FIRST_MOVEMENT, 600L, 15000L),
-      new TutorialStep(TutorialEventType.FIRST_SHOT, 600L, 20000L),
-      new TutorialStep(TutorialEventType.FIRST_KILL, 600L, 30000L)
+      new TutorialStep(TutorialEventType.FIRST_MOVEMENT, TUTORIAL_STEP_TRIGGER_DELAY_MS, TUTORIAL_FIRST_MOVEMENT_TIMEOUT_MS),
+      new TutorialStep(TutorialEventType.FIRST_SHOT, TUTORIAL_STEP_TRIGGER_DELAY_MS, TUTORIAL_FIRST_SHOT_TIMEOUT_MS),
+      new TutorialStep(TutorialEventType.FIRST_KILL, TUTORIAL_STEP_TRIGGER_DELAY_MS, TUTORIAL_FIRST_KILL_TIMEOUT_MS)
     );
   }
 }

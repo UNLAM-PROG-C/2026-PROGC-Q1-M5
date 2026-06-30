@@ -34,6 +34,11 @@ public final class TrainingScoreTracker
   // --- Sound ---
   private static final String HIT_MILESTONE_SOUND_PATH = "sounds/ding_1.wav";
   private static final float COUNTDOWN_SOUND_GAIN_DB = 9.5f;
+  private static final int HIT_SOUND_MILESTONE_INTERVAL = 10;
+  private static final double PERFECT_PRECISION_SCORE_MULTIPLIER = 1.5;
+  private static final int SCORE_BASE_PRECISION_BONUS = 100;
+  private static final double SCORE_DIVISOR = 10.0;
+  private static final double SEGMENT_INTERSECTION_EPSILON = 0.0001;
 
   // --- Instance variables ---
   private final Game game;
@@ -71,7 +76,7 @@ public final class TrainingScoreTracker
     this.aciertos = 0;
     this.fallos = 0;
     this.shotsFired = 0;
-    this.nextHitSoundMilestone = 10;
+    this.nextHitSoundMilestone = HIT_SOUND_MILESTONE_INTERVAL;
     this.displayedFailures = 0;
     this.displayedPrecisionPercent = 0;
     this.lastEnemyCount = 0;
@@ -219,15 +224,11 @@ public final class TrainingScoreTracker
   public int finalScore()
   {
     double multiplicador = 1;
-    if (this.displayedPrecisionPercent < 100)
+    if (this.displayedPrecisionPercent >= 100)
     {
-      multiplicador = 1;
+      multiplicador = PERFECT_PRECISION_SCORE_MULTIPLIER;
     }
-    else
-    {
-      multiplicador = 1.5;
-    }
-    return (int) Math.round((this.aciertos * (100 + this.displayedPrecisionPercent) / 10.0) * multiplicador);
+    return (int) Math.round((this.aciertos * (SCORE_BASE_PRECISION_BONUS + this.displayedPrecisionPercent) / SCORE_DIVISOR) * multiplicador);
   }
 
   public String precisionText()
@@ -356,7 +357,7 @@ public final class TrainingScoreTracker
     while (this.aciertos >= this.nextHitSoundMilestone)
     {
       this.game.getAudio().playOnce(HIT_MILESTONE_SOUND_PATH, COUNTDOWN_SOUND_GAIN_DB);
-      this.nextHitSoundMilestone += 10;
+      this.nextHitSoundMilestone += HIT_SOUND_MILESTONE_INTERVAL;
     }
   }
 
@@ -435,7 +436,7 @@ public final class TrainingScoreTracker
     double segmentX = endX - startX;
     double segmentY = endY - startY;
     double lengthSquared = segmentX * segmentX + segmentY * segmentY;
-    if (lengthSquared <= 0.0001)
+    if (lengthSquared <= SEGMENT_INTERSECTION_EPSILON)
     {
       double deltaX = centerX - startX;
       double deltaY = centerY - startY;

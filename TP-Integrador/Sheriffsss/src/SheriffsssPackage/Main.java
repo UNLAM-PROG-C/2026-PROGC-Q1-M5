@@ -9,50 +9,50 @@ import javax.swing.WindowConstants;
 
 public class Main
 {
-	
-	public static void main(String[] args)
+  
+  public static void main(String[] args)
  {
-		if (args != null && args.length > 0 && "--packaging-check".equals(args[0]))
-		{
-			return;
-		}
-		SwingUtilities.invokeLater(new Runnable()
+    if (args != null && args.length > 0 && "--packaging-check".equals(args[0]))
+    {
+      return;
+    }
+    SwingUtilities.invokeLater(new Runnable()
   {
-			@Override
-			public void run()
+      @Override
+      public void run()
    {
-				createAndShowGame();
-			}
-		});
-	}
+        createAndShowGame();
+      }
+    });
+  }
 
-	private static void createAndShowGame()
+  private static void createAndShowGame()
  {
-		JFrame window = new JFrame();
-		window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		window.setResizable(false);
-		window.setTitle("SHERIFFSSS");
-	
-		Game game = new Game();
-		game.setWindow(window);
-		window.setIconImage(game.getAssets().getImage("sprites/sheriffsss_icono.png"));
-		Runtime.getRuntime().addShutdownHook(new Thread(game::shutdown, "SheriffsssGameShutdown"));
-		window.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent event)
+    JFrame window = new JFrame();
+    window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    window.setResizable(false);
+    window.setTitle("SHERIFFSSS");
+  
+    Game game = new Game();
+    game.setWindow(window);
+    window.setIconImage(game.getAssets().getImage("sprites/sheriffsss_icono.png"));
+    Runtime.getRuntime().addShutdownHook(new Thread(game::shutdown, "SheriffsssGameShutdown"));
+    window.addWindowListener(new WindowAdapter()
+    {
+      @Override
+      public void windowClosing(WindowEvent event)
    {
-				game.shutdown();
-				window.dispose();
-				System.exit(0);
-			}
-		});
-		window.add(game);
-		game.applyInitialDisplaySettings();
-		
-		window.setVisible(true);
-		
-		game.startGame();
-	}
+        game.shutdown();
+        window.dispose();
+        System.exit(0);
+      }
+    });
+    window.add(game);
+    game.applyInitialDisplaySettings();
+    
+    window.setVisible(true);
+    
+    game.startGame();
+  }
 
 }

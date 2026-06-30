@@ -8,46 +8,46 @@ import java.awt.image.BufferedImage;
 
 public enum TileType
 {
-	SAND(0, false, Color.YELLOW, "sprites/Arena.png");
+  SAND(0, false, Color.YELLOW, "sprites/Arena.png");
 
-	private static final TileType[] BY_ID = values();
+  private static final TileType[] BY_ID = values();
 
-	private final int id;
-	private final boolean solid;
-	private final Color minimapColor;
-	private final String spritePath;
+  private final int id;
+  private final boolean solid;
+  private final Color minimapColor;
+  private final String spritePath;
 
-	TileType(int id, boolean solid, Color minimapColor, String spritePath)
+  TileType(int id, boolean solid, Color minimapColor, String spritePath)
  {
-		this.id = id;
-		this.solid = solid;
-		this.minimapColor = minimapColor;
-		this.spritePath = spritePath;
-	}
+    this.id = id;
+    this.solid = solid;
+    this.minimapColor = minimapColor;
+    this.spritePath = spritePath;
+  }
 
-	public int getId()
+  public int getId()
  { return this.id; }
-	public boolean isSolid()
+  public boolean isSolid()
  { return this.solid; }
-	public boolean isHazardous()
+  public boolean isHazardous()
  { return false; }
-	public Color getMinimapColor()
+  public Color getMinimapColor()
  { return this.minimapColor; }
-	public String[] getSpritePaths()
+  public String[] getSpritePaths()
  { return new String[] { this.spritePath }; }
-	public int getLightRadiusTiles()
+  public int getLightRadiusTiles()
  { return 0; }
-	public double getLightIntensity()
+  public double getLightIntensity()
  { return 0.0; }
-	public BufferedImage getSprite(AssetManager assets, long frameCount)
+  public BufferedImage getSprite(AssetManager assets, long frameCount)
  { return assets.getImage(this.spritePath); }
 
-	public static TileType fromId(int id)
+  public static TileType fromId(int id)
  {
-		if (id < 0 || id >= BY_ID.length)
-		{
-			return SAND;
-		}
-		return BY_ID[id];
-	}
+    if (id < 0 || id >= BY_ID.length)
+    {
+      return SAND;
+    }
+    return BY_ID[id];
+  }
 }

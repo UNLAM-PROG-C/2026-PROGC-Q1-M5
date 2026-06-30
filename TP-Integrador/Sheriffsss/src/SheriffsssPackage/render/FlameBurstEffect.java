@@ -4,6 +4,11 @@ public final class FlameBurstEffect
 {
   private static final int DEFAULT_LIFE_TICKS = 34;
   private static final int PARTICLE_COUNT = 26;
+  private static final int ANGLE_JITTER_MODULO = 5;
+  private static final double ANGLE_JITTER_STEP = 0.17;
+  private static final double PARTICLE_DIST_BASE = 0.68;
+  private static final int PARTICLE_DIST_MODULO = 7;
+  private static final double PARTICLE_DIST_STEP = 0.055;
 
   private final int originWorldX;
   private final int originWorldY;
@@ -65,11 +70,11 @@ public final class FlameBurstEffect
 
   public double getParticleAngleRadians(int index)
   {
-    return index * (Math.PI * 2.0 / PARTICLE_COUNT) + (index % 5) * 0.17;
+    return index * (Math.PI * 2.0 / PARTICLE_COUNT) + (index % ANGLE_JITTER_MODULO) * ANGLE_JITTER_STEP;
   }
 
   public double getParticleDistanceScale(int index)
   {
-    return 0.68 + (index % 7) * 0.055;
+    return PARTICLE_DIST_BASE + (index % PARTICLE_DIST_MODULO) * PARTICLE_DIST_STEP;
   }
 }

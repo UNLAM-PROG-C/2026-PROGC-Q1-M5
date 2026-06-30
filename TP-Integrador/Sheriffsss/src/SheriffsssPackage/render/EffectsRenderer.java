@@ -11,12 +11,31 @@ import java.util.List;
 
 public class EffectsRenderer
 {
+  private static final Color FIRE_YELLOW = new Color(255, 218, 72, 210);
+  private static final Color FIRE_ORANGE = new Color(255, 96, 18, 210);
+  private static final int BURST_FLAME_MAX_ALPHA = 220;
+  private static final double BURST_MIN_RADIUS_PIXELS = 8.0;
+  private static final int BURST_MIN_CORE_RADIUS_PIXELS = 8;
+  private static final int BURST_CORE_RADIUS_DIVISOR = 4;
+  private static final double BURST_PARTICLE_ROTATION_SPEED = 0.9;
+  private static final int EMBER_SIZE_BASE = 3;
+  private static final int EMBER_SIZE_MODULO = 5;
+  private static final int EMBER_OVAL_HEIGHT_EXTRA = 2;
+  private static final int FLAME_OUTER_MIN_ALPHA = 35;
+  private static final int FLAME_OUTER_ALPHA_DIVISOR = 3;
+  private static final int FLAME_OUTER_COLOR_R = 255;
+  private static final int FLAME_OUTER_COLOR_G = 68;
+  private static final int FLAME_OUTER_COLOR_B = 12;
+  private static final int FLAME_CORE_MIN_ALPHA = 70;
+  private static final int FLAME_CORE_ALPHA_DIVISOR = 2;
+  private static final int FLAME_CORE_COLOR_R = 255;
+  private static final int FLAME_CORE_COLOR_G = 214;
+  private static final int FLAME_CORE_COLOR_B = 72;
+
   private final Camera camera;
   private final Color[] flameBurstOuterColors = new Color[256];
   private final Color[] flameBurstCoreColors = new Color[256];
   private final Composite[] pickupTextComposites = new Composite[256];
-  private final Color fireYellow = new Color(255, 218, 72, 210);
-  private final Color fireOrange = new Color(255, 96, 18, 210);
   private final Font pickupTextFont = new Font("Arial", Font.BOLD, 16);
 
   public EffectsRenderer(Camera camera)
@@ -34,26 +53,26 @@ public class EffectsRenderer
       double easeOut = 1.0 - (1.0 - progress) * (1.0 - progress);
       int centerX = this.camera.worldToScreenX(effect.getOriginWorldX());
       int centerY = this.camera.worldToScreenY(effect.getOriginWorldY());
-      int radius = (int) Math.max(8.0, effect.getRadiusPixels() * easeOut);
-      int alpha = Math.max(0, Math.min(220, (int) (220.0 * (1.0 - progress))));
+      int radius = (int) Math.max(BURST_MIN_RADIUS_PIXELS, effect.getRadiusPixels() * easeOut);
+      int alpha = Math.max(0, Math.min(BURST_FLAME_MAX_ALPHA, (int) (BURST_FLAME_MAX_ALPHA * (1.0 - progress))));
 
       g2.setComposite(getPickupTextComposite(Math.max(0, Math.min(255, alpha))));
       g2.setColor(getFlameBurstOuterColor(alpha));
       g2.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
       g2.setColor(getFlameBurstCoreColor(alpha));
-      int coreRadius = Math.max(8, radius / 4);
+      int coreRadius = Math.max(BURST_MIN_CORE_RADIUS_PIXELS, radius / BURST_CORE_RADIUS_DIVISOR);
       g2.fillOval(centerX - coreRadius, centerY - coreRadius, coreRadius * 2, coreRadius * 2);
 
       for (int particle = 0; particle < effect.getParticleCount(); particle++)
       {
-        double angle = effect.getParticleAngleRadians(particle) + progress * 0.9;
+        double angle = effect.getParticleAngleRadians(particle) + progress * BURST_PARTICLE_ROTATION_SPEED;
         int distance = (int) (effect.getRadiusPixels() * easeOut * effect.getParticleDistanceScale(particle));
         int particleX = centerX + (int) Math.round(Math.cos(angle) * distance);
         int particleY = centerY + (int) Math.round(Math.sin(angle) * distance);
-        int emberSize = 3 + (particle % 5);
-        g2.setColor((particle & 1) == 0 ? this.fireYellow : this.fireOrange);
+        int emberSize = EMBER_SIZE_BASE + (particle % EMBER_SIZE_MODULO);
+        g2.setColor((particle & 1) == 0 ? FIRE_YELLOW : FIRE_ORANGE);
         g2.drawLine(centerX, centerY, particleX, particleY);
-        g2.fillOval(particleX - emberSize / 2, particleY - emberSize / 2, emberSize, emberSize + 2);
+        g2.fillOval(particleX - emberSize / 2, particleY - emberSize / 2, emberSize, emberSize + EMBER_OVAL_HEIGHT_EXTRA);
       }
     }
     g2.setComposite(previousComposite);
@@ -89,11 +108,11 @@ public class EffectsRenderer
 
   private Color getFlameBurstOuterColor(int alpha)
   {
-    int colorAlpha = Math.max(35, Math.max(0, Math.min(255, alpha)) / 3);
+    int colorAlpha = Math.max(FLAME_OUTER_MIN_ALPHA, Math.max(0, Math.min(255, alpha)) / FLAME_OUTER_ALPHA_DIVISOR);
     Color color = this.flameBurstOuterColors[colorAlpha];
     if (color == null)
     {
-      color = new Color(255, 68, 12, colorAlpha);
+      color = new Color(FLAME_OUTER_COLOR_R, FLAME_OUTER_COLOR_G, FLAME_OUTER_COLOR_B, colorAlpha);
       this.flameBurstOuterColors[colorAlpha] = color;
     }
     return color;
@@ -101,11 +120,11 @@ public class EffectsRenderer
 
   private Color getFlameBurstCoreColor(int alpha)
   {
-    int colorAlpha = Math.max(70, Math.max(0, Math.min(255, alpha)) / 2);
+    int colorAlpha = Math.max(FLAME_CORE_MIN_ALPHA, Math.max(0, Math.min(255, alpha)) / FLAME_CORE_ALPHA_DIVISOR);
     Color color = this.flameBurstCoreColors[colorAlpha];
     if (color == null)
     {
-      color = new Color(255, 214, 72, colorAlpha);
+      color = new Color(FLAME_CORE_COLOR_R, FLAME_CORE_COLOR_G, FLAME_CORE_COLOR_B, colorAlpha);
       this.flameBurstCoreColors[colorAlpha] = color;
     }
     return color;

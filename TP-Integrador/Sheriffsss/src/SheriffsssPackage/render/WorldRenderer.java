@@ -18,9 +18,14 @@ import java.util.List;
 
 public class WorldRenderer
 {
+  private static final int SUNSET_TINT_COLOR_CACHE_SIZE = 69;
+  private static final int SUNSET_TINT_R = 255;
+  private static final int SUNSET_TINT_G = 122;
+  private static final int SUNSET_TINT_B = 28;
+
   private final AssetManager assets;
   private final Camera camera;
-  private final Color[] sunsetTintColors = new Color[69];
+  private final Color[] sunsetTintColors = new Color[SUNSET_TINT_COLOR_CACHE_SIZE];
 
   public WorldRenderer(AssetManager assets, Camera camera)
   {
@@ -148,7 +153,7 @@ public class WorldRenderer
     Color color = this.sunsetTintColors[alpha];
     if (color == null)
     {
-      color = new Color(255, 122, 28, alpha);
+      color = new Color(SUNSET_TINT_R, SUNSET_TINT_G, SUNSET_TINT_B, alpha);
       this.sunsetTintColors[alpha] = color;
     }
     return color;

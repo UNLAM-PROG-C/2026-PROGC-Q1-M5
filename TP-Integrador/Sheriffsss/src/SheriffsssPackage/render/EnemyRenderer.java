@@ -17,12 +17,30 @@ public class EnemyRenderer
 {
   private static final Composite TRAINING_DIANA_BLINK_COMPOSITE =
     AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TrainingModeConstants.TARGET_BLINK_ALPHA);
+  private static final Color FIRE_YELLOW = new Color(255, 218, 72, 210);
+  private static final Color FIRE_ORANGE = new Color(255, 96, 18, 210);
+  private static final int ANIMATION_TICK_DIVISOR = 8;
+  private static final int HEALTH_BAR_Y_ABOVE_ENEMY = 8;
+  private static final int HEALTH_BAR_WIDTH = 34;
+  private static final int HEALTH_BAR_HEIGHT = 5;
+  private static final int HEALTH_TEXT_Y_OFFSET = 4;
+  private static final int BURN_PARTICLE_COUNT = 5;
+  private static final int BURN_SEED_OFFSET = 3;
+  private static final int BURN_SEED_MULTIPLIER = 17;
+  private static final int BURN_X_SPREAD_DIVISOR = 3;
+  private static final int BURN_X_STEP_SEED = 7;
+  private static final int BURN_X_SPREAD_FACTOR = 2;
+  private static final int BURN_Y_BOTTOM_OFFSET = 10;
+  private static final int BURN_Y_STEP_SEED = 5;
+  private static final int BURN_HEIGHT_MARGIN = 8;
+  private static final int BURN_SIZE_BASE = 3;
+  private static final int BURN_SIZE_MODULO = 4;
+  private static final int BURN_OVAL_HEIGHT_EXTRA = 2;
+  private static final double HEALTH_FORMAT_EPSILON = 0.001;
 
   private final Camera camera;
   private final SheriffsssPackage.context.AssetManager assets;
   private final Font debugFont = new Font("Arial", Font.BOLD, 13);
-  private final Color fireYellow = new Color(255, 218, 72, 210);
-  private final Color fireOrange = new Color(255, 96, 18, 210);
 
   public EnemyRenderer(Camera camera, SheriffsssPackage.context.AssetManager assets)
   {
@@ -46,7 +64,7 @@ public class EnemyRenderer
         continue;
       }
       BufferedImage sheet = this.assets.getImage(type.getSpritePath());
-      int frame = (enemy.getAnimationTicks() / 8) % type.getFramesPerRow();
+      int frame = (enemy.getAnimationTicks() / ANIMATION_TICK_DIVISOR) % type.getFramesPerRow();
       int row = type.getAnimationRow(enemy.getFacing());
       int sourceX = frame * type.getFrameWidth();
       int sourceY = row * type.getFrameHeight();
@@ -63,7 +81,7 @@ public class EnemyRenderer
       {
         drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
       }
-      drawEnemyHealthBar(g2, game, enemy, screenX, drawY - 8);
+      drawEnemyHealthBar(g2, game, enemy, screenX, drawY - HEALTH_BAR_Y_ABOVE_ENEMY);
       if (enemy.hasDebuff(Debuff.BURN))
       {
         drawBurningParticles(g2, enemy, screenX, drawY, drawWidth, drawHeight);
@@ -91,8 +109,8 @@ public class EnemyRenderer
     {
       return;
     }
-    int barWidth = 34;
-    int barHeight = 5;
+    int barWidth = HEALTH_BAR_WIDTH;
+    int barHeight = HEALTH_BAR_HEIGHT;
     int x = centerX - barWidth / 2;
     double hpRatio = Math.max(0.0, Math.min(1.0, enemy.getCurrentHP() / enemy.getMaxHP()));
     g2.setColor(Color.BLACK);
@@ -103,20 +121,20 @@ public class EnemyRenderer
     g2.fillRect(x, y, (int) (barWidth * hpRatio), barHeight);
     String healthText = formatHealthValue(enemy.getCurrentHP()) + "/" + formatHealthValue(enemy.getMaxHP());
     TextRenderer.draw(g2, this.debugFont, healthText, Color.WHITE,
-      TextRenderer.centeredX(g2, this.debugFont, healthText, centerX), y - 4, true);
+      TextRenderer.centeredX(g2, this.debugFont, healthText, centerX), y - HEALTH_TEXT_Y_OFFSET, true);
   }
 
   private void drawBurningParticles(Graphics2D g2, Enemy enemy, int screenX, int drawY, int drawWidth, int drawHeight)
   {
     int ticks = enemy.getAnimationTicks();
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < BURN_PARTICLE_COUNT; i++)
     {
-      int offsetSeed = ticks * (i + 3) + i * 17;
-      int particleX = screenX - drawWidth / 3 + Math.floorMod(offsetSeed * 7, Math.max(1, drawWidth * 2 / 3));
-      int particleY = drawY + drawHeight - 10 - Math.floorMod(offsetSeed * 5, Math.max(1, drawHeight - 8));
-      int size = 3 + Math.floorMod(offsetSeed, 4);
-      g2.setColor((i & 1) == 0 ? this.fireOrange : this.fireYellow);
-      g2.fillOval(particleX, particleY, size, size + 2);
+      int offsetSeed = ticks * (i + BURN_SEED_OFFSET) + i * BURN_SEED_MULTIPLIER;
+      int particleX = screenX - drawWidth / BURN_X_SPREAD_DIVISOR + Math.floorMod(offsetSeed * BURN_X_STEP_SEED, Math.max(1, drawWidth * BURN_X_SPREAD_FACTOR / BURN_X_SPREAD_DIVISOR));
+      int particleY = drawY + drawHeight - BURN_Y_BOTTOM_OFFSET - Math.floorMod(offsetSeed * BURN_Y_STEP_SEED, Math.max(1, drawHeight - BURN_HEIGHT_MARGIN));
+      int size = BURN_SIZE_BASE + Math.floorMod(offsetSeed, BURN_SIZE_MODULO);
+      g2.setColor((i & 1) == 0 ? FIRE_ORANGE : FIRE_YELLOW);
+      g2.fillOval(particleX, particleY, size, size + BURN_OVAL_HEIGHT_EXTRA);
     }
   }
 
@@ -145,7 +163,7 @@ public class EnemyRenderer
 
   private String formatHealthValue(double health)
   {
-    return Math.abs(health - Math.round(health)) < 0.001
+    return Math.abs(health - Math.round(health)) < HEALTH_FORMAT_EPSILON
       ? Integer.toString((int) Math.round(health))
       : String.format(java.util.Locale.US, "%.1f", health);
   }

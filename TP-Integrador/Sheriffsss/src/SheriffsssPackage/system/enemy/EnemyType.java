@@ -32,6 +32,10 @@ public enum EnemyType
   private final EnemyDensity density;
   private final String hitSoundPath;
 
+  private static final double HP_SCALING_BASE = 1.32;
+  private static final double SPEED_SCALING_BASE = 1.09;
+  private static final double DAMAGE_SCALING_BASE = 1.25;
+
   EnemyType(String spritePath, EnemyBehavior behavior, int frameWidth, int frameHeight, int framesPerRow, int rowCount,
       int drawWidth, int drawHeight, int collisionRadius, double baseMaxHP, double baseSpeed, double baseDamage,
       double attackKnockbackStrengthPixels, int attackRangePixels, int attackCooldownTicks,
@@ -98,17 +102,17 @@ public enum EnemyType
 
   public double getScaledMaxHP(int dayCount)
   {
-    return this.baseMaxHP * Math.pow(1.32, Math.max(0, dayCount - 1));
+    return this.baseMaxHP * Math.pow(HP_SCALING_BASE, Math.max(0, dayCount - 1));
   }
 
   public double getScaledSpeed(int dayCount)
   {
-    return this.baseSpeed * Math.pow(1.09, Math.max(0, dayCount - 1));
+    return this.baseSpeed * Math.pow(SPEED_SCALING_BASE, Math.max(0, dayCount - 1));
   }
 
   public double getScaledDamage(int dayCount)
   {
-    return this.baseDamage * Math.pow(1.25, Math.max(0, dayCount - 1));
+    return this.baseDamage * Math.pow(DAMAGE_SCALING_BASE, Math.max(0, dayCount - 1));
   }
 
   public double getAttackKnockbackStrengthPixels()
