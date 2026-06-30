@@ -1,6 +1,7 @@
 package SheriffsssPackage.render;
 
-public final class TrainingHudSnapshotConfig {
+public final class TrainingHudSnapshotConfig
+{
   private int failures;
   private int hits;
   private String precisionText = "";
@@ -48,7 +49,7 @@ public final class TrainingHudSnapshotConfig {
       boolean finalScreenVisible,
       int finalScore,
       boolean debugUsed)
-  {
+      {
     this.deathPromptVisible = deathPromptVisible;
     this.finalScreenVisible = finalScreenVisible;
     this.finalScore = finalScore;

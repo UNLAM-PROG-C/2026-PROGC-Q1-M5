@@ -51,7 +51,7 @@ public final class TargetSpawnController
    */
   public TargetSpawnController(GameSession session, EnemySystem enemySystem, EnemyFactory enemyFactory,
                                 GameMap map, TrainingControls controls)
-  {
+                                {
     this.session = session;
     this.enemySystem = enemySystem;
     this.enemyFactory = enemyFactory;

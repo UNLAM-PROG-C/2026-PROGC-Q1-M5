@@ -1,6 +1,7 @@
 package SheriffsssPackage.system.weapon;
 
-final class ProjectileWeaponStats {
+final class ProjectileWeaponStats
+{
 	private final ProjectileType projectileType;
 	private final int ammoDefinitionId;
 	private final double damage;
@@ -11,7 +12,7 @@ final class ProjectileWeaponStats {
 
 	ProjectileWeaponStats(ProjectileType projectileType, int ammoDefinitionId, double damage, double speedPixels,
 		double knockbackStrengthPixels, int cooldownTicks, int lifeTicks)
- {
+  {
 		this.projectileType = projectileType;
 		this.ammoDefinitionId = ammoDefinitionId;
 		this.damage = damage;
@@ -37,22 +38,22 @@ final class ProjectileWeaponStats {
 	}
 
 	double getSpeedPixels(ProjectileStatModifiers modifiers)
-  {
+ {
 		return Math.max(0.0, this.speedPixels + modifiers.getSpeedPixels());
 	}
 
 	double getKnockbackStrengthPixels(ProjectileStatModifiers modifiers)
-  {
+ {
 		return Math.max(0.0, this.knockbackStrengthPixels + modifiers.getKnockbackStrengthPixels());
 	}
 
 	int getCooldownTicks(ProjectileStatModifiers modifiers)
-  {
+ {
 		return Math.max(1, this.cooldownTicks + modifiers.getCooldownTicks());
 	}
 
 	int getLifeTicks(ProjectileStatModifiers modifiers)
-  {
+ {
 		return Math.max(1, this.lifeTicks + modifiers.getLifeTicks());
 	}
 }

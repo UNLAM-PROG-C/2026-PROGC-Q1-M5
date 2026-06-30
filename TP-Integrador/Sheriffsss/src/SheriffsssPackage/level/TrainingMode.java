@@ -331,7 +331,7 @@ public final class TrainingMode
   {
     if (this.game != null && this.game.getDebugOptions() != null
         && this.game.getDebugOptions().hasAnyModeEnabled())
-    {
+        {
       this.debugUsed = true;
     }
   }

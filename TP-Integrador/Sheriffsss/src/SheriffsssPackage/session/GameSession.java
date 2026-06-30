@@ -8,7 +8,8 @@ import SheriffsssPackage.level.TrainingMode;
 
 
 /** Holds mutable state for the current playable session. */
-public final class GameSession {
+public final class GameSession
+{
   private GameMap map;
   private Player player;
   private PlayerRuntimeState playerRuntime = new PlayerRuntimeState();
@@ -16,7 +17,8 @@ public final class GameSession {
   private GameLevel activeLevel = new NoLevel();
   private double cameraZoom = GameConfig.CAMERA_MIN_ZOOM;
 
-  public GameMap map() {
+  public GameMap map()
+  {
     return this.map;
   }
 
@@ -45,7 +47,8 @@ public final class GameSession {
     this.playerRuntime = new PlayerRuntimeState();
   }
 
-  public TrainingMode trainingMode() {
+  public TrainingMode trainingMode()
+  {
     return this.trainingMode;
   }
 
@@ -64,7 +67,8 @@ public final class GameSession {
     this.activeLevel = activeLevel == null ? new NoLevel() : activeLevel;
   }
 
-  public double cameraZoom() {
+  public double cameraZoom()
+  {
     return this.cameraZoom;
   }
 

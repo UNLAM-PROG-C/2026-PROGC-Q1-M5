@@ -5,7 +5,8 @@ import SheriffsssPackage.session.GameSession;
 
 
 
-public final class TrainingLevel implements GameLevel {
+public final class TrainingLevel implements GameLevel
+{
   @Override
   public LevelType type()
   {

@@ -1,6 +1,7 @@
 package SheriffsssPackage.session;
 
-public class MapObject {
+public class MapObject
+{
 	private final MapObjectType type;
 	private final int rootTileX;
 	private final int rootTileY;

@@ -61,7 +61,7 @@ public final class TrainingScoreTracker
       ProjectileSystem projectileSystem,
       GameMap map,
       ShotFeedback shotFeedback)
-  {
+      {
     this.game = game;
     this.session = session;
     this.enemySystem = enemySystem;
@@ -100,7 +100,8 @@ public final class TrainingScoreTracker
 
   public int removeExpiredTargets()
   {
-    if (!this.targetLifetimeRunning) {
+    if (!this.targetLifetimeRunning)
+    {
       return 0;
     }
     int removedCount = this.enemySystem.removeByTypeAndMinimumAnimationTicks(EnemyType.DIANA, TARGET_LIFETIME_TICKS);
@@ -113,7 +114,8 @@ public final class TrainingScoreTracker
 
   public int damageTargetsOverTime()
   {
-    if (!this.targetLifetimeRunning) {
+    if (!this.targetLifetimeRunning)
+    {
       return 0;
     }
     List<Enemy> enemies = this.enemySystem.getEnemies();
@@ -124,7 +126,7 @@ public final class TrainingScoreTracker
           && !enemy.isDead()
           && enemy.getAnimationTicks() > 0
           && enemy.getAnimationTicks() % TARGET_DECAY_INTERVAL_TICKS == 0)
-      {
+          {
         enemy.damage(TARGET_DECAY_DAMAGE);
       }
     }
@@ -149,7 +151,8 @@ public final class TrainingScoreTracker
 
   public void updateProjectileFailures(ProjectileSystem projectileSystem)
   {
-    if (projectileSystem == null) {
+    if (projectileSystem == null)
+    {
       return;
     }
     List<Projectile> projectiles = projectileSystem.getProjectiles();
@@ -159,7 +162,7 @@ public final class TrainingScoreTracker
       Projectile projectile = projectiles.get(i);
       if (projectile == null || projectile.isCountedTrainingFailure()
         || isWorldInsideTrainingPerimeter(projectile.getWorldX(), projectile.getWorldY()))
-      {
+        {
         continue;
       }
       projectile.markCountedTrainingFailure();
@@ -174,7 +177,8 @@ public final class TrainingScoreTracker
 
   public void countPredictedFinalProjectileFailures(ProjectileSystem projectileSystem)
   {
-    if (projectileSystem == null) {
+    if (projectileSystem == null)
+    {
       return;
     }
     List<Projectile> projectiles = projectileSystem.getProjectiles();
@@ -184,10 +188,11 @@ public final class TrainingScoreTracker
       Projectile projectile = projectiles.get(i);
       if (projectile == null || projectile.isCountedTrainingFailure()
         || !isWorldInsideTrainingPerimeter(projectile.getWorldX(), projectile.getWorldY()))
-      {
+        {
         continue;
       }
-      if (projectileTrajectoryWouldHitTarget(projectile)) {
+      if (projectileTrajectoryWouldHitTarget(projectile))
+      {
         continue;
       }
       projectile.markCountedTrainingFailure();
@@ -214,7 +219,8 @@ public final class TrainingScoreTracker
   public int finalScore()
   {
     double multiplicador = 1;
-    if (this.displayedPrecisionPercent < 100) {
+    if (this.displayedPrecisionPercent < 100)
+    {
       multiplicador = 1;
     }
     else
@@ -347,7 +353,8 @@ public final class TrainingScoreTracker
 
   private void playHitMilestoneSounds()
   {
-    while (this.aciertos >= this.nextHitSoundMilestone) {
+    while (this.aciertos >= this.nextHitSoundMilestone)
+    {
       this.game.getAudio().playOnce(HIT_MILESTONE_SOUND_PATH, COUNTDOWN_SOUND_GAIN_DB);
       this.nextHitSoundMilestone += 10;
     }
@@ -391,7 +398,7 @@ public final class TrainingScoreTracker
       double startY,
       double velocityX,
       double velocityY)
-  {
+      {
     double left = getFailurePerimeterLeftWorldX();
     double right = left + getFailurePerimeterWidthWorld();
     double top = getFailurePerimeterTopWorldY();
@@ -400,14 +407,16 @@ public final class TrainingScoreTracker
     if (velocityX > 0.0)
     {
       maxTicks = Math.min(maxTicks, (right - startX) / velocityX);
-    } else if (velocityX < 0.0)
+    }
+    else if (velocityX < 0.0)
     {
       maxTicks = Math.min(maxTicks, (left - startX) / velocityX);
     }
     if (velocityY > 0.0)
     {
       maxTicks = Math.min(maxTicks, (bottom - startY) / velocityY);
-    } else if (velocityY < 0.0)
+    }
+    else if (velocityY < 0.0)
     {
       maxTicks = Math.min(maxTicks, (top - startY) / velocityY);
     }
@@ -422,11 +431,12 @@ public final class TrainingScoreTracker
       double centerX,
       double centerY,
       double radius)
-  {
+      {
     double segmentX = endX - startX;
     double segmentY = endY - startY;
     double lengthSquared = segmentX * segmentX + segmentY * segmentY;
-    if (lengthSquared <= 0.0001) {
+    if (lengthSquared <= 0.0001)
+    {
       double deltaX = centerX - startX;
       double deltaY = centerY - startY;
       return deltaX * deltaX + deltaY * deltaY <= radius * radius;

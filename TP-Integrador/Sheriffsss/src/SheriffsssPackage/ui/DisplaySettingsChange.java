@@ -2,7 +2,8 @@ package SheriffsssPackage.ui;
 
 import java.awt.Dimension;
 
-public final class DisplaySettingsChange {
+public final class DisplaySettingsChange
+{
   private final boolean fullscreenChanged;
   private final boolean resolutionChanged;
   private final boolean targetFullscreen;
@@ -13,7 +14,7 @@ public final class DisplaySettingsChange {
       boolean resolutionChanged,
       boolean targetFullscreen,
       Dimension windowedSize)
-  {
+      {
     this.fullscreenChanged = fullscreenChanged;
     this.resolutionChanged = resolutionChanged;
     this.targetFullscreen = targetFullscreen;

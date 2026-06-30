@@ -13,7 +13,8 @@ import SheriffsssPackage.context.GameInput;
  *   - Detectar clics en botones de reinicio/salida
  *   - Calcular posiciones y tamaños de los elementos de UI
  */
-public final class TrainingEndScreenHandler {
+public final class TrainingEndScreenHandler
+{
   // --- End screen hit testing ---
   private static final int DEATH_BOX_WIDTH = 360;
   private static final int DEATH_BOX_HEIGHT = 170;
@@ -39,7 +40,7 @@ public final class TrainingEndScreenHandler {
       Game game,
       TutorialThread tutorialThread,
       Runnable resetArenaCallback)
-  {
+      {
     this.input = input;
     this.controls = controls;
     this.game = game;
@@ -63,7 +64,8 @@ public final class TrainingEndScreenHandler {
 
   public void readPanelInput()
   {
-    if (this.input.consumeTrainingIncrement()) {
+    if (this.input.consumeTrainingIncrement())
+    {
       this.controls.incCount();
     }
     if (this.input.consumeTrainingDecrement())
@@ -92,8 +94,9 @@ public final class TrainingEndScreenHandler {
       int boxWidth,
       int restartButtonY,
       int exitButtonY)
-  {
-    if (!this.input.consumePrimaryClick() || this.game == null) {
+      {
+    if (!this.input.consumePrimaryClick() || this.game == null)
+    {
       return;
     }
     int mouseX = this.input.getMouseX();

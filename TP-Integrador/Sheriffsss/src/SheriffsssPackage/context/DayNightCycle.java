@@ -1,6 +1,7 @@
 package SheriffsssPackage.context;
 
-public class DayNightCycle {
+public class DayNightCycle
+{
 	private static final int TICKS_PER_DAY = GameConfig.TARGET_FPS * 300;
 	private static final double MORNING_END = 0.20;
 	private static final double AFTERNOON_END = 0.52;
@@ -13,7 +14,8 @@ public class DayNightCycle {
 	public void tick()
  {
 		this.tickOfDay++;
-		if (this.tickOfDay >= TICKS_PER_DAY) {
+		if (this.tickOfDay >= TICKS_PER_DAY)
+		{
 			this.tickOfDay = 0;
 			this.dayCount++;
 		}
@@ -32,7 +34,7 @@ public class DayNightCycle {
 	}
 
 	public int getDayCount()
-  {
+ {
 		return this.dayCount;
 	}
 
@@ -43,10 +45,12 @@ public class DayNightCycle {
   {
 			return DayPhase.MORNING;
 		}
-		if (progress < AFTERNOON_END) {
+		if (progress < AFTERNOON_END)
+		{
 			return DayPhase.AFTERNOON;
 		}
-		if (progress < SUNSET_END) {
+		if (progress < SUNSET_END)
+		{
 			return DayPhase.SUNSET;
 		}
 		return DayPhase.NIGHT;
@@ -60,21 +64,22 @@ public class DayNightCycle {
 			return lerp(0.82, 1.0, progress / MORNING_END);
 		}
 		if (progress < AFTERNOON_END)
-   {
+  {
 			return 1.0;
 		}
-		if (progress < SUNSET_END) {
+		if (progress < SUNSET_END)
+		{
 			return lerp(1.0, 0.38, (progress - AFTERNOON_END) / (SUNSET_END - AFTERNOON_END));
 		}
 		if (progress < LATE_NIGHT_START)
-   {
+  {
 			return lerp(0.38, 0.12, (progress - SUNSET_END) / (LATE_NIGHT_START - SUNSET_END));
 		}
 		return lerp(0.12, 0.82, (progress - LATE_NIGHT_START) / (1.0 - LATE_NIGHT_START));
 	}
 
 	public int getSunsetTintAlpha()
-   {
+ {
 		double progress = getDayProgress();
 		if (progress < AFTERNOON_END || progress >= SUNSET_END)
   {
@@ -86,12 +91,12 @@ public class DayNightCycle {
 	}
 
 	public boolean isNaturallyBright()
-  {
+ {
 		return getAmbientLight() >= 0.995;
 	}
 
 	private double getDayProgress()
-  {
+ {
 		return this.tickOfDay / (double) TICKS_PER_DAY;
 	}
 

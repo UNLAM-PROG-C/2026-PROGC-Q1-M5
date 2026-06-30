@@ -30,7 +30,7 @@ public class SettingsScreenController
       AudioManager audio,
       GameSession session,
       DebugOptions debugOptions)
-  {
+      {
     this.displaySettingsController = displaySettingsController;
     this.input = input;
     this.audio = audio;
@@ -48,9 +48,12 @@ public class SettingsScreenController
 
   public void update(GameView game)
   {
-    if (this.state == State.MENU_SETTINGS) {
+    if (this.state == State.MENU_SETTINGS)
+    {
       updateMenuSettings();
-    } else if (this.state == State.SETTINGS) {
+    }
+    else if (this.state == State.SETTINGS)
+    {
       updateSettings();
     }
   }
@@ -83,7 +86,8 @@ public class SettingsScreenController
 
   private void updateSettings()
   {
-    if (this.input.consumeEscapePressed()) {
+    if (this.input.consumeEscapePressed())
+    {
       resumeFromSettings(false);
       return;
     }
@@ -103,10 +107,12 @@ public class SettingsScreenController
     {
       return;
     }
-    if (!primaryPressed) {
+    if (!primaryPressed)
+    {
       return;
     }
-    if (isTrainingLevelActive() && isDebugSettingsButtonHovered()) {
+    if (isTrainingLevelActive() && isDebugSettingsButtonHovered())
+    {
       this.debugOptions.toggleMenu();
       return;
     }
@@ -135,7 +141,8 @@ public class SettingsScreenController
 
   private void updateMenuSettings()
   {
-    if (this.input.consumeEscapePressed()) {
+    if (this.input.consumeEscapePressed())
+    {
       closeMenuSettings();
       return;
     }
@@ -156,13 +163,14 @@ public class SettingsScreenController
       return;
     }
     if (primaryPressed && this.menuRenderer != null
-        && this.menuRenderer.isMenuFullscreenButtonHovered(this.input.getMouseX(), this.input.getMouseY())) {
+        && this.menuRenderer.isMenuFullscreenButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
+        {
       this.displaySettingsController.togglePendingFullscreen();
       return;
     }
     if (primaryPressed && this.menuRenderer != null
         && this.menuRenderer.isMenuBackButtonHovered(this.input.getMouseX(), this.input.getMouseY()))
-    {
+        {
       closeMenuSettings();
     }
   }
@@ -275,7 +283,8 @@ public class SettingsScreenController
 
   public int settingsSliderInteractionX()
   {
-    if (this.state == State.MENU_SETTINGS) {
+    if (this.state == State.MENU_SETTINGS)
+    {
       return this.menuRenderer.getMenuOffsetX() + GameConfig.BASE_SCREEN_WIDTH / 2 - 90;
     }
     return GameConfig.SETTINGS_SLIDER_X;
@@ -283,7 +292,8 @@ public class SettingsScreenController
 
   public int settingsSliderInteractionY(int baseY)
   {
-    if (this.state == State.MENU_SETTINGS) {
+    if (this.state == State.MENU_SETTINGS)
+    {
       return this.menuRenderer.getMenuOffsetY() + baseY;
     }
     return settingsOverlayY(baseY);

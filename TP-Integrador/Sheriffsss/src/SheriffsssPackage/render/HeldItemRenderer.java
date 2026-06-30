@@ -41,7 +41,8 @@ public class HeldItemRenderer
 
   public void drawHeldItems(Graphics2D g2, GameView game, Player localPlayer)
   {
-    if (!localPlayer.isDead()) {
+    if (!localPlayer.isDead())
+    {
       drawHeldItem(g2, game, localPlayer);
     }
   }
@@ -74,7 +75,9 @@ public class HeldItemRenderer
     if (drawConfig.isMirrored(facing))
     {
       g2.drawImage(itemSprite, drawX + itemWidth, drawY, -itemWidth, itemHeight, null);
-    } else {
+    }
+    else
+    {
       g2.drawImage(itemSprite, drawX, drawY, itemWidth, itemHeight, null);
     }
     g2.setTransform(previousTransform);
@@ -117,10 +120,11 @@ public class HeldItemRenderer
 
   public void applyHeldItemRotation(Graphics2D g2, ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int drawY,
     int itemWidth, int itemHeight, double baseAngle, double recoilAngle)
-  {
+    {
     double centerX = drawX + itemWidth / 2.0;
     double centerY = drawY + itemHeight / 2.0;
-    if (recoilAngle != 0.0) {
+    if (recoilAngle != 0.0)
+    {
       double anchorX = heldItemGripAnchorX(drawConfig, facing, drawX, itemWidth);
       double anchorY = heldItemGripAnchorY(drawConfig, drawY, itemHeight);
       double rotatedAnchorX = rotateX(anchorX, anchorY, centerX, centerY, baseAngle);

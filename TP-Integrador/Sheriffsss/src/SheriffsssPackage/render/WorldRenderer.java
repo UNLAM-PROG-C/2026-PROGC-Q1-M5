@@ -32,7 +32,8 @@ public class WorldRenderer
   {
     for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++)
     {
-      for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++) {
+      for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++)
+      {
         int screenX = this.camera.tileToScreenX(tileX);
         int screenY = this.camera.tileToScreenY(tileY);
         TileType tileType = map.getTile(tileX, tileY);
@@ -42,7 +43,9 @@ public class WorldRenderer
           tileSprite = game.getTrainingHudView().active()
             ? TileType.SAND.getSprite(this.assets, game.getFrameCount())
             : this.assets.getImage("sprites/Pasto.png");
-        } else {
+        }
+        else
+        {
           tileSprite = tileType.getSprite(this.assets, game.getFrameCount());
         }
         g2.drawImage(tileSprite, screenX, screenY, GameConfig.TILE_SIZE, GameConfig.TILE_SIZE, null);
@@ -50,14 +53,16 @@ public class WorldRenderer
     }
   }
 
-  public void drawGroundObjects(Graphics2D g2, GameMap map) {
+  public void drawGroundObjects(Graphics2D g2, GameMap map)
+  {
     int scanStartX = this.camera.getStartTileX() - MapObjectType.getMaxFootprintWidth() + 1;
     int scanEndX = this.camera.getEndTileX();
     int scanStartY = this.camera.getStartTileY() - MapObjectType.getMaxFootprintHeight() + 1;
     int scanEndY = this.camera.getEndTileY();
     for (int tileX = scanStartX; tileX <= scanEndX; tileX++)
     {
-      for (int tileY = scanStartY; tileY <= scanEndY; tileY++) {
+      for (int tileY = scanStartY; tileY <= scanEndY; tileY++)
+      {
         MapObject mapObject = map.getObject(tileX, tileY);
         if (mapObject != null && mapObject.isRootCell(tileX, tileY) && intersectsVisibleArea(mapObject))
         {
@@ -127,7 +132,7 @@ public class WorldRenderer
       int drawHeight = type.getDrawHeight();
       if (screenX < -drawWidth || screenX > GameConfig.SCREEN_WIDTH + drawWidth
         || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight)
-      {
+        {
         continue;
       }
       BufferedImage sprite = this.assets.getImage(type.getSpritePath());
@@ -138,9 +143,11 @@ public class WorldRenderer
     }
   }
 
-  private Color getSunsetTintColor(int alpha) {
+  private Color getSunsetTintColor(int alpha)
+  {
     Color color = this.sunsetTintColors[alpha];
-    if (color == null) {
+    if (color == null)
+    {
       color = new Color(255, 122, 28, alpha);
       this.sunsetTintColors[alpha] = color;
     }

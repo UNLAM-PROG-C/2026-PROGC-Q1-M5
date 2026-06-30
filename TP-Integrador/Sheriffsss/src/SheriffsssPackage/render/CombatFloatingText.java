@@ -5,7 +5,8 @@ import SheriffsssPackage.context.GameConfig;
 
 import java.awt.Color;
 
-public class CombatFloatingText {
+public class CombatFloatingText
+{
   public static final int LIFETIME_TICKS = GameConfig.TARGET_FPS * 3 / 4;
   private static final int RISE_PIXELS = 22;
 

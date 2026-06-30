@@ -1,6 +1,7 @@
 package SheriffsssPackage.render;
 
-public final class TrainingHudSnapshot {
+public final class TrainingHudSnapshot
+{
   private final int failures;
   private final int hits;
   private final String precisionText;
@@ -41,7 +42,7 @@ public final class TrainingHudSnapshot {
   }
 
   public int failures()
-    {
+  {
     return this.failures;
   }
 

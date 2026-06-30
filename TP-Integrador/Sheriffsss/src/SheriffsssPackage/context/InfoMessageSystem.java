@@ -12,8 +12,10 @@ public class InfoMessageSystem
 
   public void update()
   {
-    for (int i = 0; i < INFO_MESSAGE_SLOTS; i++) {
-      if (this.infoMessageTicks[i] > 0) {
+    for (int i = 0; i < INFO_MESSAGE_SLOTS; i++)
+    {
+      if (this.infoMessageTicks[i] > 0)
+      {
         this.infoMessageTicks[i]--;
       }
     }
@@ -36,7 +38,8 @@ public class InfoMessageSystem
 
   public void setMessage(int slotIndex, String message, int durationTicks)
   {
-    if (slotIndex >= 0 && slotIndex < INFO_MESSAGE_SLOTS) {
+    if (slotIndex >= 0 && slotIndex < INFO_MESSAGE_SLOTS)
+    {
       this.infoMessages[slotIndex] = message;
       this.infoMessageTicks[slotIndex] = durationTicks;
     }

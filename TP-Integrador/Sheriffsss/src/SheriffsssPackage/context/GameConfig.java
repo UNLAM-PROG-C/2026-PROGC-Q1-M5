@@ -9,14 +9,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public final class GameConfig {
+public final class GameConfig
+{
 	private static final String DISPLAY_CONFIG_PATH = "saves/game.cfg";
 	private static final String DISPLAY_CONFIG_FULLSCREEN = "fullscreen";
 	private static final String DISPLAY_CONFIG_RESOLUTION = "resolution";
 	private static final String DISPLAY_CONFIG_MUSIC_VOLUME = "musicVolume";
 	private static final String DISPLAY_CONFIG_SFX_VOLUME = "sfxVolume";
 	private static final char DISPLAY_CONFIG_SEPARATOR = '=';
-	private static final Dimension[] WINDOW_RESOLUTIONS = {
+	private static final Dimension[] WINDOW_RESOLUTIONS =
+	{
 		new Dimension(800, 704),
 		new Dimension(1024, 768),
 		new Dimension(1280, 720),
@@ -101,7 +103,8 @@ public final class GameConfig {
 	private static double musicVolume = 0.5;
 	private static double sfxVolume = 0.5;
 
-	private GameConfig() {
+	private GameConfig()
+	{
 	}
 
 	public static void setViewportSize(int width, int height)
@@ -120,19 +123,22 @@ public final class GameConfig {
 	}
 
 	public static void loadDisplayPreferences()
-  {
+ {
 		File file = new File(DISPLAY_CONFIG_PATH);
-		if (!file.exists()) {
+		if (!file.exists())
+		{
 			return;
 		}
 		try (BufferedReader reader = new BufferedReader(new FileReader(file)))
   {
 			String line;
-			while ((line = reader.readLine()) != null) {
+			while ((line = reader.readLine()) != null)
+			{
 				applyDisplayConfigLine(line);
 			}
-		} catch (IOException ignored)
-    {
+		}
+		catch (IOException ignored)
+  {
 		}
 	}
 
@@ -148,33 +154,40 @@ public final class GameConfig {
 		if (DISPLAY_CONFIG_FULLSCREEN.equals(key))
   {
 			fullscreenPreferred = Boolean.parseBoolean(value);
-		} else if (DISPLAY_CONFIG_RESOLUTION.equals(key))
-   {
+		}
+		else if (DISPLAY_CONFIG_RESOLUTION.equals(key))
+  {
 			applyResolutionValue(value);
-		} else if (DISPLAY_CONFIG_MUSIC_VOLUME.equals(key))
-   {
+		}
+		else if (DISPLAY_CONFIG_MUSIC_VOLUME.equals(key))
+  {
 			musicVolume = parseVolume(value, musicVolume);
-		} else if (DISPLAY_CONFIG_SFX_VOLUME.equals(key))
-   {
+		}
+		else if (DISPLAY_CONFIG_SFX_VOLUME.equals(key))
+  {
 			sfxVolume = parseVolume(value, sfxVolume);
 		}
 	}
 
 	private static double parseVolume(String value, double fallback)
-   {
-		try {
+ {
+		try
+		{
 			return clamp01(Double.parseDouble(value));
-		} catch (NumberFormatException exception)
-   {
+		}
+		catch (NumberFormatException exception)
+  {
 			return fallback;
 		}
 	}
 
 	private static void applyResolutionValue(String value)
  {
-		for (int i = 0; i < WINDOW_RESOLUTIONS.length; i++) {
+		for (int i = 0; i < WINDOW_RESOLUTIONS.length; i++)
+		{
 			Dimension resolution = WINDOW_RESOLUTIONS[i];
-			if ((resolution.width + "x" + resolution.height).equals(value)) {
+			if ((resolution.width + "x" + resolution.height).equals(value))
+			{
 				windowResolutionIndex = i;
 				return;
 			}
@@ -185,7 +198,8 @@ public final class GameConfig {
  {
 		File file = new File(DISPLAY_CONFIG_PATH);
 		ensureParentDirExists(file);
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file)))
+		{
 			writer.write(DISPLAY_CONFIG_FULLSCREEN + DISPLAY_CONFIG_SEPARATOR + fullscreenPreferred);
 			writer.newLine();
 			writer.write(DISPLAY_CONFIG_RESOLUTION + DISPLAY_CONFIG_SEPARATOR + getWindowResolutionLabel());
@@ -194,8 +208,9 @@ public final class GameConfig {
 			writer.newLine();
 			writer.write(DISPLAY_CONFIG_SFX_VOLUME + DISPLAY_CONFIG_SEPARATOR + sfxVolume);
 			writer.newLine();
-		} catch (IOException ignored)
-   {
+		}
+		catch (IOException ignored)
+  {
 		}
 	}
 
@@ -209,7 +224,7 @@ public final class GameConfig {
 	}
 
 	public static int getWindowResolutionIndex()
-   {
+ {
 		return windowResolutionIndex;
 	}
 
@@ -219,7 +234,8 @@ public final class GameConfig {
 		return new Dimension(resolution.width, resolution.height);
 	}
 
-	public static int getWindowResolutionCount() {
+	public static int getWindowResolutionCount()
+	{
 		return WINDOW_RESOLUTIONS.length;
 	}
 
@@ -237,12 +253,12 @@ public final class GameConfig {
 	}
 
 	public static void setWindowResolutionIndex(int index)
-  {
+ {
 		windowResolutionIndex = Math.max(0, Math.min(WINDOW_RESOLUTIONS.length - 1, index));
 	}
 
 	public static boolean isFullscreenPreferred()
-  {
+ {
 		return fullscreenPreferred;
 	}
 
@@ -262,7 +278,7 @@ public final class GameConfig {
 	}
 
 	public static double getSfxVolume()
-  {
+ {
 		return sfxVolume;
 	}
 
@@ -272,7 +288,7 @@ public final class GameConfig {
 	}
 
 	private static double clamp01(double value)
-  {
+ {
 		return Math.max(0.0, Math.min(1.0, value));
 	}
 

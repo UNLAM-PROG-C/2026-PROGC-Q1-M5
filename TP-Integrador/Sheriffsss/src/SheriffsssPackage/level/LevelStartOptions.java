@@ -1,6 +1,7 @@
 package SheriffsssPackage.level;
 
-public final class LevelStartOptions {
+public final class LevelStartOptions
+{
   private final boolean resetDebugOptions;
   private final String seedOverride;
 

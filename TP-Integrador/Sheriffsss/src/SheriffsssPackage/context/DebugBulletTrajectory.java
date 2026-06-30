@@ -1,6 +1,7 @@
 package SheriffsssPackage.context;
 
-public class DebugBulletTrajectory {
+public class DebugBulletTrajectory
+{
   private final int startWorldX;
   private final int startWorldY;
   private final int endWorldX;

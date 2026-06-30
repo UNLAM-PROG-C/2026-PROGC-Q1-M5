@@ -3,7 +3,8 @@ package SheriffsssPackage.render;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-public final class GameTheme {
+public final class GameTheme
+{
 	public static final BasicStroke DEFAULT_STROKE = new BasicStroke(4f);
 	public static final BasicStroke LIGHT_STROKE = new BasicStroke(2f);
 	public static final BasicStroke HEAVY_STROKE = new BasicStroke(6f);
@@ -18,6 +19,7 @@ public final class GameTheme {
 	public static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 100);
 	public static final Color TRANSPARENT_WHITE = new Color(255, 255, 255, 200);
 
-	private GameTheme() {
+	private GameTheme()
+	{
 	}
 }

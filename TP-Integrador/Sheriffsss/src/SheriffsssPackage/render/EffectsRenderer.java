@@ -75,7 +75,7 @@ public class EffectsRenderer
       int centerY = this.camera.worldToScreenY(text.getWorldY());
       if (centerX < -GameConfig.TILE_SIZE || centerX > GameConfig.SCREEN_WIDTH + GameConfig.TILE_SIZE
         || centerY < -GameConfig.TILE_SIZE || centerY > GameConfig.SCREEN_HEIGHT + GameConfig.TILE_SIZE)
-      {
+        {
         continue;
       }
       String message = text.getMessage();
@@ -99,7 +99,8 @@ public class EffectsRenderer
     return color;
   }
 
-  private Color getFlameBurstCoreColor(int alpha) {
+  private Color getFlameBurstCoreColor(int alpha)
+  {
     int colorAlpha = Math.max(70, Math.max(0, Math.min(255, alpha)) / 2);
     Color color = this.flameBurstCoreColors[colorAlpha];
     if (color == null)

@@ -15,7 +15,8 @@ import java.io.IOException;
  *   - Guardar la configuración actual al archivo de disco
  *   - Parsear líneas de configuración
  */
-public final class TrainingConfigStore {
+public final class TrainingConfigStore
+{
   // --- Persistencia ---
   private static final String CONFIG_PATH = "saves/training.cfg";
   private static final String CONFIG_KEY_COUNT = "count";
@@ -31,16 +32,19 @@ public final class TrainingConfigStore {
   public void loadControls()
   {
     File file = new File(CONFIG_PATH);
-    if (!file.exists()) {
+    if (!file.exists())
+    {
       return;
     }
     try (BufferedReader reader = new BufferedReader(new FileReader(file)))
     {
       String line;
-      while ((line = reader.readLine()) != null) {
+      while ((line = reader.readLine()) != null)
+      {
         applyConfigLine(line);
       }
-    } catch (IOException ignored)
+    }
+    catch (IOException ignored)
     {
     }
   }
@@ -49,10 +53,12 @@ public final class TrainingConfigStore {
   {
     File file = new File(CONFIG_PATH);
     ensureParentDirExists(file);
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file)))
+    {
       writer.write(CONFIG_KEY_COUNT + CONFIG_KEY_VALUE_SEPARATOR + this.controls.getEnemyCount());
       writer.newLine();
-    } catch (IOException ignored)
+    }
+    catch (IOException ignored)
     {
     }
   }
@@ -74,9 +80,11 @@ public final class TrainingConfigStore {
 
   private void applyCountValue(String value)
   {
-    try {
+    try
+    {
       this.controls.setEnemyCount(Integer.parseInt(value));
-    } catch (NumberFormatException ignored)
+    }
+    catch (NumberFormatException ignored)
     {
     }
   }

@@ -1,6 +1,7 @@
 package SheriffsssPackage.system.weapon;
 
-final class ProjectileStatModifiers {
+final class ProjectileStatModifiers
+{
 	static final ProjectileStatModifiers NONE = new ProjectileStatModifiers(0.0, 0.0, 0.0, 0, 0);
 
 	private final double damage;
@@ -9,7 +10,8 @@ final class ProjectileStatModifiers {
 	private final int cooldownTicks;
 	private final int lifeTicks;
 
-	ProjectileStatModifiers(double damage, double speedPixels, double knockbackStrengthPixels, int cooldownTicks, int lifeTicks) {
+	ProjectileStatModifiers(double damage, double speedPixels, double knockbackStrengthPixels, int cooldownTicks, int lifeTicks)
+	{
 		this.damage = damage;
 		this.speedPixels = speedPixels;
 		this.knockbackStrengthPixels = knockbackStrengthPixels;

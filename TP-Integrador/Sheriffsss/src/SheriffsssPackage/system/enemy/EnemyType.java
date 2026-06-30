@@ -3,7 +3,8 @@ package SheriffsssPackage.system.enemy;
 import SheriffsssPackage.session.Facing;
 
 
-public enum EnemyType {
+public enum EnemyType
+{
   DIANA(
     "sprites/Diana.png",
     EnemyBehavior.STATIC,
@@ -35,7 +36,7 @@ public enum EnemyType {
       int drawWidth, int drawHeight, int collisionRadius, double baseMaxHP, double baseSpeed, double baseDamage,
       double attackKnockbackStrengthPixels, int attackRangePixels, int attackCooldownTicks,
       EnemyDensity density, String hitSoundPath)
-  {
+      {
     this.spritePath = spritePath;
     this.behavior = behavior;
     this.frameWidth = frameWidth;
@@ -101,17 +102,17 @@ public enum EnemyType {
   }
 
   public double getScaledSpeed(int dayCount)
-    {
+  {
     return this.baseSpeed * Math.pow(1.09, Math.max(0, dayCount - 1));
   }
 
   public double getScaledDamage(int dayCount)
-    {
+  {
     return this.baseDamage * Math.pow(1.25, Math.max(0, dayCount - 1));
   }
 
   public double getAttackKnockbackStrengthPixels()
-    {
+  {
     return this.attackKnockbackStrengthPixels;
   }
 
@@ -137,16 +138,20 @@ public enum EnemyType {
 
   public int getAnimationRow(Facing facing)
   {
-    if (this.rowCount <= 1) {
+    if (this.rowCount <= 1)
+    {
       return 0;
     }
-    if (facing == Facing.DOWN) {
+    if (facing == Facing.DOWN)
+    {
       return 0;
     }
-    if (facing == Facing.LEFT) {
+    if (facing == Facing.LEFT)
+    {
       return 1;
     }
-    if (facing == Facing.RIGHT) {
+    if (facing == Facing.RIGHT)
+    {
       return 2;
     }
     return 3;

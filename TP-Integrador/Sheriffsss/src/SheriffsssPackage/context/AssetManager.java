@@ -19,7 +19,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-public class AssetManager {
+public class AssetManager
+{
 	private final Map<String, BufferedImage> imageCache = new HashMap<String, BufferedImage>();
 	private final EnumMap<CursorType, Cursor> cursorCache = new EnumMap<CursorType, Cursor>(CursorType.class);
 
@@ -29,7 +30,7 @@ public class AssetManager {
 	}
 
 	public BufferedImage getImage(String path)
-  {
+ {
 		BufferedImage image = this.imageCache.get(path);
 		if (image != null)
   {
@@ -41,7 +42,7 @@ public class AssetManager {
 	}
 
 	public Cursor getCursor(CursorType cursorType)
-  {
+ {
 		Cursor cursor = this.cursorCache.get(cursorType);
 		if (cursor != null)
   {
@@ -56,27 +57,29 @@ public class AssetManager {
 	}
 
 	private void preload()
-  {
-		for (TileType tileType : TileType.values()) {
-			for (String spritePath : tileType.getSpritePaths()) {
+ {
+		for (TileType tileType : TileType.values())
+		{
+			for (String spritePath : tileType.getSpritePaths())
+			{
 				getImage(spritePath);
 			}
 		}
 		getImage("sprites/sheriffsss_icono.png");
 		for (MapObjectType objectType : MapObjectType.values())
-    {
+  {
 			getImage(objectType.getSpritePath());
 		}
 		for (ItemDefinition itemDefinition : ItemDefinition.values())
-   {
+  {
 			getImage(itemDefinition.getSpritePath());
 		}
 		for (EnemyType enemyType : EnemyType.values())
-   {
+  {
 			getImage(enemyType.getSpritePath());
 		}
 		for (CursorType cursorType : CursorType.values())
-   {
+  {
 			getImage(cursorType.getSpritePath());
 		}
 		getImage("sprites/sheriffsss-player-sprites/1/sheriff-south.png");
@@ -90,15 +93,18 @@ public class AssetManager {
 	}
 
 	private BufferedImage loadImage(String path)
-   {
+ {
 		URL resource = getClass().getClassLoader().getResource(path);
 		if (resource == null)
   {
 			throw new IllegalStateException("Missing image resource: " + path);
 		}
-		try {
+		try
+		{
 			return ImageIO.read(resource);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			throw new IllegalStateException("Unable to load image resource: " + path, e);
 		}
 	}

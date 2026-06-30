@@ -6,7 +6,8 @@ import SheriffsssPackage.context.AssetManager;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-public enum TileType {
+public enum TileType
+{
 	SAND(0, false, Color.YELLOW, "sprites/Arena.png");
 
 	private static final TileType[] BY_ID = values();
@@ -43,7 +44,8 @@ public enum TileType {
 
 	public static TileType fromId(int id)
  {
-		if (id < 0 || id >= BY_ID.length) {
+		if (id < 0 || id >= BY_ID.length)
+		{
 			return SAND;
 		}
 		return BY_ID[id];

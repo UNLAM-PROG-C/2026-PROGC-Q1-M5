@@ -1,6 +1,7 @@
 package SheriffsssPackage.system.enemy;
 
-public enum EnemyDensity {
+public enum EnemyDensity
+{
   LOW,
   MEDIUM,
   HIGH

@@ -3,7 +3,8 @@ package SheriffsssPackage.system.enemy;
 import SheriffsssPackage.context.GameConfig;
 
 
-public enum Debuff {
+public enum Debuff
+{
   BURN(GameConfig.TARGET_FPS * 5, 3, 0.34)
   {
     @Override
@@ -18,18 +19,19 @@ public enum Debuff {
   private final double lightIntensity;
 
   Debuff(int durationTicks)
-      {
+  {
     this(durationTicks, 0, 0.0);
   }
 
-  Debuff(int durationTicks, int lightRadiusTiles, double lightIntensity) {
+  Debuff(int durationTicks, int lightRadiusTiles, double lightIntensity)
+  {
     this.durationTicks = durationTicks;
     this.lightRadiusTiles = Math.max(0, lightRadiusTiles);
     this.lightIntensity = Math.max(0.0, lightIntensity);
   }
 
   public int getDurationTicks()
-    {
+  {
     return this.durationTicks;
   }
 

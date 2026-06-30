@@ -7,7 +7,8 @@ import SheriffsssPackage.system.enemy.EnemyDensity;
 import SheriffsssPackage.system.enemy.EnemySystem;
 
 
-public class Projectile {
+public class Projectile
+{
 	private static final int MAX_PIERCED_ENEMIES = 24;
 	private static final double STEP_SIZE_PIXELS = 8.0;
 
@@ -30,17 +31,19 @@ public class Projectile {
 
 	public Projectile(ProjectileType type, double worldX, double worldY, double velocityX, double velocityY,
 		double damage, double knockbackStrengthPixels, int lifeTicks)
- {
+  {
 		this(type, null, null, worldX, worldY, velocityX, velocityY, damage, knockbackStrengthPixels, lifeTicks);
 	}
 
 	public Projectile(ProjectileType type, Player owner, double worldX, double worldY, double velocityX, double velocityY,
-		double damage, double knockbackStrengthPixels, int lifeTicks) {
+		double damage, double knockbackStrengthPixels, int lifeTicks)
+		{
 		this(type, owner, null, worldX, worldY, velocityX, velocityY, damage, knockbackStrengthPixels, lifeTicks);
 	}
 
 	public Projectile(ProjectileType type, Player owner, ItemDefinition weapon, double worldX, double worldY, double velocityX, double velocityY,
-		double damage, double knockbackStrengthPixels, int lifeTicks) {
+		double damage, double knockbackStrengthPixels, int lifeTicks)
+		{
 		this.type = type;
 		this.owner = owner;
 		this.weapon = weapon;
@@ -55,12 +58,14 @@ public class Projectile {
 	}
 
 	public void update(GameMap map, EnemySystem enemySystem)
-  {
-		if (!this.active) {
+ {
+		if (!this.active)
+		{
 			return;
 		}
 		this.lifeTicks--;
-		if (this.lifeTicks <= 0) {
+		if (this.lifeTicks <= 0)
+		{
 			this.active = false;
 			return;
 		}
@@ -68,16 +73,18 @@ public class Projectile {
 	}
 
 	private void advanceWithSubsteps(GameMap map, EnemySystem enemySystem)
-  {
+ {
 		int steps = computeStepCount();
 		double stepX = this.velocityX / steps;
 		double stepY = this.velocityY / steps;
-		for (int step = 0; step < steps && this.active; step++) {
+		for (int step = 0; step < steps && this.active; step++)
+		{
 			double previousX = this.worldX;
 			double previousY = this.worldY;
 			this.worldX += stepX;
 			this.worldY += stepY;
-			if (map.isProjectileBlockedAtWorld(getWorldX(), getWorldY())) {
+			if (map.isProjectileBlockedAtWorld(getWorldX(), getWorldY()))
+			{
 				this.active = false;
 				return;
 			}
@@ -86,53 +93,61 @@ public class Projectile {
 	}
 
 	private int computeStepCount()
-  {
+ {
 		double maxVelocity = Math.max(Math.abs(this.velocityX), Math.abs(this.velocityY));
 		return Math.max(1, (int) Math.ceil(maxVelocity / STEP_SIZE_PIXELS));
 	}
 
 	private void hitEnemies(EnemySystem enemySystem, double previousX, double previousY)
-   {
+ {
 		java.util.List<Enemy> enemies = enemySystem.getEnemies();
-		for (int i = 0; i < enemies.size() && this.active; i++) {
+		for (int i = 0; i < enemies.size() && this.active; i++)
+		{
 			hitEnemyIfColliding(enemies.get(i), enemySystem, previousX, previousY);
 		}
 	}
 
 	private void hitEnemyIfColliding(Enemy enemy, EnemySystem enemySystem, double previousX, double previousY)
-  {
-		if (enemy.isDead() || alreadyPierced(enemy)) {
+ {
+		if (enemy.isDead() || alreadyPierced(enemy))
+		{
 			return;
 		}
 		int radius = enemy.getType().getCollisionRadius() + Math.max(this.type.getDrawWidth(), this.type.getDrawHeight()) / 2;
 		int deltaX = enemy.getWorldX() - getWorldX();
 		int deltaY = enemy.getWorldY() - getWorldY();
-		if (deltaX * deltaX + deltaY * deltaY > radius * radius) {
+		if (deltaX * deltaX + deltaY * deltaY > radius * radius)
+		{
 			return;
 		}
 		applyHit(enemy, enemySystem, previousX, previousY);
 	}
 
 	private void applyHit(Enemy enemy, EnemySystem enemySystem, double previousX, double previousY)
-  {
+ {
 		this.hitTarget = true;
 		enemySystem.damageEnemy(enemy, this.damage, this.owner, this.weapon);
-		if (this.knockbackStrengthPixels > 0.0) {
+		if (this.knockbackStrengthPixels > 0.0)
+		{
 			enemy.applyKnockbackFrom((int) Math.round(previousX), (int) Math.round(previousY), this.knockbackStrengthPixels);
 		}
-		if (this.type.piercesLowDensity() && enemy.getType().getDensity() == EnemyDensity.LOW) {
+		if (this.type.piercesLowDensity() && enemy.getType().getDensity() == EnemyDensity.LOW)
+		{
 			rememberPierced(enemy);
-		} else {
+		}
+		else
+		{
 			this.active = false;
 		}
 	}
 
 	private boolean alreadyPierced(Enemy enemy)
-    {
+ {
 		int key = System.identityHashCode(enemy);
 		for (int i = 0; i < this.piercedEnemyCount; i++)
   {
-			if (this.piercedEnemyKeys[i] == key) {
+			if (this.piercedEnemyKeys[i] == key)
+			{
 				return true;
 			}
 		}
@@ -141,7 +156,8 @@ public class Projectile {
 
 	private void rememberPierced(Enemy enemy)
  {
-		if (this.piercedEnemyCount >= this.piercedEnemyKeys.length) {
+		if (this.piercedEnemyCount >= this.piercedEnemyKeys.length)
+		{
 			return;
 		}
 		this.piercedEnemyKeys[this.piercedEnemyCount] = System.identityHashCode(enemy);
@@ -149,7 +165,7 @@ public class Projectile {
 	}
 
 	public ProjectileType getType()
-  {
+ {
 		return this.type;
 	}
 
@@ -158,11 +174,13 @@ public class Projectile {
 		return (int) Math.round(this.worldX);
 	}
 
-	public int getWorldY() {
+	public int getWorldY()
+	{
 		return (int) Math.round(this.worldY);
 	}
 
-	public double getPreciseWorldX() {
+	public double getPreciseWorldX()
+	{
 		return this.worldX;
 	}
 

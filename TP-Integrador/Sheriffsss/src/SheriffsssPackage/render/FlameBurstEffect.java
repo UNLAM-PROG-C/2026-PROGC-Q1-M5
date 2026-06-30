@@ -1,6 +1,7 @@
 package SheriffsssPackage.render;
 
-public final class FlameBurstEffect {
+public final class FlameBurstEffect
+{
   private static final int DEFAULT_LIFE_TICKS = 34;
   private static final int PARTICLE_COUNT = 26;
 
@@ -14,7 +15,8 @@ public final class FlameBurstEffect {
     this(originWorldX, originWorldY, radiusPixels, 0);
   }
 
-  public FlameBurstEffect(int originWorldX, int originWorldY, int radiusPixels, int ageTicks) {
+  public FlameBurstEffect(int originWorldX, int originWorldY, int radiusPixels, int ageTicks)
+  {
     this.originWorldX = originWorldX;
     this.originWorldY = originWorldY;
     this.radiusPixels = Math.max(1, radiusPixels);
@@ -22,7 +24,7 @@ public final class FlameBurstEffect {
   }
 
   public void update()
-    {
+  {
     this.ageTicks++;
   }
 

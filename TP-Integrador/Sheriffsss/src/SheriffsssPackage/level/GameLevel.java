@@ -5,7 +5,8 @@ import SheriffsssPackage.session.GameSession;
 
 
 
-public interface GameLevel {
+public interface GameLevel
+{
   LevelType type();
   void enter(GameContext context, GameSession session, LevelStartOptions options);
   void update(GameContext context, GameSession session);

@@ -6,7 +6,8 @@ import SheriffsssPackage.render.GameTheme;
 
 import java.awt.Color;
 
-public enum MapObjectType {
+public enum MapObjectType
+{
 	DRY_BUSH(0, 1, 1, "sprites/ArbustoMuerto.png", GameTheme.DIRT),
 	WOODEN_FENCE(1, 1, 1, "sprites/CercoMadera1.png", GameTheme.DIRT, Player.HITBOX_WIDTH, Player.HITBOX_HEIGHT),
 	TRAINING_BORDER_TREE_1(2, 2, 3, "sprites/Arbol1.png", GameTheme.DARK_DIRT),
@@ -28,7 +29,8 @@ public enum MapObjectType {
 		this(id, footprintWidth, footprintHeight, spritePath, minimapColor, GameConfig.TILE_SIZE, GameConfig.TILE_SIZE);
 	}
 
-	MapObjectType(int id, int footprintWidth, int footprintHeight, String spritePath, Color minimapColor, int collisionWidth, int collisionHeight) {
+	MapObjectType(int id, int footprintWidth, int footprintHeight, String spritePath, Color minimapColor, int collisionWidth, int collisionHeight)
+	{
 		this.id = id;
 		this.footprintWidth = footprintWidth;
 		this.footprintHeight = footprintHeight;
@@ -64,16 +66,18 @@ public enum MapObjectType {
 	public static int getMaxFootprintWidth()
  {
 		int maxWidth = 1;
-		for (MapObjectType type : VALUES) {
+		for (MapObjectType type : VALUES)
+		{
 			maxWidth = Math.max(maxWidth, type.footprintWidth);
 		}
 		return maxWidth;
 	}
 
 	public static int getMaxFootprintHeight()
-   {
+ {
 		int maxHeight = 1;
-		for (MapObjectType type : VALUES) {
+		for (MapObjectType type : VALUES)
+		{
 			maxHeight = Math.max(maxHeight, type.footprintHeight);
 		}
 		return maxHeight;

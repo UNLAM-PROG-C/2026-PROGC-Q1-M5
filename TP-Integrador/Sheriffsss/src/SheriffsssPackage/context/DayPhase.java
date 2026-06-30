@@ -1,6 +1,7 @@
 package SheriffsssPackage.context;
 
-public enum DayPhase {
+public enum DayPhase
+{
   MORNING("MANANA"),
   AFTERNOON("TARDE"),
   SUNSET("ATARDECER"),

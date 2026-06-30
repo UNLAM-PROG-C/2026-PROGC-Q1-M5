@@ -8,7 +8,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-public class GameInput implements KeyListener, MouseListener, MouseWheelListener, MouseMotionListener {
+public class GameInput implements KeyListener, MouseListener, MouseWheelListener, MouseMotionListener
+{
 	private boolean leftPressed;
 	private boolean rightPressed;
 	private boolean upPressed;
@@ -51,11 +52,13 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 		return (this.leftPressed ? -1 : 0) + (this.rightPressed ? 1 : 0);
 	}
 
-	public int getMoveY() {
+	public int getMoveY()
+	{
 		return (this.upPressed ? -1 : 0) + (this.downPressed ? 1 : 0);
 	}
 
-	public void clearMovement() {
+	public void clearMovement()
+	{
 		this.leftPressed = false;
 		this.rightPressed = false;
 		this.upPressed = false;
@@ -190,7 +193,8 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 		return (this.zoomInHeld ? 1 : 0) + (this.zoomOutHeld ? -1 : 0);
 	}
 
-	public int getMouseX() {
+	public int getMouseX()
+	{
 		return this.mouseX;
 	}
 
@@ -207,14 +211,17 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 	@Override
 	public void keyPressed(KeyEvent e)
  {
-		if (e.getKeyCode() == KeyEvent.VK_F11 || (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown())) {
-			if (!this.fullscreenHeld) {
+		if (e.getKeyCode() == KeyEvent.VK_F11 || (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown()))
+		{
+			if (!this.fullscreenHeld)
+			{
 				this.fullscreenToggleQueued = true;
 				this.fullscreenHeld = true;
 			}
 			return;
 		}
-		switch (e.getKeyCode()) {
+		switch (e.getKeyCode())
+		{
 			case KeyEvent.VK_A:
 				this.leftPressed = true;
 				break;
@@ -228,25 +235,29 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 				this.downPressed = true;
 				break;
 			case KeyEvent.VK_E:
-				if (!this.interactHeld) {
+				if (!this.interactHeld)
+				{
 					this.interactQueued = true;
 					this.interactHeld = true;
 				}
 				break;
 			case KeyEvent.VK_M:
-				if (!this.mapHeld) {
+				if (!this.mapHeld)
+				{
 					this.mapToggleQueued = true;
 					this.mapHeld = true;
 				}
 				break;
 			case KeyEvent.VK_ESCAPE:
-				if (!this.escapeHeld) {
+				if (!this.escapeHeld)
+				{
 					this.escapeQueued = true;
 					this.escapeHeld = true;
 				}
 				break;
 			case KeyEvent.VK_TAB:
-				if (!this.equipmentHeld) {
+				if (!this.equipmentHeld)
+				{
 					this.equipmentToggleQueued = true;
 					this.equipmentHeld = true;
 				}
@@ -276,37 +287,43 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 				break;
 			case GameConfig.CAMERA_ZOOM_OUT_KEY:
 			case GameConfig.CAMERA_ZOOM_OUT_KEY_NUMPAD:
-				if (!this.zoomOutHeld) {
+				if (!this.zoomOutHeld)
+				{
 					this.zoomKeySteps--;
 					this.zoomOutHeld = true;
 				}
 				break;
 			case GameConfig.TRAINING_PANEL_INC_KEY:
-				if (!this.trainingIncHeld) {
+				if (!this.trainingIncHeld)
+				{
 					this.trainingIncQueued = true;
 					this.trainingIncHeld = true;
 				}
 				break;
 			case GameConfig.TRAINING_PANEL_DEC_KEY:
-				if (!this.trainingDecHeld) {
+				if (!this.trainingDecHeld)
+				{
 					this.trainingDecQueued = true;
 					this.trainingDecHeld = true;
 				}
 				break;
 			case GameConfig.TRAINING_PANEL_RESET_KEY:
-				if (!this.trainingResetHeld) {
+				if (!this.trainingResetHeld)
+				{
 					this.trainingResetQueued = true;
 					this.trainingResetHeld = true;
 				}
 				break;
 			case GameConfig.TRAINING_TUTORIAL_SKIP_KEY:
-				if (!this.trainingSkipTutorialHeld) {
+				if (!this.trainingSkipTutorialHeld)
+				{
 					this.trainingSkipTutorialQueued = true;
 					this.trainingSkipTutorialHeld = true;
 				}
 				break;
 			case KeyEvent.VK_B:
-				if (!this.trainingBackToMenuHeld) {
+				if (!this.trainingBackToMenuHeld)
+				{
 					this.trainingBackToMenuQueued = true;
 					this.trainingBackToMenuHeld = true;
 				}
@@ -319,7 +336,8 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 	@Override
 	public void keyReleased(KeyEvent e)
  {
-		switch (e.getKeyCode()) {
+		switch (e.getKeyCode())
+		{
 			case KeyEvent.VK_A:
 				this.leftPressed = false;
 				break;
@@ -385,10 +403,13 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 	@Override
 	public void mousePressed(MouseEvent e)
  {
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		if (e.getButton() == MouseEvent.BUTTON1)
+		{
 			this.primaryClickQueued = true;
 			this.primaryHeld = true;
-		} else if (e.getButton() == MouseEvent.BUTTON3 && !this.secondaryHeld) {
+		}
+		else if (e.getButton() == MouseEvent.BUTTON3 && !this.secondaryHeld)
+		{
 			this.secondaryClickQueued = true;
 			this.secondaryHeld = true;
 		}
@@ -397,10 +418,13 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 
 	@Override
 	public void mouseReleased(MouseEvent e)
-  {
-		if (e.getButton() == MouseEvent.BUTTON1) {
+ {
+		if (e.getButton() == MouseEvent.BUTTON1)
+		{
 			this.primaryHeld = false;
-		} else if (e.getButton() == MouseEvent.BUTTON3) {
+		}
+		else if (e.getButton() == MouseEvent.BUTTON3)
+		{
 			this.secondaryHeld = false;
 		}
 		updateMousePosition(e);
@@ -408,40 +432,43 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
 
 	@Override
 	public void mouseEntered(MouseEvent e)
-  {
+ {
 		updateMousePosition(e);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
-  {
+ {
 		updateMousePosition(e);
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e)
-  {
-		if (e.isControlDown()) {
+ {
+		if (e.isControlDown())
+		{
 			this.zoomWheelRotationSteps += e.getWheelRotation();
-		} else {
+		}
+		else
+		{
 			this.wheelRotationSteps += e.getWheelRotation();
 		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e)
-   {
+ {
 		updateMousePosition(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e)
-  {
+ {
 		updateMousePosition(e);
 	}
 
 	private void updateMousePosition(MouseEvent e)
-  {
+ {
 		this.mouseX = e.getX();
 		this.mouseY = e.getY();
 	}

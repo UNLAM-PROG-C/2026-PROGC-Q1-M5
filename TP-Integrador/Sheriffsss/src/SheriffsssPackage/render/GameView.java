@@ -18,7 +18,8 @@ import SheriffsssPackage.system.weapon.Projectile;
 import java.util.List;
 
 
-public interface GameView {
+public interface GameView
+{
   AssetManager getAssets();
   AudioManager getAudio();
   GameInput getInput();

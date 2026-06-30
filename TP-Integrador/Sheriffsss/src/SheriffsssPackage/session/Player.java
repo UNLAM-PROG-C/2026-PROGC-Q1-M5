@@ -7,7 +7,8 @@ import SheriffsssPackage.system.weapon.ItemDefinition;
 
 import java.awt.image.BufferedImage;
 
-public class Player {
+public class Player
+{
 	public static final int PLAYER_WIDTH = 64;
 	public static final int PLAYER_HEIGHT = 64;
 	public static final int HITBOX_WIDTH = PLAYER_WIDTH / 2;
@@ -35,7 +36,8 @@ public class Player {
 	private boolean takingDamage;
 	private boolean dead;
 
-	public Player(String name, int x, int y, AssetManager assets) {
+	public Player(String name, int x, int y, AssetManager assets)
+	{
 		this.name = name;
 		this.x = x;
 		this.y = y;
@@ -51,7 +53,7 @@ public class Player {
 	}
 
 	private void loadDirectionalSprite(AssetManager assets, Facing facing, String spritePath)
-  {
+ {
 		this.sprites[facing.getSpriteIndex()] = assets.getImage(spritePath);
 	}
 
@@ -96,13 +98,14 @@ public class Player {
 	}
 
 	public int consumeMoveDeltaX(int direction)
-  {
+ {
 		return consumeMoveDeltaX(direction, 1.0);
 	}
 
 	public int consumeMoveDeltaX(int direction, double speedScale)
-  {
-		if (direction == 0) {
+ {
+		if (direction == 0)
+		{
 			this.moveCarryX = 0.0;
 			return 0;
 		}
@@ -113,13 +116,14 @@ public class Player {
 	}
 
 	public int consumeMoveDeltaY(int direction)
-  {
+ {
 		return consumeMoveDeltaY(direction, 1.0);
 	}
 
 	public int consumeMoveDeltaY(int direction, double speedScale)
-  {
-		if (direction == 0) {
+ {
+		if (direction == 0)
+		{
 			this.moveCarryY = 0.0;
 			return 0;
 		}
@@ -130,19 +134,20 @@ public class Player {
 	}
 
 	public int applyAttackSpeedToCooldown(int cooldownTicks)
-  {
+ {
 		return Math.max(1, cooldownTicks);
 	}
 
 	public void moveBy(int deltaX, int deltaY)
-  {
+ {
 		this.x += deltaX;
 		this.y += deltaY;
 	}
 
 	public void updateKnockback(GameMap map)
  {
-		if (Math.abs(this.knockbackX) < MIN_KNOCKBACK_SPEED && Math.abs(this.knockbackY) < MIN_KNOCKBACK_SPEED) {
+		if (Math.abs(this.knockbackX) < MIN_KNOCKBACK_SPEED && Math.abs(this.knockbackY) < MIN_KNOCKBACK_SPEED)
+		{
 			this.knockbackX = 0.0;
 			this.knockbackY = 0.0;
 			return;
@@ -153,30 +158,34 @@ public class Player {
 	}
 
 	private void moveWithCollision(GameMap map, double deltaX, double deltaY)
-  {
+ {
 		applyKnockbackAxisX(map, (int) Math.round(deltaX));
 		applyKnockbackAxisY(map, (int) Math.round(deltaY));
 	}
 
 	private void applyKnockbackAxisX(GameMap map, int stepX)
-  {
-		if (stepX == 0) {
+ {
+		if (stepX == 0)
+		{
 			return;
 		}
 		this.x += stepX;
-		if (isHitboxBlocked(map)) {
+		if (isHitboxBlocked(map))
+		{
 			this.x -= stepX;
 			this.knockbackX = 0.0;
 		}
 	}
 
 	private void applyKnockbackAxisY(GameMap map, int stepY)
-  {
-		if (stepY == 0) {
+ {
+		if (stepY == 0)
+		{
 			return;
 		}
 		this.y += stepY;
-		if (isHitboxBlocked(map)) {
+		if (isHitboxBlocked(map))
+		{
 			this.y -= stepY;
 			this.knockbackY = 0.0;
 		}
@@ -188,11 +197,12 @@ public class Player {
 	}
 
 	public void applyKnockbackFrom(int sourceX, int sourceY, double strength)
-  {
+ {
 		double deltaX = this.x - sourceX;
 		double deltaY = getFeetWorldY() - sourceY;
 		double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-		if (length <= NEAR_ZERO_LENGTH) {
+		if (length <= NEAR_ZERO_LENGTH)
+		{
 			applyKnockbackDown(strength);
 			return;
 		}
@@ -201,7 +211,7 @@ public class Player {
 	}
 
 	private void applyKnockbackDown(double strength)
-  {
+ {
 		this.knockbackX = 0.0;
 		this.knockbackY = strength;
 	}
@@ -214,8 +224,9 @@ public class Player {
 	}
 
 	public void setFacing(Facing facing)
-  {
-		if (facing != null) {
+ {
+		if (facing != null)
+		{
 			this.facing = facing;
 		}
 	}
@@ -223,25 +234,27 @@ public class Player {
 	public void damage(double amount)
  {
 		this.currentHP -= amount;
-		if (this.currentHP <= 0.0) {
+		if (this.currentHP <= 0.0)
+		{
 			die();
 		}
 	}
 
 	public void damageEnemyAttack(double amount)
-   {
-		if (amount > 0.0) {
+ {
+		if (amount > 0.0)
+		{
 			damage(amount);
 		}
 	}
 
 	public void heal(double amount)
-   {
+ {
 		this.currentHP = Math.min(this.maxHP, this.currentHP + amount);
 	}
 
 	public void die()
-  {
+ {
 		this.currentHP = 0.0;
 		this.dead = true;
 		this.takingDamage = false;
@@ -254,20 +267,26 @@ public class Player {
 
 	public void updateFacing(int moveX, int moveY)
  {
-		if (moveX != 0 && moveY != 0) {
+		if (moveX != 0 && moveY != 0)
+		{
 			this.facing = facingDiagonal(moveX, moveY);
-		} else if (moveX != 0) {
+		}
+		else if (moveX != 0)
+		{
 			this.facing = moveX < 0 ? Facing.LEFT : Facing.RIGHT;
-		} else if (moveY != 0) {
+		}
+		else if (moveY != 0)
+		{
 			this.facing = moveY < 0 ? Facing.UP : Facing.DOWN;
 		}
 	}
 
 	private static Facing facingDiagonal(int moveX, int moveY)
-  {
+ {
 		boolean up = moveY < 0;
 		boolean left = moveX < 0;
-		if (up) {
+		if (up)
+		{
 			return left ? Facing.UP_LEFT : Facing.UP_RIGHT;
 		}
 		return left ? Facing.DOWN_LEFT : Facing.DOWN_RIGHT;

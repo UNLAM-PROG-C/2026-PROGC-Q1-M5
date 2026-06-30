@@ -4,7 +4,8 @@ import SheriffsssPackage.render.ItemDefinitionDrawConfig;
 import SheriffsssPackage.session.Facing;
 
 
-public enum ItemDefinition {
+public enum ItemDefinition
+{
 	BULLET(0, "Bullet", "sprites/commonBullet.png", 1.0,
 		null, ProjectileStatModifiers.NONE, "", WeaponType.NONE, false,
 		ItemDefinitionDrawConfig.DEFAULT),
@@ -131,14 +132,15 @@ public enum ItemDefinition {
 	ItemDefinition(int id, String displayName, String spritePath,
 		double accuracy, ProjectileWeaponStats projectileWeaponStats, ProjectileStatModifiers projectileStatModifiers, String attackSoundPath, WeaponType weaponType,
 		boolean handEquipable, ItemDefinitionDrawConfig drawConfig)
- {
+  {
 		this(id, displayName, spritePath, accuracy, projectileWeaponStats, projectileStatModifiers,
 			attackSoundPath, weaponType, handEquipable, 0.10, drawConfig);
 	}
 
 	ItemDefinition(int id, String displayName, String spritePath,
 		double accuracy, ProjectileWeaponStats projectileWeaponStats, ProjectileStatModifiers projectileStatModifiers, String attackSoundPath, WeaponType weaponType,
-		boolean handEquipable, double kickback, ItemDefinitionDrawConfig drawConfig) {
+		boolean handEquipable, double kickback, ItemDefinitionDrawConfig drawConfig)
+		{
 		this.id = id;
 		this.displayName = displayName;
 		this.spritePath = spritePath;
@@ -158,7 +160,7 @@ public enum ItemDefinition {
 	}
 
 	private static ItemDefinition[] buildByIdIndex()
-   {
+ {
 		int maxId = 0;
 		ItemDefinition[] definitions = values();
 		for (int i = 0; i < definitions.length; i++)
@@ -167,7 +169,7 @@ public enum ItemDefinition {
 		}
 		ItemDefinition[] byId = new ItemDefinition[maxId + 1];
 		for (int i = 0; i < definitions.length; i++)
-   {
+  {
 			byId[definitions[i].id] = definitions[i];
 		}
 		return byId;
@@ -184,11 +186,12 @@ public enum ItemDefinition {
 		}
 		ItemDefinition[][] byWeaponType = new ItemDefinition[weaponTypes.length][];
 		for (int i = 0; i < weaponTypes.length; i++)
-   {
+  {
 			byWeaponType[i] = new ItemDefinition[counts[i]];
 		}
 		int[] writeIndices = new int[weaponTypes.length];
-		for (int i = 0; i < definitions.length; i++) {
+		for (int i = 0; i < definitions.length; i++)
+		{
 			int weaponTypeIndex = definitions[i].weaponType.ordinal();
 			byWeaponType[weaponTypeIndex][writeIndices[weaponTypeIndex]] = definitions[i];
 			writeIndices[weaponTypeIndex]++;
@@ -197,8 +200,9 @@ public enum ItemDefinition {
 	}
 
 	public static ItemDefinition fromId(int id)
-   {
-		if (id < 0 || id >= BY_ID.length) {
+ {
+		if (id < 0 || id >= BY_ID.length)
+		{
 			return null;
 		}
 		return BY_ID[id];

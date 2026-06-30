@@ -142,11 +142,14 @@ public class DebugWorldRenderer
 
   private void drawDebugObjectHitboxes(Graphics2D g2, GameMap map)
   {
-    if (map == null) {
+    if (map == null)
+    {
       return;
     }
-    for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++) {
-      for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++) {
+    for (int tileX = this.camera.getStartTileX(); tileX <= this.camera.getEndTileX(); tileX++)
+    {
+      for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++)
+      {
         MapObject mapObject = map.getObject(tileX, tileY);
         if (mapObject == null || !mapObject.isSolid())
         {
@@ -222,7 +225,8 @@ public class DebugWorldRenderer
   {
     Player player = game.getPlayer();
     ItemDefinition definition = this.heldItemRenderer.equippedHandDefinition(player);
-    if (definition == null) {
+    if (definition == null)
+    {
       return;
     }
     int radius = 2;

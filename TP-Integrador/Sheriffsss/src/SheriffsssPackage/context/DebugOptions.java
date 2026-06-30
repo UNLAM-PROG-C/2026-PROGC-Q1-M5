@@ -3,7 +3,8 @@ package SheriffsssPackage.context;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DebugOptions {
+public class DebugOptions
+{
 	public static final int MAX_BULLET_TRAJECTORIES = 20;
 	public static final int PANEL_X = 18;
 	public static final int PANEL_Y = 84;
@@ -50,33 +51,39 @@ public class DebugOptions {
 	public boolean handleClick(int mouseX, int mouseY)
  {
 		if (!this.menuOpen || mouseX < PANEL_X || mouseX > PANEL_X + PANEL_WIDTH
-			|| mouseY < PANEL_Y || mouseY > PANEL_Y + PANEL_HEIGHT) {
+			|| mouseY < PANEL_Y || mouseY > PANEL_Y + PANEL_HEIGHT)
+			{
 			return false;
 		}
-		if (isTrajectorySliderHovered(mouseX, mouseY)) {
+		if (isTrajectorySliderHovered(mouseX, mouseY))
+		{
 			setBulletTrajectoryLimitFromMouse(mouseX);
 			return true;
 		}
 		int row = (mouseY - FIRST_ROW_Y) / ROW_HEIGHT;
 		if (row < 0 || row > SHOW_TARGET_HEALTH_BARS_ROW)
-   {
+  {
 			return true;
 		}
 		int rowTop = FIRST_ROW_Y + row * ROW_HEIGHT;
-		if (mouseY < rowTop || mouseY > rowTop + ROW_HEIGHT) {
+		if (mouseY < rowTop || mouseY > rowTop + ROW_HEIGHT)
+		{
 			return true;
 		}
-		if (row == UNLOCK_ALL_WEAPONS_ROW) {
+		if (row == UNLOCK_ALL_WEAPONS_ROW)
+		{
 			this.unlockAllWeaponsRequested = true;
 			this.allWeaponsUnlocked = !this.allWeaponsUnlocked;
-		} else {
+		}
+		else
+		{
 			toggleRow(row);
 		}
 		return true;
 	}
 
 	public void resetAll()
-   {
+ {
 		this.menuOpen = false;
 		this.drawHitboxes = false;
 		this.drawSpritePerimeters = false;
@@ -98,32 +105,57 @@ public class DebugOptions {
 	}
 
 	private void toggleRow(int row)
-  {
-		if (row == 0) {
+ {
+		if (row == 0)
+		{
 			this.drawHitboxes = !this.drawHitboxes;
-		} else if (row == 1) {
+		}
+		else if (row == 1)
+		{
 			this.drawSpritePerimeters = !this.drawSpritePerimeters;
-		} else if (row == 2) {
+		}
+		else if (row == 2)
+		{
 			this.drawPlayerMouseLine = !this.drawPlayerMouseLine;
-		} else if (row == 3) {
+		}
+		else if (row == 3)
+		{
 			this.drawPlayerOrigin = !this.drawPlayerOrigin;
-		} else if (row == 4) {
+		}
+		else if (row == 4)
+		{
 			this.drawWeaponOrigin = !this.drawWeaponOrigin;
-		} else if (row == 5) {
+		}
+		else if (row == 5)
+		{
 			this.drawWeaponGripAnchor = !this.drawWeaponGripAnchor;
-		} else if (row == 6) {
+		}
+		else if (row == 6)
+		{
 			this.drawWeaponBarrelAnchor = !this.drawWeaponBarrelAnchor;
-		} else if (row == 7) {
+		}
+		else if (row == 7)
+		{
 			this.drawFullAccuracyCone = !this.drawFullAccuracyCone;
-		} else if (row == 8) {
+		}
+		else if (row == 8)
+		{
 			this.drawWeaponAccuracyCone = !this.drawWeaponAccuracyCone;
-		} else if (row == 9) {
+		}
+		else if (row == 9)
+		{
 			this.drawBulletTrajectories = !this.drawBulletTrajectories;
-		} else if (row == 10) {
+		}
+		else if (row == 10)
+		{
 			this.forceTrainingPerfectAccuracy = !this.forceTrainingPerfectAccuracy;
-		} else if (row == 11) {
+		}
+		else if (row == 11)
+		{
 			this.drawTrainingFailurePerimeter = !this.drawTrainingFailurePerimeter;
-		} else if (row == SHOW_TARGET_HEALTH_BARS_ROW) {
+		}
+		else if (row == SHOW_TARGET_HEALTH_BARS_ROW)
+		{
 			this.showTargetHealthBars = !this.showTargetHealthBars;
 		}
 	}
@@ -144,14 +176,15 @@ public class DebugOptions {
 	}
 
 	public void setBulletTrajectoryLimit(int limit)
-  {
+ {
 		this.bulletTrajectoryLimit = Math.max(0, Math.min(MAX_BULLET_TRAJECTORIES, limit));
 		trimBulletTrajectories();
 	}
 
 	public void recordBulletTrajectory(int startWorldX, int startWorldY, int endWorldX, int endWorldY)
-  {
-		if (this.bulletTrajectoryLimit <= 0) {
+ {
+		if (this.bulletTrajectoryLimit <= 0)
+		{
 			this.bulletTrajectories.clear();
 			return;
 		}
@@ -160,14 +193,15 @@ public class DebugOptions {
 	}
 
 	private void trimBulletTrajectories()
-   {
-		while (this.bulletTrajectories.size() > this.bulletTrajectoryLimit) {
+ {
+		while (this.bulletTrajectories.size() > this.bulletTrajectoryLimit)
+		{
 			this.bulletTrajectories.remove(0);
 		}
 	}
 
 	public boolean isMenuOpen()
-   {
+ {
 		return this.menuOpen;
 	}
 
@@ -288,46 +322,60 @@ public class DebugOptions {
 
 	public boolean isRowEnabled(int row)
  {
-		if (row == 0) {
+		if (row == 0)
+		{
 			return this.drawHitboxes;
 		}
-		if (row == 1) {
+		if (row == 1)
+		{
 			return this.drawSpritePerimeters;
 		}
-		if (row == 2) {
+		if (row == 2)
+		{
 			return this.drawPlayerMouseLine;
 		}
-		if (row == 3) {
+		if (row == 3)
+		{
 			return this.drawPlayerOrigin;
 		}
-		if (row == 4) {
+		if (row == 4)
+		{
 			return this.drawWeaponOrigin;
 		}
-		if (row == 5) {
+		if (row == 5)
+		{
 			return this.drawWeaponGripAnchor;
 		}
-		if (row == 6) {
+		if (row == 6)
+		{
 			return this.drawWeaponBarrelAnchor;
 		}
-		if (row == 7) {
+		if (row == 7)
+		{
 			return this.drawFullAccuracyCone;
 		}
-		if (row == 8) {
+		if (row == 8)
+		{
 			return this.drawWeaponAccuracyCone;
 		}
-		if (row == 9) {
+		if (row == 9)
+		{
 			return this.drawBulletTrajectories;
 		}
-		if (row == 10) {
+		if (row == 10)
+		{
 			return this.forceTrainingPerfectAccuracy;
 		}
-		if (row == 11) {
+		if (row == 11)
+		{
 			return this.drawTrainingFailurePerimeter;
 		}
-		if (row == UNLOCK_ALL_WEAPONS_ROW) {
+		if (row == UNLOCK_ALL_WEAPONS_ROW)
+		{
 			return this.allWeaponsUnlocked;
 		}
-		if (row == SHOW_TARGET_HEALTH_BARS_ROW) {
+		if (row == SHOW_TARGET_HEALTH_BARS_ROW)
+		{
 			return this.showTargetHealthBars;
 		}
 		return false;

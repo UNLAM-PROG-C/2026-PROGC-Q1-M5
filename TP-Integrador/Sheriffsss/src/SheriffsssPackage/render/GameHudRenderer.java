@@ -13,7 +13,8 @@ public class GameHudRenderer
   public void drawInfoMessages(Graphics2D g2, GameView game)
   {
     int drawY = GameConfig.SCREEN_HEIGHT - 22;
-    for (int i = 0; i < game.getInfoMessageSlotCount(); i++) {
+    for (int i = 0; i < game.getInfoMessageSlotCount(); i++)
+    {
       String message = game.getInfoMessage(i);
       if (message == null || game.getInfoMessageTicks(i) <= 0)
       {
@@ -34,7 +35,8 @@ public class GameHudRenderer
     {
       return;
     }
-    if (player.getTakingDamage()) {
+    if (player.getTakingDamage())
+    {
       g2.setColor(GameTheme.DAMAGE_RED);
       g2.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
     }

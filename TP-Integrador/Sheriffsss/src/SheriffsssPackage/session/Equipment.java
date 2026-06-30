@@ -9,7 +9,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Equipment {
+public class Equipment
+{
 	private final ArrayList<ItemDefinition> unlockedWeapons = new ArrayList<ItemDefinition>();
 	private ItemDefinition equippedWeapon;
 	private boolean menuOpen;
@@ -24,15 +25,16 @@ public class Equipment {
 	}
 
 	public void resetToWeapon(ItemDefinition weapon)
-  {
+ {
 		clear();
 		unlockWeapon(weapon);
 		equipWeapon(weapon);
 	}
 
 	public boolean unlockWeapon(ItemDefinition weapon)
-  {
-		if (!isFirearm(weapon) || this.unlockedWeapons.contains(weapon)) {
+ {
+		if (!isFirearm(weapon) || this.unlockedWeapons.contains(weapon))
+		{
 			return false;
 		}
 		this.unlockedWeapons.add(weapon);
@@ -45,12 +47,15 @@ public class Equipment {
 
 	public int unlockWeapons(ItemDefinition[] weapons)
  {
-		if (weapons == null) {
+		if (weapons == null)
+		{
 			return 0;
 		}
 		int added = 0;
-		for (int i = 0; i < weapons.length; i++) {
-			if (unlockWeapon(weapons[i])) {
+		for (int i = 0; i < weapons.length; i++)
+		{
+			if (unlockWeapon(weapons[i]))
+			{
 				added++;
 			}
 		}
@@ -59,7 +64,8 @@ public class Equipment {
 
 	public boolean equipWeapon(ItemDefinition weapon)
  {
-		if (!this.unlockedWeapons.contains(weapon)) {
+		if (!this.unlockedWeapons.contains(weapon))
+		{
 			return false;
 		}
 		this.equippedWeapon = weapon;
@@ -78,17 +84,19 @@ public class Equipment {
 	}
 
 	public List<ItemDefinition> getWeaponSelectionOrder()
-  {
+ {
 		ArrayList<ItemDefinition> orderedWeapons = new ArrayList<ItemDefinition>(this.unlockedWeapons);
 		Collections.sort(orderedWeapons, new Comparator<ItemDefinition>()
   {
 			@Override
 			public int compare(ItemDefinition first, ItemDefinition second)
    {
-				if (first == equippedWeapon) {
+				if (first == equippedWeapon)
+				{
 					return -1;
 				}
-				if (second == equippedWeapon) {
+				if (second == equippedWeapon)
+				{
 					return 1;
 				}
 				return Integer.compare(first.getId(), second.getId());
@@ -98,12 +106,12 @@ public class Equipment {
 	}
 
 	public boolean hasUnlockedWeapons()
-    {
+ {
 		return !this.unlockedWeapons.isEmpty();
 	}
 
 	public boolean isWeaponSelectorOpen()
-  {
+ {
 		return this.menuOpen && this.weaponSelectorOpen;
 	}
 
@@ -115,7 +123,8 @@ public class Equipment {
 	public void toggleMenu()
  {
 		this.menuOpen = !this.menuOpen;
-		if (!this.menuOpen) {
+		if (!this.menuOpen)
+		{
 			this.weaponSelectorOpen = false;
 		}
 	}
@@ -132,7 +141,7 @@ public class Equipment {
 	}
 
 	public void closeWeaponSelector()
-  {
+ {
 		this.weaponSelectorOpen = false;
 	}
 

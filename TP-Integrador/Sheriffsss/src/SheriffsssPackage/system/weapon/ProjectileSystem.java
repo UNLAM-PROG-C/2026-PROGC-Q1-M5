@@ -8,7 +8,8 @@ import SheriffsssPackage.system.enemy.EnemySystem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectileSystem {
+public class ProjectileSystem
+{
 	private static final int MAX_PROJECTILES = 180;
 
 	private final ArrayList<Projectile> projectiles = new ArrayList<Projectile>(MAX_PROJECTILES);
@@ -16,7 +17,7 @@ public class ProjectileSystem {
 
 	public boolean spawn(ProjectileType type, int startWorldX, int startWorldY, int targetWorldX, int targetWorldY,
 		double speedPixels, double damage, double knockbackStrengthPixels, int lifeTicks)
- {
+  {
 		return spawn(type, null, startWorldX, startWorldY, targetWorldX, targetWorldY, speedPixels, damage, knockbackStrengthPixels, lifeTicks);
 	}
 
@@ -29,7 +30,8 @@ public class ProjectileSystem {
 	public boolean spawn(ProjectileType type, Player owner, ItemDefinition weapon, int startWorldX, int startWorldY, int targetWorldX, int targetWorldY,
 		double speedPixels, double damage, double knockbackStrengthPixels, int lifeTicks)
   {
-		if (type == null || this.projectiles.size() >= MAX_PROJECTILES) {
+		if (type == null || this.projectiles.size() >= MAX_PROJECTILES)
+		{
 			return false;
 		}
 		double deltaX = targetWorldX - startWorldX;
@@ -48,35 +50,38 @@ public class ProjectileSystem {
 	}
 
 	public void add(Projectile projectile)
-  {
-		if (projectile != null && this.projectiles.size() < MAX_PROJECTILES) {
+ {
+		if (projectile != null && this.projectiles.size() < MAX_PROJECTILES)
+		{
 			this.projectiles.add(projectile);
 		}
 	}
 
 	public void update(GameMap map, EnemySystem enemySystem)
-   {
+ {
 		this.hitTargetThisUpdate = false;
-		for (int i = this.projectiles.size() - 1; i >= 0; i--) {
+		for (int i = this.projectiles.size() - 1; i >= 0; i--)
+		{
 			Projectile projectile = this.projectiles.get(i);
 			projectile.update(map, enemySystem);
 			if (projectile.consumeHitTarget())
    {
 				this.hitTargetThisUpdate = true;
 			}
-			if (!projectile.isActive()) {
+			if (!projectile.isActive())
+			{
 				this.projectiles.remove(i);
 			}
 		}
 	}
 
 	public void clear()
-    {
+ {
 		this.projectiles.clear();
 	}
 
 	public List<Projectile> getProjectiles()
-  {
+ {
 		return this.projectiles;
 	}
 

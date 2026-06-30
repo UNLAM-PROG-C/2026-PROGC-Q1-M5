@@ -7,11 +7,13 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-public class Main {
+public class Main
+{
 	
 	public static void main(String[] args)
  {
-		if (args != null && args.length > 0 && "--packaging-check".equals(args[0])) {
+		if (args != null && args.length > 0 && "--packaging-check".equals(args[0]))
+		{
 			return;
 		}
 		SwingUtilities.invokeLater(new Runnable()
@@ -25,7 +27,7 @@ public class Main {
 	}
 
 	private static void createAndShowGame()
-    {
+ {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		window.setResizable(false);
@@ -35,7 +37,8 @@ public class Main {
 		game.setWindow(window);
 		window.setIconImage(game.getAssets().getImage("sprites/sheriffsss_icono.png"));
 		Runtime.getRuntime().addShutdownHook(new Thread(game::shutdown, "SheriffsssGameShutdown"));
-		window.addWindowListener(new WindowAdapter() {
+		window.addWindowListener(new WindowAdapter()
+		{
 			@Override
 			public void windowClosing(WindowEvent event)
    {

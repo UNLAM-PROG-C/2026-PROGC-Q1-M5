@@ -5,7 +5,8 @@ import SheriffsssPackage.context.GameConfig;
 /**
  * Public constants from TrainingMode that are used by other modules.
  */
-public final class TrainingModeConstants {
+public final class TrainingModeConstants
+{
   public static final int TARGET_LIFETIME_SECONDS = 4;
   public static final int TARGET_LIFETIME_TICKS = GameConfig.TARGET_FPS * TARGET_LIFETIME_SECONDS;
   public static final int TARGET_DECAY_INTERVAL_TICKS = GameConfig.TARGET_FPS;
@@ -16,7 +17,8 @@ public final class TrainingModeConstants {
   public static final int TARGET_BLINK_FAST_PHASE_TICKS = Math.max(1, GameConfig.TARGET_FPS / 8);
   public static final float TARGET_BLINK_ALPHA = 0.15f;
 
-  private TrainingModeConstants() {
+  private TrainingModeConstants()
+  {
     // Utility class
   }
 }

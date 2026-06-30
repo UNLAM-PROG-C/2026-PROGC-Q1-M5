@@ -1,6 +1,7 @@
 package SheriffsssPackage.system.weapon;
 
-public enum ProjectileType {
+public enum ProjectileType
+{
 	BULLET("sprites/commonBullet.png", 14, 6, false, true),
 	NAIL("sprites/Nail.png", 14, 5, true, false),
 	FIRE_BULLET("sprites/FireBullet.png", 14, 22, false, true, 2, 0.72, 2.7, Math.PI / 2.0);
@@ -21,17 +22,20 @@ public enum ProjectileType {
 	}
 
 	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
-		int lightRadiusTiles, double lightIntensity) {
+		int lightRadiusTiles, double lightIntensity)
+		{
 		this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, lightRadiusTiles, lightIntensity, 1.0, 0.0);
 	}
 
 	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
-		int lightRadiusTiles, double lightIntensity, double drawAngleOffsetRadians) {
+		int lightRadiusTiles, double lightIntensity, double drawAngleOffsetRadians)
+		{
 		this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, lightRadiusTiles, lightIntensity, 1.0, drawAngleOffsetRadians);
 	}
 
 	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
-		int lightRadiusTiles, double lightIntensity, double lightFalloffExponent, double drawAngleOffsetRadians) {
+		int lightRadiusTiles, double lightIntensity, double lightFalloffExponent, double drawAngleOffsetRadians)
+		{
 		this.spritePath = spritePath;
 		this.drawWidth = drawWidth;
 		this.drawHeight = drawHeight;
@@ -44,7 +48,7 @@ public enum ProjectileType {
 	}
 
 	public String getSpritePath()
-  {
+ {
 		return this.spritePath;
 	}
 

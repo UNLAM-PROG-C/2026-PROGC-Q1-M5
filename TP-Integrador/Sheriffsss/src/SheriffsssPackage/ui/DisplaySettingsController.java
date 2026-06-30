@@ -7,8 +7,10 @@ import SheriffsssPackage.context.GameConfig;
 import java.awt.Dimension;
 
 
-public final class DisplaySettingsController {
-  private enum ActiveSlider {
+public final class DisplaySettingsController
+{
+  private enum ActiveSlider
+  {
     NONE,
     MUSIC,
     SFX,
@@ -22,7 +24,8 @@ public final class DisplaySettingsController {
   private String message = "";
   private ActiveSlider activeSlider = ActiveSlider.NONE;
 
-  public void loadPreferences(AudioManager audio) {
+  public void loadPreferences(AudioManager audio)
+  {
     this.windowedSize = GameConfig.getWindowResolution();
     this.fullscreen = GameConfig.isFullscreenPreferred();
     this.pendingWindowResolutionIndex = GameConfig.getWindowResolutionIndex();
@@ -32,13 +35,13 @@ public final class DisplaySettingsController {
   }
 
   public void beginEdit()
-    {
+  {
     this.pendingFullscreen = this.fullscreen;
     this.pendingWindowResolutionIndex = GameConfig.getWindowResolutionIndex();
   }
 
   public DisplaySettingsChange applyPending()
-    {
+  {
     int currentResolutionIndex = GameConfig.getWindowResolutionIndex();
     boolean resolutionChanged = this.pendingWindowResolutionIndex != currentResolutionIndex;
     boolean fullscreenChanged = this.pendingFullscreen != this.fullscreen;
@@ -55,7 +58,7 @@ public final class DisplaySettingsController {
   }
 
   public void applyImmediateFullscreen(boolean fullscreen)
-    {
+  {
     this.fullscreen = fullscreen;
     this.pendingFullscreen = fullscreen;
     this.pendingWindowResolutionIndex = GameConfig.getWindowResolutionIndex();
@@ -64,7 +67,7 @@ public final class DisplaySettingsController {
   }
 
   public void clearMessage()
-    {
+  {
     this.message = "";
   }
 
@@ -82,37 +85,48 @@ public final class DisplaySettingsController {
       boolean musicHovered,
       boolean sfxHovered,
       boolean resolutionHovered)
-  {
-    if (musicHovered) {
+      {
+    if (musicHovered)
+    {
       this.activeSlider = ActiveSlider.MUSIC;
-    } else if (sfxHovered) {
+    }
+    else if (sfxHovered)
+    {
       this.activeSlider = ActiveSlider.SFX;
-    } else if (resolutionHovered) {
+    }
+    else if (resolutionHovered)
+    {
       this.activeSlider = ActiveSlider.RESOLUTION;
-    } else {
+    }
+    else
+    {
       this.activeSlider = ActiveSlider.NONE;
     }
   }
 
   public boolean updateActiveSlider(AudioManager audio, double sliderValue)
   {
-    if (this.activeSlider == ActiveSlider.NONE) {
+    if (this.activeSlider == ActiveSlider.NONE)
+    {
       return false;
     }
-    if (this.activeSlider == ActiveSlider.MUSIC) {
+    if (this.activeSlider == ActiveSlider.MUSIC)
+    {
       setMusicVolume(audio, sliderValue);
-    } else if (this.activeSlider == ActiveSlider.SFX)
-      {
+    }
+    else if (this.activeSlider == ActiveSlider.SFX)
+    {
       setSfxVolume(audio, sliderValue);
-    } else if (this.activeSlider == ActiveSlider.RESOLUTION)
-      {
+    }
+    else if (this.activeSlider == ActiveSlider.RESOLUTION)
+    {
       setWindowResolutionFromSlider(sliderValue);
     }
     return true;
   }
 
   public Dimension windowedSize()
-      {
+  {
     return this.windowedSize;
   }
 
@@ -138,24 +152,24 @@ public final class DisplaySettingsController {
   }
 
   public String windowResolutionLabel()
-    {
+  {
     return GameConfig.getWindowResolutionLabel(this.pendingWindowResolutionIndex);
   }
 
   private void setMusicVolume(AudioManager audio, double volume)
-    {
+  {
     audio.setMusicVolume(volume);
     GameConfig.setMusicVolume(audio.getMusicVolume());
   }
 
   private void setSfxVolume(AudioManager audio, double volume)
-    {
+  {
     audio.setSfxVolume(volume);
     GameConfig.setSfxVolume(audio.getSfxVolume());
   }
 
   private void setWindowResolutionFromSlider(double sliderValue)
-    {
+  {
     int maxIndex = GameConfig.getWindowResolutionCount() - 1;
     int index = (int) Math.round(sliderValue * maxIndex);
     this.pendingWindowResolutionIndex = Math.max(0, Math.min(maxIndex, index));

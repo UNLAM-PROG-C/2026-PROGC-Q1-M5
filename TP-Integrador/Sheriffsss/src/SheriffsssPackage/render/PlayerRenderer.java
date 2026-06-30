@@ -20,7 +20,8 @@ public class PlayerRenderer
 
   public void drawPlayers(Graphics2D g2, GameView game, Player localPlayer)
   {
-    if (!localPlayer.isDead()) {
+    if (!localPlayer.isDead())
+    {
       drawPlayer(g2, localPlayer);
     }
   }

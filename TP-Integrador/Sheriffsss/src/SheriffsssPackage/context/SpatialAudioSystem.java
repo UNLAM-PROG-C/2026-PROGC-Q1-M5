@@ -18,7 +18,9 @@ public class SpatialAudioSystem
     if (this.unavailableSfxPaths.contains(resourcePath))
     {
       playFallbackPersistentSpatialSfx(gainDb, sourceWorldX, sourceWorldY, playerWorldX, playerWorldY);
-    } else {
+    }
+    else
+    {
       playPersistentSpatialSfx(resourcePath, gainDb, sourceWorldX, sourceWorldY, playerWorldX, playerWorldY);
     }
   }
@@ -30,7 +32,8 @@ public class SpatialAudioSystem
 
   public void playPersistentSpatialSfx(String resourcePath, float gainDb, int sourceWorldX, int sourceWorldY, int playerWorldX, int playerWorldY)
   {
-    if (this.audio == null) {
+    if (this.audio == null)
+    {
       return;
     }
     try
@@ -40,7 +43,9 @@ public class SpatialAudioSystem
       {
         this.audio.playOnceUntilFinished(resourcePath, gainDb, volumeScale);
       }
-    } catch (Exception ex) {
+    }
+    catch (Exception ex)
+    {
       this.unavailableSfxPaths.add(resourcePath);
     }
   }

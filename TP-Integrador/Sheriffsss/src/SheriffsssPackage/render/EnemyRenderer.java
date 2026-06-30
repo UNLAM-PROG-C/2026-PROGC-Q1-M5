@@ -32,7 +32,8 @@ public class EnemyRenderer
 
   public void drawEnemies(Graphics2D g2, GameView game)
   {
-    for (int i = 0; i < game.getEnemies().size(); i++) {
+    for (int i = 0; i < game.getEnemies().size(); i++)
+    {
       Enemy enemy = game.getEnemies().get(i);
       EnemyType type = enemy.getType();
       int screenX = this.camera.worldToScreenX(enemy.getWorldX());
@@ -41,7 +42,7 @@ public class EnemyRenderer
       int drawHeight = type.getDrawHeight();
       if (screenX < -drawWidth || screenX > GameConfig.SCREEN_WIDTH + drawWidth
         || screenY < -drawHeight || screenY > GameConfig.SCREEN_HEIGHT + drawHeight)
-      {
+        {
         continue;
       }
       BufferedImage sheet = this.assets.getImage(type.getSpritePath());
@@ -57,7 +58,9 @@ public class EnemyRenderer
         g2.setComposite(TRAINING_DIANA_BLINK_COMPOSITE);
         drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
         g2.setComposite(previousComposite);
-      } else {
+      }
+      else
+      {
         drawEnemySprite(g2, sheet, enemy, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY);
       }
       drawEnemyHealthBar(g2, game, enemy, screenX, drawY - 8);
@@ -68,7 +71,8 @@ public class EnemyRenderer
     }
   }
 
-  private void drawEnemySprite(Graphics2D g2, BufferedImage sheet, Enemy enemy, int drawX, int drawY, int drawWidth, int drawHeight, int sourceX, int sourceY) {
+  private void drawEnemySprite(Graphics2D g2, BufferedImage sheet, Enemy enemy, int drawX, int drawY, int drawWidth, int drawHeight, int sourceX, int sourceY)
+  {
     EnemyType type = enemy.getType();
     g2.drawImage(sheet, drawX, drawY, drawX + drawWidth, drawY + drawHeight,
       sourceX, sourceY, sourceX + type.getFrameWidth(), sourceY + type.getFrameHeight(), null);
@@ -76,11 +80,15 @@ public class EnemyRenderer
 
   private void drawEnemyHealthBar(Graphics2D g2, GameView game, Enemy enemy, int centerX, int y)
   {
-    if (enemy.getType() == EnemyType.DIANA) {
-      if (game.getDebugOptions() == null || !game.getDebugOptions().shouldShowTargetHealthBars()) {
+    if (enemy.getType() == EnemyType.DIANA)
+    {
+      if (game.getDebugOptions() == null || !game.getDebugOptions().shouldShowTargetHealthBars())
+      {
         return;
       }
-    } else if (enemy.getCurrentHP() >= enemy.getMaxHP()) {
+    }
+    else if (enemy.getCurrentHP() >= enemy.getMaxHP())
+    {
       return;
     }
     int barWidth = 34;
@@ -98,7 +106,8 @@ public class EnemyRenderer
       TextRenderer.centeredX(g2, this.debugFont, healthText, centerX), y - 4, true);
   }
 
-  private void drawBurningParticles(Graphics2D g2, Enemy enemy, int screenX, int drawY, int drawWidth, int drawHeight) {
+  private void drawBurningParticles(Graphics2D g2, Enemy enemy, int screenX, int drawY, int drawWidth, int drawHeight)
+  {
     int ticks = enemy.getAnimationTicks();
     for (int i = 0; i < 5; i++)
     {
@@ -113,7 +122,8 @@ public class EnemyRenderer
 
   private boolean shouldDimTrainingDianaBlink(Enemy enemy)
   {
-    if (enemy.getType() != EnemyType.DIANA || enemy.getMaxHP() <= 0.0) {
+    if (enemy.getType() != EnemyType.DIANA || enemy.getMaxHP() <= 0.0)
+    {
       return false;
     }
     double hpRatio = enemy.getCurrentHP() / enemy.getMaxHP();
@@ -121,9 +131,13 @@ public class EnemyRenderer
     if (hpRatio <= TrainingModeConstants.TARGET_BLINK_FAST_HP_RATIO)
     {
       phaseTicks = TrainingModeConstants.TARGET_BLINK_FAST_PHASE_TICKS;
-    } else if (hpRatio <= TrainingModeConstants.TARGET_BLINK_SLOW_HP_RATIO) {
+    }
+    else if (hpRatio <= TrainingModeConstants.TARGET_BLINK_SLOW_HP_RATIO)
+    {
       phaseTicks = TrainingModeConstants.TARGET_BLINK_SLOW_PHASE_TICKS;
-    } else {
+    }
+    else
+    {
       return false;
     }
     return (enemy.getAnimationTicks() / phaseTicks) % 2 == 0;

@@ -1,6 +1,7 @@
 package SheriffsssPackage.system.enemy;
 
-public final class EnemyHitSound {
+public final class EnemyHitSound
+{
   private final String resourcePath;
   private final int worldX;
   private final int worldY;

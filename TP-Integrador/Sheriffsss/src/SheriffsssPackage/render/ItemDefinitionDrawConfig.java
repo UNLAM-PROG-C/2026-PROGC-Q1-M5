@@ -4,7 +4,8 @@ import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.session.Facing;
 
 
-public class ItemDefinitionDrawConfig {
+public class ItemDefinitionDrawConfig
+{
 	public static final ItemDefinitionDrawConfig DEFAULT = new ItemDefinitionDrawConfig();
 
 	private int heldDrawWidth;
@@ -23,7 +24,8 @@ public class ItemDefinitionDrawConfig {
 	private final boolean[] drawnBehind = new boolean[Facing.values().length];
 	private final boolean[] mirrored = new boolean[Facing.values().length];
 
-	public ItemDefinitionDrawConfig() {
+	public ItemDefinitionDrawConfig()
+	{
 		this.baseAngle[index(Facing.LEFT)] = 0.0;
 		this.baseAngle[index(Facing.UP_LEFT)] = 0.75;
 		this.baseAngle[index(Facing.RIGHT)] = 0.0;
@@ -35,14 +37,14 @@ public class ItemDefinitionDrawConfig {
 	}
 
 	public ItemDefinitionDrawConfig withHeldDrawSize(int width, int height)
-  {
+ {
 		this.heldDrawWidth = Math.max(0, width);
 		this.heldDrawHeight = Math.max(0, height);
 		return this;
 	}
 
 	public ItemDefinitionDrawConfig withGripAnchorOffset(int x, int y)
-  {
+ {
 		this.gripAnchorOffsetX = x;
 		this.gripAnchorOffsetY = y;
 		return this;
@@ -63,15 +65,16 @@ public class ItemDefinitionDrawConfig {
 	}
 
 	public ItemDefinitionDrawConfig withRecoil(double recoil)
-  {
+ {
 		this.recoil = Math.max(0.0, recoil);
 		this.recoilConfigured = true;
 		return this;
 	}
 
 	public ItemDefinitionDrawConfig applyDefaultRecoilForAccuracy(double accuracy)
-  {
-		if (!this.recoilConfigured) {
+ {
+		if (!this.recoilConfigured)
+		{
 			double clampedAccuracy = Math.max(0.0, Math.min(1.0, accuracy));
 			this.recoil = (1.0 - clampedAccuracy) * GameConfig.DEFAULT_RECOIL_ACCURACY_SCALE;
 		}
@@ -79,34 +82,36 @@ public class ItemDefinitionDrawConfig {
 	}
 
 	public ItemDefinitionDrawConfig withRecoilRotation(double radians)
-   {
+ {
 		this.recoilRotationRadians = Math.max(0.0, radians);
 		return this;
 	}
 
 	public ItemDefinitionDrawConfig drawnBehind(Facing... facings)
-  {
-		for (int i = 0; i < facings.length; i++) {
+ {
+		for (int i = 0; i < facings.length; i++)
+		{
 			this.drawnBehind[index(facings[i])] = true;
 		}
 		return this;
 	}
 
 	public ItemDefinitionDrawConfig mirrored(Facing... facings)
-   {
-		for (int i = 0; i < facings.length; i++) {
+ {
+		for (int i = 0; i < facings.length; i++)
+		{
 			this.mirrored[index(facings[i])] = true;
 		}
 		return this;
 	}
 
 	public int getBaseOffsetX(Facing facing)
-   {
+ {
 		return this.baseOffsetX[index(facing)];
 	}
 
 	public int getHeldDrawWidth()
-  {
+ {
 		return this.heldDrawWidth;
 	}
 
@@ -141,41 +146,44 @@ public class ItemDefinitionDrawConfig {
 	}
 
 	public double getBaseAngle(Facing facing)
-  {
+ {
 		return this.baseAngle[index(facing)];
 	}
 
 	public int getSwingOffsetX(Facing facing, double swing)
-  {
+ {
 		return (int) (swing * this.recoil * recoilXDirection(facing));
 	}
 
-	public int getSwingOffsetY(Facing facing, double swing) {
+	public int getSwingOffsetY(Facing facing, double swing)
+	{
 		return (int) (Math.abs(swing) * this.recoil * recoilYDirection(facing));
 	}
 
-	public double getSwingAngle(Facing facing, double swing) {
+	public double getSwingAngle(Facing facing, double swing)
+	{
 		return swing * this.recoilRotationRadians * recoilRotationDirection(facing);
 	}
 
 	public boolean isDrawnBehind(Facing facing)
-  {
+ {
 		return this.drawnBehind[index(facing)];
 	}
 
 	public boolean isMirrored(Facing facing)
-  {
+ {
 		return this.mirrored[index(facing)];
 	}
 
 	private int index(Facing facing)
-  {
+ {
 		return facing == null ? 0 : facing.ordinal();
 	}
 
 	private int recoilXDirection(Facing facing)
-  {
-		if (facing == Facing.RIGHT || facing == Facing.UP_RIGHT || facing == Facing.DOWN_RIGHT || facing == Facing.UP) {
+ {
+		if (facing == Facing.RIGHT || facing == Facing.UP_RIGHT || facing == Facing.DOWN_RIGHT || facing == Facing.UP)
+		{
 			return -1;
 		}
 		return 1;
@@ -183,7 +191,8 @@ public class ItemDefinitionDrawConfig {
 
 	private int recoilYDirection(Facing facing)
  {
-		if (facing == Facing.UP || facing == Facing.UP_LEFT || facing == Facing.UP_RIGHT) {
+		if (facing == Facing.UP || facing == Facing.UP_LEFT || facing == Facing.UP_RIGHT)
+		{
 			return 1;
 		}
 		return -1;
