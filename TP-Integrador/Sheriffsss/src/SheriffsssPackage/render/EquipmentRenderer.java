@@ -1,5 +1,6 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.MagicConstants;
 import SheriffsssPackage.context.AssetManager;
 import SheriffsssPackage.system.weapon.ItemDefinition;
 
@@ -68,7 +69,7 @@ public class EquipmentRenderer
     g2.setStroke(GameTheme.LIGHT_STROKE);
     g2.drawRect(x, y, width, height);
     BufferedImage sheriffIcon = this.assets.getImage("sprites/sheriffsss_icono.png");
-    g2.drawImage(sheriffIcon, x + (width - SHERIFF_ICON_SIZE) / 2, y + ICON_Y_OFFSET, SHERIFF_ICON_SIZE, SHERIFF_ICON_SIZE, null);
+    g2.drawImage(sheriffIcon, x + (width - SHERIFF_ICON_SIZE) / MagicConstants.DIVISOR_HALF, y + ICON_Y_OFFSET, SHERIFF_ICON_SIZE, SHERIFF_ICON_SIZE, null);
     drawEquipmentSelector(g2, equipmentHud);
   }
 
@@ -88,7 +89,7 @@ public class EquipmentRenderer
       drawEquipmentWeaponSprite(g2, weapon, x + SELECTOR_SPRITE_X_INSET, y + SELECTOR_SPRITE_Y_INSET, width - SELECTOR_SPRITE_WIDTH_SHRINK, SELECTOR_SPRITE_HEIGHT);
       String damageText = "Daño: " + formatDamage(weapon.getProjectileDamage());
       TextRenderer.draw(g2, this.debugFont, damageText, Color.LIGHT_GRAY,
-        TextRenderer.centeredX(g2, this.debugFont, damageText, x + width / 2), y + height - SELECTOR_DAMAGE_Y_FROM_BOTTOM, false);
+        TextRenderer.centeredX(g2, this.debugFont, damageText, x + width / MagicConstants.DIVISOR_HALF), y + height - SELECTOR_DAMAGE_Y_FROM_BOTTOM, false);
     }
   }
 
@@ -129,8 +130,8 @@ public class EquipmentRenderer
     double scale = Math.min(maxWidth / (double) drawWidth, maxHeight / (double) drawHeight);
     int fittedWidth = Math.max(1, (int) Math.round(drawWidth * scale));
     int fittedHeight = Math.max(1, (int) Math.round(drawHeight * scale));
-    int drawX = x + (maxWidth - fittedWidth) / 2;
-    int drawY = y + (maxHeight - fittedHeight) / 2;
+    int drawX = x + (maxWidth - fittedWidth) / MagicConstants.DIVISOR_HALF;
+    int drawY = y + (maxHeight - fittedHeight) / MagicConstants.DIVISOR_HALF;
     g2.drawImage(sprite, drawX, drawY, fittedWidth, fittedHeight, null);
   }
 
