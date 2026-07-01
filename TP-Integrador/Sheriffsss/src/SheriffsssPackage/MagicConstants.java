@@ -35,6 +35,14 @@ public class MagicConstants
   public static final int WEAPON_RENDER_Y_OFFSET_UP = -1;
   public static final int WEAPON_RENDER_Y_OFFSET_DOWN = 9;
 
+  // Game loop - Delta time
+  public static final double DELTA_FRAME_THRESHOLD = 1.0;
+  public static final double DELTA_FRAME_DECREMENT = 1.0;
+
+  // Gameplay - Default values
+  public static final int MOVEMENT_RESET = 0;
+  public static final double ACCURACY_MAX_DEFAULT = 1.0;
+
   private MagicConstants()
   {
   }

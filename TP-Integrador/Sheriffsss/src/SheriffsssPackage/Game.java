@@ -282,7 +282,7 @@ public class Game extends JPanel implements Runnable, GameView
   public void run()
   {
     double drawInterval = GameConfig.FRAME_INTERVAL_NS;
-    double delta = 0.0;
+    double delta = MagicConstants.MIN_VALUE;
     long lastTime = System.nanoTime();
 
     while (!this.shuttingDown && Thread.currentThread() == this.gameThread)
@@ -291,12 +291,12 @@ public class Game extends JPanel implements Runnable, GameView
       delta += (currentTime - lastTime) / drawInterval;
       lastTime = currentTime;
 
-      while (delta >= 1.0)
+      while (delta >= MagicConstants.DELTA_FRAME_THRESHOLD)
       {
         updateGame();
         repaint();
         this.frameCount++;
-        delta--;
+        delta -= MagicConstants.DELTA_FRAME_DECREMENT;
       }
     }
   }
@@ -556,8 +556,8 @@ public class Game extends JPanel implements Runnable, GameView
     int moveY = this.input.getMoveY();
     if (isTrainingWaitingForFirstShot())
     {
-      moveX = 0;
-      moveY = 0;
+      moveX = MagicConstants.MOVEMENT_RESET;
+      moveY = MagicConstants.MOVEMENT_RESET;
     }
     this.session.player().setTakingDamage(false);
     this.playerMovementSystem.update(
@@ -569,7 +569,7 @@ public class Game extends JPanel implements Runnable, GameView
     this.dayNightCycle.tick();
     this.enemySystem.update(this.session.map(), this.session.player());
 
-    if (this.session.player().getCurrentHP() <= 0.0)
+    if (this.session.player().getCurrentHP() <= MagicConstants.MIN_VALUE)
     {
       this.session.player().die();
       returnToMenu();
@@ -977,7 +977,7 @@ public class Game extends JPanel implements Runnable, GameView
   {
     if (this.session.player() == null)
     {
-      return 1.0;
+      return MagicConstants.ACCURACY_MAX_DEFAULT;
     }
     ItemDefinition weapon = this.session.player().getEquipment().getEquippedWeapon();
     return this.weaponUseSystem.resolveEffectiveAccuracy(
