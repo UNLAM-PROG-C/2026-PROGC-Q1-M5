@@ -1,5 +1,6 @@
 package SheriffsssPackage.session;
 
+import SheriffsssPackage.MagicConstants;
 import SheriffsssPackage.context.DayNightCycle;
 import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.system.enemy.Debuff;
@@ -42,7 +43,7 @@ public class WorldLighting
  {
     if (map == null)
     {
-      return 0.0;
+      return MagicConstants.MIN_VALUE;
     }
     int sourceTileX = map.worldToTileX(sourceWorldX);
     int sourceTileY = map.worldToTileY(sourceWorldY);
@@ -70,11 +71,11 @@ public class WorldLighting
  {
     if (map == null || enemies == null)
     {
-      return 0.0;
+      return MagicConstants.MIN_VALUE;
     }
-    int tileCenterWorldX = tileX * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
-    int tileCenterWorldY = tileY * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / 2;
-    double bestLight = 0.0;
+    int tileCenterWorldX = tileX * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / MagicConstants.DIVISOR_HALF;
+    int tileCenterWorldY = tileY * GameConfig.TILE_SIZE + GameConfig.TILE_SIZE / MagicConstants.DIVISOR_HALF;
+    double bestLight = MagicConstants.MIN_VALUE;
     for (int i = 0; i < enemies.size(); i++)
     {
       bestLight = Math.max(bestLight, lightFromEnemy(enemies.get(i), tileCenterWorldX, tileCenterWorldY));

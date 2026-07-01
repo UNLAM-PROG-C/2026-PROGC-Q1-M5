@@ -1,5 +1,6 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.MagicConstants;
 import SheriffsssPackage.context.AssetManager;
 import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.session.Facing;
@@ -105,7 +106,7 @@ public class HeldItemRenderer
     int barWidth = 52;
     int barHeight = 8;
     int objectWidth = targetObject.getType().getFootprintWidth() * GameConfig.TILE_SIZE;
-    int screenX = this.camera.tileToScreenX(targetObject.getRootTileX()) + objectWidth / 2 - barWidth / 2;
+    int screenX = this.camera.tileToScreenX(targetObject.getRootTileX()) + objectWidth / MagicConstants.DIVISOR_HALF - barWidth / MagicConstants.DIVISOR_HALF;
     int screenY = this.camera.tileToScreenY(targetObject.getRootTileY()) - 12;
     g2.setColor(Color.BLACK);
     g2.fillRect(screenX - 2, screenY - 2, barWidth + 4, barHeight + 4);
@@ -121,8 +122,8 @@ public class HeldItemRenderer
   public void applyHeldItemRotation(Graphics2D g2, ItemDefinitionDrawConfig drawConfig, Facing facing, int drawX, int drawY,
     int itemWidth, int itemHeight, double baseAngle, double recoilAngle)
     {
-    double centerX = drawX + itemWidth / 2.0;
-    double centerY = drawY + itemHeight / 2.0;
+    double centerX = drawX + itemWidth / (double) MagicConstants.DIVISOR_HALF;
+    double centerY = drawY + itemHeight / (double) MagicConstants.DIVISOR_HALF;
     if (recoilAngle != 0.0)
     {
       double anchorX = heldItemGripAnchorX(drawConfig, facing, drawX, itemWidth);
