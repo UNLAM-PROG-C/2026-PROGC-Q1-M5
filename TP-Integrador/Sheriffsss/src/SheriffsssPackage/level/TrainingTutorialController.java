@@ -14,6 +14,10 @@ public class TrainingTutorialController
   private TutorialPhase phase = TutorialPhase.AIM;
   private MusicController musicController;
 
+  public TrainingTutorialController()
+  {
+  }
+
   public TrainingTutorialController(MusicController musicController)
   {
     this.musicController = musicController;
