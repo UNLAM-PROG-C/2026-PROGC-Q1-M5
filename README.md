@@ -101,16 +101,3 @@ java -jar dist-jar/Sheriffsss.jar
 
 *Nota: La configuración de resolución, volumen y pantalla completa se guarda automáticamente en `saves/game.cfg`.*
 
----
-
-## 🎓 Reglas de la Cátedra (Programación Concurrente)
-
-*Al menos 3 miembros deberán aprobar los code-reviews antes de que se mergeen al Branch destino.*
-
-Al realizar un commit, se realizará la validación del código. Si cumple con los criterios establecidos por la cátedra, será aprobado.
-
-**Validaciones requeridas:**
-1. **Coding-Standard de Google:** Ajustado según el lenguaje, con modificaciones y adaptaciones marcadas por la cátedra.
-2. **Patrones de diseño:** Es obligatorio el uso de patrones de diseño de la forma adecuada.
-3. **No números mágicos:** Utilizar constantes semánticas en lugar de valores duros en el código.
-4. **Tamaño de métodos:** Los métodos y funciones **no deben superar las 15 líneas** de código.
