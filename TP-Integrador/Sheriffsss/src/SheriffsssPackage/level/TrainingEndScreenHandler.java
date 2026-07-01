@@ -5,8 +5,7 @@ import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.context.GameInput;
 
 /**
- * Maneja la lógica de entrada y renderizado para las pantallas finales de entrenamiento
- * (cuando el jugador muere o cuando termina la sesión).
+ * Maneja la logica de entrada para la pantalla final de entrenamiento.
  *
  * Responsabilidades:
  *   - Consumir input del jugador mientras está en pantalla de fin
@@ -16,15 +15,10 @@ import SheriffsssPackage.context.GameInput;
 public final class TrainingEndScreenHandler
 {
   // --- End screen hit testing ---
-  private static final int DEATH_BOX_WIDTH = 360;
-  private static final int DEATH_BOX_HEIGHT = 170;
-  private static final int DEATH_BOX_Y_OFFSET_FROM_CENTER = 60;
   private static final int FINAL_BOX_WIDTH = 460;
   private static final int FINAL_BOX_HEIGHT = 290;
   private static final int END_BUTTON_WIDTH = 220;
   private static final int END_BUTTON_HEIGHT = 38;
-  private static final int DEATH_RESTART_BUTTON_Y = 56;
-  private static final int DEATH_EXIT_BUTTON_Y = 108;
   private static final int FINAL_RESTART_BUTTON_Y = 188;
   private static final int FINAL_EXIT_BUTTON_Y = 236;
 
@@ -45,16 +39,9 @@ public final class TrainingEndScreenHandler
     this.resetArenaCallback = resetArenaCallback;
   }
 
-  public void handleDeadInput()
-  {
-    drainPanelInputWhileDead();
-    drainResetKey();
-    handleEndScreenClick(deathBoxX(), deathBoxY(), DEATH_BOX_WIDTH, DEATH_RESTART_BUTTON_Y, DEATH_EXIT_BUTTON_Y);
-  }
-
   public void handleFinalInput()
   {
-    drainPanelInputWhileDead();
+    drainPanelInputOnFinalScreen();
     drainResetKey();
     handleEndScreenClick(finalBoxX(), finalBoxY(), FINAL_BOX_WIDTH, FINAL_RESTART_BUTTON_Y, FINAL_EXIT_BUTTON_Y);
   }
@@ -111,20 +98,10 @@ public final class TrainingEndScreenHandler
       && mouseY >= buttonY && mouseY <= buttonY + END_BUTTON_HEIGHT;
   }
 
-  private void drainPanelInputWhileDead()
+  private void drainPanelInputOnFinalScreen()
   {
     this.input.consumeTrainingIncrement();
     this.input.consumeTrainingDecrement();
-  }
-
-  private static int deathBoxX()
-  {
-    return (GameConfig.SCREEN_WIDTH - DEATH_BOX_WIDTH) / 2;
-  }
-
-  private static int deathBoxY()
-  {
-    return GameConfig.SCREEN_HEIGHT / 2 + DEATH_BOX_Y_OFFSET_FROM_CENTER;
   }
 
   private static int finalBoxX()

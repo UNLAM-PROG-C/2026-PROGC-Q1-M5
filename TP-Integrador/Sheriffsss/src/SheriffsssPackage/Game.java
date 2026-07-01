@@ -62,7 +62,6 @@ import javax.swing.SwingUtilities;
 public class Game extends JPanel implements Runnable, GameView
 {
   private static final long serialVersionUID = 1L;
-  private static final String DEFAULT_WEAPON_ATTACK_SOUND = "sounds/Shot.wav";
   private static final float WEAPON_GAIN_DB = 0f;
   private static final float ENEMY_HIT_GAIN_DB = 0f;
   private final AssetManager assets;
@@ -352,7 +351,7 @@ public class Game extends JPanel implements Runnable, GameView
       && this.state == State.PLAYING
       && this.session.player() != null)
       {
-      this.session.trainingMode().update(this.session.player(), this.input, this.projectileSystem);
+      this.session.trainingMode().update(this.input, this.projectileSystem);
     }
     this.infoMessageSystem.update();
     updateMusic();
@@ -938,8 +937,6 @@ public class Game extends JPanel implements Runnable, GameView
   }
   public double getCameraZoom()
     { return this.session.cameraZoom(); }
-  public boolean isSpectating()
-  { return false; }
   public List<Enemy> getEnemies()
   { return this.enemySystem.getEnemies(); }
   public List<Projectile> getProjectiles()
@@ -1023,7 +1020,7 @@ public class Game extends JPanel implements Runnable, GameView
     TrainingMode trainingMode = this.session.trainingMode();
     this.trainingHudView.update(
       isTrainingLevelActive(),
-      trainingMode == null ? null : trainingMode.hudSnapshot(this.session.player()));
+      trainingMode == null ? null : trainingMode.hudSnapshot());
     return this.trainingHudView;
   }
 

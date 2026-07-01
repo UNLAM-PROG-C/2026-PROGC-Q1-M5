@@ -7,7 +7,6 @@ import SheriffsssPackage.render.TrainingHudSnapshot;
 import SheriffsssPackage.render.TrainingHudSnapshotConfig;
 import SheriffsssPackage.session.GameMap;
 import SheriffsssPackage.session.GameSession;
-import SheriffsssPackage.session.Player;
 import SheriffsssPackage.system.enemy.EnemyFactory;
 import SheriffsssPackage.system.enemy.EnemySystem;
 import SheriffsssPackage.system.weapon.ProjectileSystem;
@@ -142,19 +141,13 @@ public final class TrainingMode
 
   // === Update tick ===
 
-  public void update(Player player, GameInput input, ProjectileSystem projectileSystem)
+  public void update(GameInput input, ProjectileSystem projectileSystem)
   {
     markDebugUsedIfNeeded();
 
     if (this.sessionTimer.isSessionFinished())
     {
       this.endScreenHandler.handleFinalInput();
-      return;
-    }
-
-    if (player != null && player.isDead())
-    {
-      this.endScreenHandler.handleDeadInput();
       return;
     }
 
@@ -210,7 +203,7 @@ public final class TrainingMode
     return this.tutorialController.getPhase() == TutorialPhase.AIM;
   }
 
-  public TrainingHudSnapshot hudSnapshot(Player player)
+  public TrainingHudSnapshot hudSnapshot()
   {
     TrainingHudSnapshotConfig config = new TrainingHudSnapshotConfig()
       .withStats(
@@ -224,7 +217,6 @@ public final class TrainingMode
         outerFenceScreenCenterX(),
         trainingPromptBaselineY())
       .withEndState(
-        player != null && player.isDead(),
         this.sessionTimer.isSessionFinished(),
         this.scoreTracker.finalScore(),
         this.debugUsed)
