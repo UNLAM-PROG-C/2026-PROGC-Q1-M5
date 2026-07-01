@@ -5,7 +5,7 @@ import SheriffsssPackage.context.GameConfig;
 
 /**
  * State of the training mode control panel.
- * Lives in the game loop thread; not accessed from TutorialThread.
+ * Lives in the game loop thread.
  */
 public final class TrainingControls
 {

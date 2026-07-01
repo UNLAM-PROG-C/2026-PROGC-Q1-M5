@@ -12,8 +12,6 @@ import SheriffsssPackage.system.enemy.EnemyFactory;
 import SheriffsssPackage.system.enemy.EnemySystem;
 import SheriffsssPackage.system.weapon.ProjectileSystem;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 
@@ -38,13 +36,7 @@ public final class TrainingMode
   private static final int TARGET_HINT_MIN_TICKS = GameConfig.TARGET_FPS * 3;
   private static final int TIMER_NOTICE_TICKS = GameConfig.TARGET_FPS * 5;
 
-  // --- Tutorial join timeout ---
-  private static final long TUTORIAL_JOIN_TIMEOUT_MS = 200L;
   private static final int SESSION_DURATION_SECONDS = 60;
-  private static final long TUTORIAL_STEP_TRIGGER_DELAY_MS = 600L;
-  private static final long TUTORIAL_FIRST_MOVEMENT_TIMEOUT_MS = 15000L;
-  private static final long TUTORIAL_FIRST_SHOT_TIMEOUT_MS = 20000L;
-  private static final long TUTORIAL_FIRST_KILL_TIMEOUT_MS = 30000L;
 
   // === Core subsystems ===
   private final Game game;
@@ -62,7 +54,6 @@ public final class TrainingMode
   private TrainingTutorialController tutorialController;
   private TrainingEndScreenHandler endScreenHandler;
   private final TrainingConfigStore configStore;
-  private final TutorialThread tutorialThread;
 
   // === Tutorial / hint state ===
   private int lastProjectileCount;
@@ -82,7 +73,6 @@ public final class TrainingMode
     this.session = null;
     this.enemySystem = enemySystem;
     this.sessionSeedHash = sessionSeedHash;
-    this.tutorialThread = new TutorialThread(buildSteps());
 
     this.configStore = new TrainingConfigStore(this.controls);
     this.configStore.loadControls();
@@ -123,7 +113,7 @@ public final class TrainingMode
     this.tutorialController = new TrainingTutorialController(
         this.game != null ? this.game.getMusicController() : null);
     this.endScreenHandler = new TrainingEndScreenHandler(input, this.controls, this.game,
-        this.tutorialThread, this::resetArena);
+        this::resetArena);
   }
 
   // === Lifecycle ===
@@ -143,15 +133,6 @@ public final class TrainingMode
 
   public void shutdown()
   {
-    this.tutorialThread.skip();
-    try
-    {
-      this.tutorialThread.join(TUTORIAL_JOIN_TIMEOUT_MS);
-    }
-    catch (InterruptedException ignored)
-    {
-      Thread.currentThread().interrupt();
-    }
     this.configStore.saveControls();
   }
 
@@ -425,14 +406,4 @@ public final class TrainingMode
     return INTERIOR_TILES * GameConfig.TILE_SIZE;
   }
 
-  // === Tutorial steps ===
-
-  private static List<TutorialStep> buildSteps()
-  {
-    return Arrays.asList(
-      new TutorialStep(TutorialEventType.FIRST_MOVEMENT, TUTORIAL_STEP_TRIGGER_DELAY_MS, TUTORIAL_FIRST_MOVEMENT_TIMEOUT_MS),
-      new TutorialStep(TutorialEventType.FIRST_SHOT, TUTORIAL_STEP_TRIGGER_DELAY_MS, TUTORIAL_FIRST_SHOT_TIMEOUT_MS),
-      new TutorialStep(TutorialEventType.FIRST_KILL, TUTORIAL_STEP_TRIGGER_DELAY_MS, TUTORIAL_FIRST_KILL_TIMEOUT_MS)
-    );
-  }
 }

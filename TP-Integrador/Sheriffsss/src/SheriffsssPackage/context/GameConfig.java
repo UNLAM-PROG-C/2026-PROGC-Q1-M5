@@ -35,7 +35,6 @@ public final class GameConfig
   public static final int TRAINING_INTERIOR_FENCE_TILES = 24;
   /** Probabilidad [0,1] por tile fuera de arena+cerco de intentar un arbusto o arbol. */
   public static final double TRAINING_WILDERNESS_PROP_PER_TILE = 0.07;
-  public static final int TRAINING_TUTORIAL_SKIP_KEY = KeyEvent.VK_K;
   public static final int TRAINING_PANEL_INC_KEY = KeyEvent.VK_PAGE_UP;
   public static final int TRAINING_PANEL_DEC_KEY = KeyEvent.VK_PAGE_DOWN;
   public static final int TRAINING_PANEL_RESET_KEY = KeyEvent.VK_R;
