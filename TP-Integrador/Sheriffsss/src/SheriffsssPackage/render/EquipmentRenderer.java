@@ -33,7 +33,6 @@ public class EquipmentRenderer
   private static final int LIST_DAMAGE_Y_OFFSET = 41;
   private static final int LIST_ROW_INSET = 1;
   private static final int LIST_ROW_INSET_X2 = 2;
-  private static final double DAMAGE_FORMAT_EPSILON = 0.001;
 
   private final AssetManager assets;
   private final Font debugFont = new Font("Arial", Font.BOLD, 13);
@@ -137,6 +136,6 @@ public class EquipmentRenderer
 
   private String formatDamage(double damage)
   {
-    return Math.abs(damage - Math.round(damage)) < DAMAGE_FORMAT_EPSILON ? Integer.toString((int) Math.round(damage)) : String.format(java.util.Locale.US, "%.1f", damage);
+    return Math.abs(damage - Math.round(damage)) < MagicConstants.EPSILON ? Integer.toString((int) Math.round(damage)) : String.format(java.util.Locale.US, "%.1f", damage);
   }
 }

@@ -1,5 +1,6 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.MagicConstants;
 import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.level.TrainingModeConstants;
 import SheriffsssPackage.system.enemy.Debuff;
@@ -36,7 +37,6 @@ public class EnemyRenderer
   private static final int BURN_SIZE_BASE = 3;
   private static final int BURN_SIZE_MODULO = 4;
   private static final int BURN_OVAL_HEIGHT_EXTRA = 2;
-  private static final double HEALTH_FORMAT_EPSILON = 0.001;
 
   private final Camera camera;
   private final SheriffsssPackage.context.AssetManager assets;
@@ -163,7 +163,7 @@ public class EnemyRenderer
 
   private String formatHealthValue(double health)
   {
-    return Math.abs(health - Math.round(health)) < HEALTH_FORMAT_EPSILON
+    return Math.abs(health - Math.round(health)) < MagicConstants.EPSILON
       ? Integer.toString((int) Math.round(health))
       : String.format(java.util.Locale.US, "%.1f", health);
   }

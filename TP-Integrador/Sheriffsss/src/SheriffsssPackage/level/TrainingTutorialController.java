@@ -1,12 +1,12 @@
 package SheriffsssPackage.level;
 
+import SheriffsssPackage.MagicConstants;
 import SheriffsssPackage.system.MusicController;
 
 public class TrainingTutorialController
 {
   private static final int TARGET_BLINK_ANIMATION_TICKS = 8;
   private static final int TARGET_ANIMATION_RESET_INTERVAL = 10;
-  private static final int HINT_ALPHA_FULL = 255;
   private int targetBlinkTicks;
   private int targetAnimationResetTicks;
   private int hintAlphaTicks;
@@ -93,7 +93,7 @@ public class TrainingTutorialController
 
   public void setHintText(String text)
   {
-    this.hintAlphaTicks = HINT_ALPHA_FULL;
+    this.hintAlphaTicks = MagicConstants.MAX_ALPHA;
     this.isHintFullyFaded = false;
   }
 
