@@ -39,7 +39,7 @@ public class LightingRenderer
     {
       for (int tileY = this.camera.getStartTileY(); tileY <= this.camera.getEndTileY(); tileY++)
       {
-        int alpha = game.isSpectating() || game.getPlayer().isDead()
+        int alpha = game.getPlayer().isDead()
           ? this.lighting.resolveDarknessAlpha(map, tileX, tileY, cycle)
           : this.lighting.resolveDarknessAlpha(map, game.getPlayer(), tileX, tileY, cycle);
         alpha = applyRevolverFlash(game, map, tileX, tileY, alpha);

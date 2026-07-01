@@ -11,7 +11,6 @@ public final class TrainingHudSnapshotConfig
   private String hintText = "";
   private int hintCenterX;
   private int hintBaselineY;
-  private boolean deathPromptVisible;
   private boolean finalScreenVisible;
   private int finalScore;
   private boolean debugUsed;
@@ -45,12 +44,10 @@ public final class TrainingHudSnapshotConfig
   }
 
   public TrainingHudSnapshotConfig withEndState(
-      boolean deathPromptVisible,
       boolean finalScreenVisible,
       int finalScore,
       boolean debugUsed)
       {
-    this.deathPromptVisible = deathPromptVisible;
     this.finalScreenVisible = finalScreenVisible;
     this.finalScore = finalScore;
     this.debugUsed = debugUsed;
@@ -109,11 +106,6 @@ public final class TrainingHudSnapshotConfig
   int hintBaselineY()
   {
     return this.hintBaselineY;
-  }
-
-  boolean deathPromptVisible()
-  {
-    return this.deathPromptVisible;
   }
 
   boolean finalScreenVisible()

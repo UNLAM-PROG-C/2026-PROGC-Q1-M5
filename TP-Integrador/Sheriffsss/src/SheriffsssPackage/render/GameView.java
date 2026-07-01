@@ -30,7 +30,6 @@ public interface GameView
   int getCameraCenterWorldX();
   int getCameraCenterWorldY();
   double getCameraZoom();
-  boolean isSpectating();
   List<Enemy> getEnemies();
   List<Projectile> getProjectiles();
   List<FlameBurstEffect> getFlameBurstEffects();
