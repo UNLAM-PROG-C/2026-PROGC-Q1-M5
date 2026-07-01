@@ -9,7 +9,8 @@ import SheriffsssPackage.session.PlayerRuntimeState;
 import java.util.Random;
 
 
-public final class WeaponUseSystem {
+public final class WeaponUseSystem
+{
   private static final double MOVING_ACCURACY_PENALTY = 0.2;
   private static final double MOVING_ACCURACY_MIN_LINEAR_SPEED = 0.1;
   private static final double MIN_AIM_LENGTH = 0.001;
@@ -18,7 +19,8 @@ public final class WeaponUseSystem {
   private static final double PROJECTILE_AIM_DISTANCE_PIXELS = 1000.0;
   private static final double EIGHT_WAY_ARC_DEGREES = 45.0;
   private static final double EIGHT_WAY_HALF_ARC_DEGREES = 22.5;
-  private static final Facing[] FACING_BY_ANGLE_INDEX = {
+  private static final Facing[] FACING_BY_ANGLE_INDEX =
+  {
     Facing.RIGHT,
     Facing.DOWN_RIGHT,
     Facing.DOWN,
@@ -31,8 +33,10 @@ public final class WeaponUseSystem {
 
   private final Random random = new Random(0L);
 
-  public void updateProjectileWeaponCooldown(PlayerRuntimeState runtime) {
-    if (runtime != null && runtime.projectileWeaponCooldownTicks > 0) {
+  public void updateProjectileWeaponCooldown(PlayerRuntimeState runtime)
+  {
+    if (runtime != null && runtime.projectileWeaponCooldownTicks > 0)
+    {
       runtime.projectileWeaponCooldownTicks--;
     }
   }
@@ -44,13 +48,14 @@ public final class WeaponUseSystem {
       ItemDefinition weapon,
       int targetWorldX,
       int targetWorldY)
-  {
-    if (!canFire(player, runtime, weapon)) {
+      {
+    if (!canFire(player, runtime, weapon))
+    {
       return WeaponUseResult.missed();
     }
     ItemDefinition ammoDefinition = weapon.getProjectileAmmoDefinition();
     if (ammoDefinition == null)
-      {
+    {
       return WeaponUseResult.missed();
     }
     return spawnProjectile(projectileSystem, player, runtime, weapon, ammoDefinition,
@@ -58,8 +63,9 @@ public final class WeaponUseSystem {
   }
 
   public int heldItemOriginWorldX(Player player, ItemDefinition definition, Facing facing)
-      {
-    if (player == null || definition == null || !definition.isHandEquipable()) {
+  {
+    if (player == null || definition == null || !definition.isHandEquipable())
+    {
       return player == null ? 0 : player.getX();
     }
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
@@ -68,8 +74,9 @@ public final class WeaponUseSystem {
   }
 
   public int heldItemOriginWorldY(Player player, ItemDefinition definition, Facing facing)
-      {
-    if (player == null || definition == null || !definition.isHandEquipable()) {
+  {
+    if (player == null || definition == null || !definition.isHandEquipable())
+    {
       return player == null ? 0 : player.getY();
     }
     ItemDefinitionDrawConfig drawConfig = definition.getDrawConfig();
@@ -78,8 +85,9 @@ public final class WeaponUseSystem {
   }
 
   public double resolveEffectiveAccuracy(Player sourcePlayer, Player currentPlayer, ItemDefinition weapon)
-      {
-    if (weapon == null) {
+  {
+    if (weapon == null)
+    {
       return 1.0;
     }
     double accuracy = weapon.getAccuracy();
@@ -91,7 +99,7 @@ public final class WeaponUseSystem {
   }
 
   private boolean canFire(Player player, PlayerRuntimeState runtime, ItemDefinition weapon)
-    {
+  {
     return player != null && runtime != null && weapon != null && weapon.isProjectileWeapon()
       && runtime.projectileWeaponCooldownTicks <= 0;
   }
@@ -104,7 +112,7 @@ public final class WeaponUseSystem {
       ItemDefinition ammoDefinition,
       int targetWorldX,
       int targetWorldY)
-    {
+      {
     ShotVector shotVector = createShotVector(player, weapon, targetWorldX, targetWorldY);
     ProjectileType type = weapon.getProjectileType();
     boolean spawned = projectileSystem.spawn(type, player, weapon, shotVector.startWorldX,
@@ -123,7 +131,7 @@ public final class WeaponUseSystem {
   }
 
   private ShotVector createShotVector(Player player, ItemDefinition weapon, int targetWorldX, int targetWorldY)
-      {
+  {
     Facing shotFacing = facingFromTarget(player, targetWorldX, targetWorldY);
     int originX = heldItemOriginWorldX(player, weapon, shotFacing);
     int originY = heldItemOriginWorldY(player, weapon, shotFacing);
@@ -143,7 +151,7 @@ public final class WeaponUseSystem {
       int originY,
       int targetWorldX,
       int targetWorldY)
-    {
+      {
     double deltaX = targetWorldX - originX;
     double deltaY = targetWorldY - originY;
     double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -162,7 +170,8 @@ public final class WeaponUseSystem {
       int targetWorldX,
       int targetWorldY,
       double deltaX,
-      double deltaY) {
+      double deltaY)
+      {
     double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     double accuracy = resolveEffectiveAccuracy(player, player, weapon);
     if (accuracy >= 1.0)
@@ -179,7 +188,8 @@ public final class WeaponUseSystem {
       int targetWorldY,
       double deltaX,
       double deltaY,
-      double accuracy) {
+      double accuracy)
+      {
     double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     double halfBasePixels = length * ACCURACY_SPREAD_HALF_SCALE * (1.0 - accuracy);
     double baseOffset = (this.random.nextDouble() * RANDOM_SIGN_RANGE - 1.0) * halfBasePixels;
@@ -192,7 +202,7 @@ public final class WeaponUseSystem {
   }
 
   private Facing facingFromTarget(Player player, int targetWorldX, int targetWorldY)
-    {
+  {
     double deltaX = targetWorldX - player.getX();
     double deltaY = targetWorldY - player.getY();
     double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -200,14 +210,15 @@ public final class WeaponUseSystem {
   }
 
   private Facing facingFromDelta(double deltaX, double deltaY)
-    {
+  {
     double angle = Math.toDegrees(Math.atan2(deltaY, deltaX));
     int index = (int) Math.floor((angle + EIGHT_WAY_HALF_ARC_DEGREES) / EIGHT_WAY_ARC_DEGREES);
     if (index < 0)
     {
       index += FACING_BY_ANGLE_INDEX.length;
     }
-    if (index >= FACING_BY_ANGLE_INDEX.length) {
+    if (index >= FACING_BY_ANGLE_INDEX.length)
+    {
       index = 0;
     }
     return FACING_BY_ANGLE_INDEX[index];
@@ -222,7 +233,7 @@ public final class WeaponUseSystem {
   }
 
   private double rotatedBarrelAnchorOffsetY(ItemDefinitionDrawConfig drawConfig, Facing facing)
-    {
+  {
     double offsetX = drawConfig.isMirrored(facing) ? -drawConfig.getBarrelAnchorOffsetX() : drawConfig.getBarrelAnchorOffsetX();
     double offsetY = drawConfig.getBarrelAnchorOffsetY();
     double angle = drawConfig.getBaseAngle(facing);
@@ -230,7 +241,7 @@ public final class WeaponUseSystem {
   }
 
   private double heldItemBarrelAnchorWorldX(Player player, ItemDefinition definition, ItemDefinitionDrawConfig drawConfig, Facing facing)
-    {
+  {
     int drawX = player.getX() + drawConfig.getBaseOffsetX(facing);
     int drawY = player.getY() + drawConfig.getBaseOffsetY(facing);
     int itemWidth = definition.getHeldDrawWidth();
@@ -242,7 +253,7 @@ public final class WeaponUseSystem {
   }
 
   private double heldItemBarrelAnchorWorldY(Player player, ItemDefinition definition, ItemDefinitionDrawConfig drawConfig, Facing facing)
-    {
+  {
     int drawX = player.getX() + drawConfig.getBaseOffsetX(facing);
     int drawY = player.getY() + drawConfig.getBaseOffsetY(facing);
     int itemWidth = definition.getHeldDrawWidth();
@@ -254,30 +265,31 @@ public final class WeaponUseSystem {
   }
 
   private double rotateX(double x, double y, double centerX, double centerY, double angle)
-    {
+  {
     double deltaX = x - centerX;
     double deltaY = y - centerY;
     return centerX + deltaX * Math.cos(angle) - deltaY * Math.sin(angle);
   }
 
   private double rotateY(double x, double y, double centerX, double centerY, double angle)
-    {
+  {
     double deltaX = x - centerX;
     double deltaY = y - centerY;
     return centerY + deltaX * Math.sin(angle) + deltaY * Math.cos(angle);
   }
 
   private boolean isPlayerMovingForAccuracy(Player player)
-    {
+  {
     return player != null && player.getLastLinearVelocityPixels() > MOVING_ACCURACY_MIN_LINEAR_SPEED;
   }
 
   private double clampAccuracy(double accuracy)
-    {
+  {
     return Math.max(0.0, Math.min(1.0, accuracy));
   }
 
-  private static final class AimVector {
+  private static final class AimVector
+  {
     private final double directionX;
     private final double directionY;
 
@@ -288,7 +300,8 @@ public final class WeaponUseSystem {
     }
   }
 
-  private static final class ShotVector {
+  private static final class ShotVector
+  {
     private final int startWorldX;
     private final int startWorldY;
     private final int aimWorldX;

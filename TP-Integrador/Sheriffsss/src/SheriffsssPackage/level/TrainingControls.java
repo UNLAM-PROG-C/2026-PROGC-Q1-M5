@@ -7,7 +7,8 @@ import SheriffsssPackage.context.GameConfig;
  * State of the training mode control panel.
  * Lives in the game loop thread; not accessed from TutorialThread.
  */
-public final class TrainingControls {
+public final class TrainingControls
+{
   private int enemyCount;
 
   public TrainingControls()
@@ -27,14 +28,16 @@ public final class TrainingControls {
 
   public void incCount()
   {
-    if (this.enemyCount < GameConfig.TRAINING_MAX_ENEMIES) {
+    if (this.enemyCount < GameConfig.TRAINING_MAX_ENEMIES)
+    {
       this.enemyCount++;
     }
   }
 
   public void decCount()
   {
-    if (this.enemyCount > 0) {
+    if (this.enemyCount > 0)
+    {
       this.enemyCount--;
     }
   }
@@ -51,10 +54,12 @@ public final class TrainingControls {
 
   private static int clampCount(int count)
   {
-    if (count < 0) {
+    if (count < 0)
+    {
       return 0;
     }
-    if (count > GameConfig.TRAINING_MAX_ENEMIES) {
+    if (count > GameConfig.TRAINING_MAX_ENEMIES)
+    {
       return GameConfig.TRAINING_MAX_ENEMIES;
     }
     return count;

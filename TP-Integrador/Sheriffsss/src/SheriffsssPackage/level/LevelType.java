@@ -1,6 +1,7 @@
 package SheriffsssPackage.level;
 
-public enum LevelType {
+public enum LevelType
+{
   NONE,
   TRAINING
 }

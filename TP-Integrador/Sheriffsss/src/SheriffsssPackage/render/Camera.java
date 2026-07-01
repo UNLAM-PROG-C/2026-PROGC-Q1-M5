@@ -3,7 +3,8 @@ package SheriffsssPackage.render;
 import SheriffsssPackage.context.GameConfig;
 
 
-public class Camera {
+public class Camera
+{
   private int centerWorldX;
   private int centerWorldY;
   private int startTileX;
@@ -22,7 +23,7 @@ public class Camera {
   }
 
   public int tileToScreenX(int tileX)
-    {
+  {
     return tileX * GameConfig.TILE_SIZE - this.centerWorldX + GameConfig.SCREEN_CENTER_X;
   }
 

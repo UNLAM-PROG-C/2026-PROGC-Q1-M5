@@ -1,6 +1,7 @@
 package SheriffsssPackage.session;
 
-public enum Facing {
+public enum Facing
+{
   DOWN(0, 0, 1),
   LEFT(1, -1, 0),
   UP(2, 0, -1),
@@ -23,7 +24,7 @@ public enum Facing {
   }
 
   public int getSpriteIndex()
-    {
+  {
     return this.spriteIndex;
   }
 

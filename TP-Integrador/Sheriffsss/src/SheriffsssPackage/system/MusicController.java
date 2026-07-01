@@ -6,7 +6,8 @@ import SheriffsssPackage.session.Player;
 
 
 
-public final class MusicController {
+public final class MusicController
+{
   private static final String MENU_MUSIC = "sounds/Menu.wav";
   private static final String NIGHT_MUSIC = "sounds/Night.wav";
   private static final float MUSIC_GAIN_DB = -5f;
@@ -25,8 +26,9 @@ public final class MusicController {
   }
 
   public void stop(AudioManager audio)
-      {
-    if (this.activeMusicPath == null) {
+  {
+    if (this.activeMusicPath == null)
+    {
       return;
     }
     audio.stopLoop();
@@ -34,13 +36,14 @@ public final class MusicController {
   }
 
   public void clear()
-    {
+  {
     this.activeMusicPath = null;
   }
 
   private void playIfChanged(AudioManager audio, String desiredMusicPath)
   {
-    if (desiredMusicPath.equals(this.activeMusicPath)) {
+    if (desiredMusicPath.equals(this.activeMusicPath))
+    {
       return;
     }
     audio.playLoop(desiredMusicPath, MUSIC_GAIN_DB);
@@ -48,11 +51,13 @@ public final class MusicController {
   }
 
   private String desiredMusicPath(State state, Player player)
+  {
+    if (state == State.MENU || state == State.MENU_SETTINGS)
     {
-    if (state == State.MENU || state == State.MENU_SETTINGS) {
       return MENU_MUSIC;
     }
-    if ((state == State.PLAYING || state == State.SETTINGS) && player != null) {
+    if ((state == State.PLAYING || state == State.SETTINGS) && player != null)
+    {
       return NIGHT_MUSIC;
     }
     return null;

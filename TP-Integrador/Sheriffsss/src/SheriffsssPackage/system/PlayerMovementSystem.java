@@ -5,7 +5,8 @@ import SheriffsssPackage.session.Player;
 
 
 
-public final class PlayerMovementSystem {
+public final class PlayerMovementSystem
+{
   private static final double STRAIGHT_MOVE_SCALE = 1.0;
   private static final double DIAGONAL_AXIS_COUNT = 2.0;
   private static final double DIAGONAL_MOVE_SCALE = 1.0 / Math.sqrt(DIAGONAL_AXIS_COUNT);
@@ -16,7 +17,7 @@ public final class PlayerMovementSystem {
       int moveX,
       int moveY,
       boolean canUpdateFacing)
-  {
+      {
     double moveScale = normalizedMoveScale(moveX, moveY);
     int previousX = player.getX();
     int previousY = player.getY();
@@ -29,8 +30,9 @@ public final class PlayerMovementSystem {
   }
 
   private double normalizedMoveScale(int moveX, int moveY)
+  {
+    if (moveX == 0 || moveY == 0)
     {
-    if (moveX == 0 || moveY == 0) {
       return STRAIGHT_MOVE_SCALE;
     }
     return DIAGONAL_MOVE_SCALE;
@@ -38,7 +40,8 @@ public final class PlayerMovementSystem {
 
   private void moveHorizontally(GameMap map, Player player, int direction, double moveScale)
   {
-    if (direction == 0) {
+    if (direction == 0)
+    {
       player.consumeMoveDeltaX(0);
       return;
     }
@@ -47,8 +50,9 @@ public final class PlayerMovementSystem {
   }
 
   private void moveVertically(GameMap map, Player player, int direction, double moveScale)
-      {
-    if (direction == 0) {
+  {
+    if (direction == 0)
+    {
       player.consumeMoveDeltaY(0);
       return;
     }
@@ -57,7 +61,7 @@ public final class PlayerMovementSystem {
   }
 
   private void moveWithRollback(GameMap map, Player player, int deltaX, int deltaY)
-      {
+  {
     player.moveBy(deltaX, deltaY);
     if (player.isHitboxBlocked(map))
     {
@@ -66,8 +70,9 @@ public final class PlayerMovementSystem {
   }
 
   private void updateFacing(Player player, int moveX, int moveY, boolean canUpdateFacing)
-      {
-    if (canUpdateFacing) {
+  {
+    if (canUpdateFacing)
+    {
       player.updateFacing(moveX, moveY);
     }
   }

@@ -3,7 +3,8 @@ package SheriffsssPackage.level;
 /**
  * Static definition of a tutorial step. Immutable.
  */
-public final class TutorialStep {
+public final class TutorialStep
+{
   private final TutorialEventType triggerEvent;
   private final long minDurationMs;
   private final long maxWaitMs;

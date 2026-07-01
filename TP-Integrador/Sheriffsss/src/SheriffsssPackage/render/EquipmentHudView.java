@@ -9,7 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 
-public final class EquipmentHudView {
+public final class EquipmentHudView
+{
   private boolean visible;
   private boolean selectorOpen;
   private ItemDefinition equippedWeapon;
@@ -37,7 +38,7 @@ public final class EquipmentHudView {
   }
 
   private void updateLayout(EquipmentMenuLayout layout)
-    {
+  {
     this.panelX = layout.panelX();
     this.panelY = layout.panelY();
     this.panelWidth = layout.panelWidth();
@@ -53,7 +54,7 @@ public final class EquipmentHudView {
   }
 
   public boolean visible()
-    {
+  {
     return this.visible;
   }
 

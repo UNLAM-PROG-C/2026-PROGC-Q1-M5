@@ -1,6 +1,7 @@
 package SheriffsssPackage.render;
 
-public final class TrainingHudView {
+public final class TrainingHudView
+{
   private boolean active;
   private TrainingHudSnapshot snapshot;
 

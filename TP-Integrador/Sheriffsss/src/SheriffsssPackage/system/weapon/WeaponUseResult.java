@@ -1,7 +1,8 @@
 package SheriffsssPackage.system.weapon;
 
 
-public final class WeaponUseResult {
+public final class WeaponUseResult
+{
   private final boolean fired;
   private final ItemDefinition weapon;
   private final ProjectileType projectileType;
@@ -18,7 +19,7 @@ public final class WeaponUseResult {
       int startWorldY,
       int aimWorldX,
       int aimWorldY)
-  {
+      {
     this.fired = fired;
     this.weapon = weapon;
     this.projectileType = projectileType;
@@ -33,7 +34,8 @@ public final class WeaponUseResult {
     return new WeaponUseResult(false, null, null, 0, 0, 0, 0);
   }
 
-  public boolean fired() {
+  public boolean fired()
+  {
     return this.fired;
   }
 

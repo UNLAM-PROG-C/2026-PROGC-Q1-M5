@@ -6,7 +6,8 @@ import SheriffsssPackage.system.weapon.ProjectileSystem;
 
 
 /** Groups stable systems created once by the main game shell. */
-public final class GameContext {
+public final class GameContext
+{
   private final AssetManager assets;
   private final AudioManager audio;
   private final GameInput input;
@@ -18,7 +19,7 @@ public final class GameContext {
   public GameContext(AssetManager assets, AudioManager audio, GameInput input,
       DayNightCycle dayNightCycle, EnemySystem enemySystem,
       ProjectileSystem projectileSystem, DebugOptions debugOptions)
-  {
+      {
     this.assets = assets;
     this.audio = audio;
     this.input = input;

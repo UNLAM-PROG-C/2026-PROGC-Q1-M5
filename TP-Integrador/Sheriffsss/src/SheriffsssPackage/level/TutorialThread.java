@@ -17,7 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *  - Tutorial state is the exclusive property of this thread.
  *  - No shared locks.
  */
-public final class TutorialThread extends Thread {
+public final class TutorialThread extends Thread
+{
   private static final String THREAD_NAME = "SheriffsssTutorial";
   private static final long MIN_WAIT_AFTER_MIN_DURATION_MS = 1L;
 
@@ -35,11 +36,16 @@ public final class TutorialThread extends Thread {
   @Override
   public void run()
   {
-    try {
+    try
+    {
       runAllSteps();
-    } catch (InterruptedException ignored) {
+    }
+    catch (InterruptedException ignored)
+    {
       // Skip via interrupt: simply terminate.
-    } finally {
+    }
+    finally
+    {
       this.finished.set(true);
     }
   }
@@ -47,8 +53,10 @@ public final class TutorialThread extends Thread {
   private void runAllSteps() throws InterruptedException
   {
     int total = this.steps.size();
-    for (int i = 0; i < total; i++) {
-      if (this.skipRequested.get()) {
+    for (int i = 0; i < total; i++)
+    {
+      if (this.skipRequested.get())
+      {
         return;
       }
       runStep(this.steps.get(i), i + 1, total);
@@ -57,14 +65,17 @@ public final class TutorialThread extends Thread {
 
   private void runStep(TutorialStep step, int stepNumber, int totalSteps) throws InterruptedException
   {
-    if (step.getMinDurationMs() > 0) {
+    if (step.getMinDurationMs() > 0)
+    {
       Thread.sleep(step.getMinDurationMs());
     }
-    if (this.skipRequested.get()) {
+    if (this.skipRequested.get())
+    {
       return;
     }
     TutorialEventType expected = step.getTriggerEvent();
-    if (expected == null) {
+    if (expected == null)
+    {
       return;
     }
     Thread.sleep(remainingWaitMs(step));
@@ -80,7 +91,8 @@ public final class TutorialThread extends Thread {
    */
   public void skip()
   {
-    if (this.skipRequested.compareAndSet(false, true)) {
+    if (this.skipRequested.compareAndSet(false, true))
+    {
       interrupt();
     }
   }

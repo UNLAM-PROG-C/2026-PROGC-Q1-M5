@@ -11,16 +11,18 @@ import SheriffsssPackage.system.weapon.WeaponType;
 import java.util.Random;
 
 
-public final class TrainingSessionBuilder {
+public final class TrainingSessionBuilder
+{
   private static final String TRAINING_PLAYER_NAME = "Trainee";
-  private static final double TRAINING_DAY_PROGRESS = 1.0;
+  private static final double TRAINING_DAY_PROGRESS = 0.3;
   private static final int TRAINING_SEED_RADIX = 36;
   private static final int FNV_OFFSET_BASIS = 0x811C9DC5;
   private static final int FNV_PRIME = 0x01000193;
 
   public void build(Game owner, GameContext context, GameSession session, boolean resetDebugOptions)
   {
-    if (resetDebugOptions) {
+    if (resetDebugOptions)
+    {
       context.debugOptions().resetAll();
     }
     String trainingWorldSeed = createRandomTrainingWorldSeed();
@@ -37,12 +39,16 @@ public final class TrainingSessionBuilder {
 
   public void applyTrainingDebugLoadout(GameContext context, Player targetPlayer)
   {
-    if (targetPlayer == null) {
+    if (targetPlayer == null)
+    {
       return;
     }
-    if (context.debugOptions().shouldUnlockAllWeapons()) {
+    if (context.debugOptions().shouldUnlockAllWeapons())
+    {
       unlockAllTrainingWeapons(targetPlayer);
-    } else {
+    }
+    else
+    {
       resetTrainingWeapon(targetPlayer);
     }
   }
@@ -58,7 +64,7 @@ public final class TrainingSessionBuilder {
       GameContext context,
       GameSession session,
       String trainingWorldSeed)
-  {
+      {
     int trainingSeedHash = hashString(trainingWorldSeed);
     context.enemySystem().clear();
     context.enemySystem().reset(trainingSeedHash);
@@ -77,7 +83,8 @@ public final class TrainingSessionBuilder {
 
   private void giveTrainingLoadout(GameContext context, Player targetPlayer)
   {
-    if (targetPlayer == null) {
+    if (targetPlayer == null)
+    {
       return;
     }
     applyTrainingDebugLoadout(context, targetPlayer);
@@ -102,7 +109,8 @@ public final class TrainingSessionBuilder {
   private int hashString(String value)
   {
     int hash = FNV_OFFSET_BASIS;
-    for (char character : value.toCharArray()) {
+    for (char character : value.toCharArray())
+    {
       hash ^= character;
       hash *= FNV_PRIME;
     }

@@ -5,7 +5,8 @@ import SheriffsssPackage.context.GameConfig;
 
 
 /** Tracks short-lived visual feedback created by projectile weapon shots. */
-public final class ShotFeedback {
+public final class ShotFeedback
+{
   private static final int MUZZLE_FLASH_TICKS = 7;
   private static final int MUZZLE_FLASH_RADIUS_TILES = 5;
   private static final int HIT_MARKER_TICKS = 8;
@@ -25,7 +26,7 @@ public final class ShotFeedback {
   }
 
   public void triggerMuzzleFlash(int worldX, int worldY)
-    {
+  {
     this.muzzleFlashWorldX = worldX;
     this.muzzleFlashWorldY = worldY;
     this.muzzleFlashTicks = MUZZLE_FLASH_TICKS;
@@ -78,21 +79,24 @@ public final class ShotFeedback {
 
   private void tickMuzzleFlash()
   {
-    if (this.muzzleFlashTicks > 0) {
+    if (this.muzzleFlashTicks > 0)
+    {
       this.muzzleFlashTicks--;
     }
   }
 
   private void tickHitMarker()
   {
-    if (this.hitMarkerTicks > 0) {
+    if (this.hitMarkerTicks > 0)
+    {
       this.hitMarkerTicks--;
     }
   }
 
   private void tickFacingLock()
   {
-    if (this.facingLockTicks > 0) {
+    if (this.facingLockTicks > 0)
+    {
       this.facingLockTicks--;
     }
   }

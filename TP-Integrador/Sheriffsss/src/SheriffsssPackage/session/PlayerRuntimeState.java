@@ -3,7 +3,8 @@ package SheriffsssPackage.session;
 import SheriffsssPackage.system.weapon.ItemDefinition;
 
 
-public class PlayerRuntimeState {
+public class PlayerRuntimeState
+{
   public boolean usingTool;
   public MapObject toolTargetObject;
   public int toolUseTicks;

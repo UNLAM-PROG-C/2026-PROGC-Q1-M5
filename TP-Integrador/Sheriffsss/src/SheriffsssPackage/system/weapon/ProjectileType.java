@@ -1,90 +1,94 @@
 package SheriffsssPackage.system.weapon;
 
-public enum ProjectileType {
-	BULLET("sprites/commonBullet.png", 14, 6, false, true),
-	NAIL("sprites/Nail.png", 14, 5, true, false),
-	FIRE_BULLET("sprites/FireBullet.png", 14, 22, false, true, 2, 0.72, 2.7, Math.PI / 2.0);
+public enum ProjectileType
+{
+  BULLET("sprites/commonBullet.png", 14, 6, false, true),
+  NAIL("sprites/Nail.png", 14, 5, true, false),
+  FIRE_BULLET("sprites/FireBullet.png", 14, 22, false, true, 2, 0.72, 2.7, Math.PI / 2.0);
 
-	private final String spritePath;
-	private final int drawWidth;
-	private final int drawHeight;
-	private final boolean piercesLowDensity;
-	private final boolean triggersMuzzleFlash;
-	private final int lightRadiusTiles;
-	private final double lightIntensity;
-	private final double lightFalloffExponent;
-	private final double drawAngleOffsetRadians;
+  private final String spritePath;
+  private final int drawWidth;
+  private final int drawHeight;
+  private final boolean piercesLowDensity;
+  private final boolean triggersMuzzleFlash;
+  private final int lightRadiusTiles;
+  private final double lightIntensity;
+  private final double lightFalloffExponent;
+  private final double drawAngleOffsetRadians;
 
-	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash)
+  ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash)
  {
-		this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, 0, 0.0);
-	}
+    this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, 0, 0.0);
+  }
 
-	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
-		int lightRadiusTiles, double lightIntensity) {
-		this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, lightRadiusTiles, lightIntensity, 1.0, 0.0);
-	}
+  ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
+    int lightRadiusTiles, double lightIntensity)
+    {
+    this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, lightRadiusTiles, lightIntensity, 1.0, 0.0);
+  }
 
-	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
-		int lightRadiusTiles, double lightIntensity, double drawAngleOffsetRadians) {
-		this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, lightRadiusTiles, lightIntensity, 1.0, drawAngleOffsetRadians);
-	}
+  ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
+    int lightRadiusTiles, double lightIntensity, double drawAngleOffsetRadians)
+    {
+    this(spritePath, drawWidth, drawHeight, piercesLowDensity, triggersMuzzleFlash, lightRadiusTiles, lightIntensity, 1.0, drawAngleOffsetRadians);
+  }
 
-	ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
-		int lightRadiusTiles, double lightIntensity, double lightFalloffExponent, double drawAngleOffsetRadians) {
-		this.spritePath = spritePath;
-		this.drawWidth = drawWidth;
-		this.drawHeight = drawHeight;
-		this.piercesLowDensity = piercesLowDensity;
-		this.triggersMuzzleFlash = triggersMuzzleFlash;
-		this.lightRadiusTiles = lightRadiusTiles;
-		this.lightIntensity = lightIntensity;
-		this.lightFalloffExponent = Math.max(1.0, lightFalloffExponent);
-		this.drawAngleOffsetRadians = drawAngleOffsetRadians;
-	}
+  ProjectileType(String spritePath, int drawWidth, int drawHeight, boolean piercesLowDensity, boolean triggersMuzzleFlash,
+    int lightRadiusTiles, double lightIntensity, double lightFalloffExponent, double drawAngleOffsetRadians)
+    {
+    this.spritePath = spritePath;
+    this.drawWidth = drawWidth;
+    this.drawHeight = drawHeight;
+    this.piercesLowDensity = piercesLowDensity;
+    this.triggersMuzzleFlash = triggersMuzzleFlash;
+    this.lightRadiusTiles = lightRadiusTiles;
+    this.lightIntensity = lightIntensity;
+    this.lightFalloffExponent = Math.max(1.0, lightFalloffExponent);
+    this.drawAngleOffsetRadians = drawAngleOffsetRadians;
+  }
 
-	public String getSpritePath()
-  {
-		return this.spritePath;
-	}
-
-	public int getDrawWidth()
+  public String getSpritePath()
  {
-		return this.drawWidth;
-	}
+    return this.spritePath;
+  }
 
-	public int getDrawHeight()
+  public int getDrawWidth()
  {
-		return this.drawHeight;
-	}
+    return this.drawWidth;
+  }
 
-	public boolean piercesLowDensity()
+  public int getDrawHeight()
  {
-		return this.piercesLowDensity;
-	}
+    return this.drawHeight;
+  }
 
-	public boolean triggersMuzzleFlash()
+  public boolean piercesLowDensity()
  {
-		return this.triggersMuzzleFlash;
-	}
+    return this.piercesLowDensity;
+  }
 
-	public int getLightRadiusTiles()
+  public boolean triggersMuzzleFlash()
  {
-		return this.lightRadiusTiles;
-	}
+    return this.triggersMuzzleFlash;
+  }
 
-	public double getLightIntensity()
+  public int getLightRadiusTiles()
  {
-		return this.lightIntensity;
-	}
+    return this.lightRadiusTiles;
+  }
 
-	public double getLightFalloffExponent()
+  public double getLightIntensity()
  {
-		return this.lightFalloffExponent;
-	}
+    return this.lightIntensity;
+  }
 
-	public double getDrawAngleOffsetRadians()
+  public double getLightFalloffExponent()
  {
-		return this.drawAngleOffsetRadians;
-	}
+    return this.lightFalloffExponent;
+  }
+
+  public double getDrawAngleOffsetRadians()
+ {
+    return this.drawAngleOffsetRadians;
+  }
 }
