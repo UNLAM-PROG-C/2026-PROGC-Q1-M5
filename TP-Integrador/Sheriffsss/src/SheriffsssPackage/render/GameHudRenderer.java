@@ -39,10 +39,6 @@ public class GameHudRenderer
   public void drawDebugAndUi(Graphics2D g2, GameView game)
   {
     SheriffsssPackage.session.Player player = game.getPlayer();
-    if (game.isSpectating())
-    {
-      return;
-    }
     if (player.getTakingDamage())
     {
       g2.setColor(GameTheme.DAMAGE_RED);
