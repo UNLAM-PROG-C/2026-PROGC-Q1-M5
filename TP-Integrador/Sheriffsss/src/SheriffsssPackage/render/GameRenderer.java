@@ -116,7 +116,7 @@ public class GameRenderer
       heldItemRenderer.drawHeldItems(g2, game, player);
     }
 
-    if (!game.isSpectating() && !player.isDead())
+    if (!player.isDead())
     {
       worldRenderer.drawMapObjectOverlay(g2, map, player);
     }

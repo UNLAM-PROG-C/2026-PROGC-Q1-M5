@@ -62,7 +62,6 @@ import javax.swing.SwingUtilities;
 public class Game extends JPanel implements Runnable, GameView
 {
   private static final long serialVersionUID = 1L;
-  private static final String DEFAULT_WEAPON_ATTACK_SOUND = "sounds/Shot.wav";
   private static final float WEAPON_GAIN_DB = 0f;
   private static final float ENEMY_HIT_GAIN_DB = 0f;
   private final AssetManager assets;
@@ -282,7 +281,7 @@ public class Game extends JPanel implements Runnable, GameView
   public void run()
   {
     double drawInterval = GameConfig.FRAME_INTERVAL_NS;
-    double delta = 0.0;
+    double delta = GlobalConstants.MIN_VALUE;
     long lastTime = System.nanoTime();
 
     while (!this.shuttingDown && Thread.currentThread() == this.gameThread)
@@ -291,12 +290,12 @@ public class Game extends JPanel implements Runnable, GameView
       delta += (currentTime - lastTime) / drawInterval;
       lastTime = currentTime;
 
-      while (delta >= 1.0)
+      while (delta >= GlobalConstants.DELTA_FRAME_THRESHOLD)
       {
         updateGame();
         repaint();
         this.frameCount++;
-        delta--;
+        delta -= GlobalConstants.DELTA_FRAME_DECREMENT;
       }
     }
   }
@@ -352,7 +351,7 @@ public class Game extends JPanel implements Runnable, GameView
       && this.state == State.PLAYING
       && this.session.player() != null)
       {
-      this.session.trainingMode().update(this.session.player(), this.input, this.projectileSystem);
+      this.session.trainingMode().update(this.input, this.projectileSystem);
     }
     this.infoMessageSystem.update();
     updateMusic();
@@ -535,7 +534,6 @@ public class Game extends JPanel implements Runnable, GameView
       this.localToolAnimation.resetToolAnimation();
       return;
     }
-    this.input.consumeMapToggle();
     updateCameraZoomInput();
 
     this.primaryGameplayPressedThisFrame = false;
@@ -546,18 +544,12 @@ public class Game extends JPanel implements Runnable, GameView
       this.blockPrimaryGameplayUntilRelease = this.input.isPrimaryHeld();
     }
     this.primaryGameplayPressedThisFrame = primaryPressed;
-    this.input.consumeSecondaryClick();
-    this.input.consumeToolbarSelection();
-    this.input.consumeWheelSteps();
-
-    this.input.consumeInteractPressed();
-
     int moveX = this.input.getMoveX();
     int moveY = this.input.getMoveY();
     if (isTrainingWaitingForFirstShot())
     {
-      moveX = 0;
-      moveY = 0;
+      moveX = GlobalConstants.MOVEMENT_RESET;
+      moveY = GlobalConstants.MOVEMENT_RESET;
     }
     this.session.player().setTakingDamage(false);
     this.playerMovementSystem.update(
@@ -569,7 +561,7 @@ public class Game extends JPanel implements Runnable, GameView
     this.dayNightCycle.tick();
     this.enemySystem.update(this.session.map(), this.session.player());
 
-    if (this.session.player().getCurrentHP() <= 0.0)
+    if (this.session.player().getCurrentHP() <= GlobalConstants.MIN_VALUE)
     {
       this.session.player().die();
       returnToMenu();
@@ -945,8 +937,6 @@ public class Game extends JPanel implements Runnable, GameView
   }
   public double getCameraZoom()
     { return this.session.cameraZoom(); }
-  public boolean isSpectating()
-  { return false; }
   public List<Enemy> getEnemies()
   { return this.enemySystem.getEnemies(); }
   public List<Projectile> getProjectiles()
@@ -977,7 +967,7 @@ public class Game extends JPanel implements Runnable, GameView
   {
     if (this.session.player() == null)
     {
-      return 1.0;
+      return GlobalConstants.ACCURACY_MAX_DEFAULT;
     }
     ItemDefinition weapon = this.session.player().getEquipment().getEquippedWeapon();
     return this.weaponUseSystem.resolveEffectiveAccuracy(
@@ -1030,18 +1020,13 @@ public class Game extends JPanel implements Runnable, GameView
     TrainingMode trainingMode = this.session.trainingMode();
     this.trainingHudView.update(
       isTrainingLevelActive(),
-      trainingMode == null ? null : trainingMode.hudSnapshot(this.session.player()));
+      trainingMode == null ? null : trainingMode.hudSnapshot());
     return this.trainingHudView;
   }
 
   public ShotFeedback getShotFeedback()
   {
     return this.shotFeedback;
-  }
-
-  public MusicController getMusicController()
-  {
-    return this.musicController;
   }
 
   private boolean isRootMenuButtonHovered()

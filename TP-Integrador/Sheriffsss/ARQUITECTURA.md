@@ -7,7 +7,7 @@
 - `Game` (~1500 líneas) — clase orquestadora. Extiende `JPanel` e implementa `Runnable`. Es el game loop, árbitro de estado y coordinador de todos los sistemas.
 - `GameConfig` — singleton de constantes estáticas (`TARGET_FPS = 60`, `TILE_SIZE = 32`, resoluciones). Persiste `saves/game.cfg`.
 - `GameInput` — implementa `KeyListener`, `MouseListener`, `MouseMotionListener`, `MouseWheelListener`. Almacena el estado de teclado/mouse como flags booleanos.
-- `State` — enum con los 6 estados del juego.
+- `State` — enum con los 4 estados del juego.
 - `Facing` — enum con 8 direcciones (DOWN, LEFT, RIGHT, UP, UP_LEFT, ...) con índice de sprite.
 - `CursorType`, `DebugOptions` — tipos de cursor y panel de debug solo disponible en training.
 
@@ -43,14 +43,14 @@
 - `ProjectileType`, `WeaponType`, `ProjectileWeaponStats`, `ProjectileStatModifiers` — configuración de armas.
 
 **`render`** — Renderizado
-- `GameRenderer` — recibe `Game` como parámetro de solo lectura y dibuja en `Graphics2D`. Renderiza: tiles, objetos, enemigos (con animación por frame sheet), proyectiles (rotados), efectos de llama, jugador, arma sostenida (con rotación de retroceso), overlay de iluminación, HUD, overlay de muerte.
+- `GameRenderer` — recibe `Game` como parámetro de solo lectura y dibuja en `Graphics2D`. Renderiza: tiles, objetos, enemigos (con animación por frame sheet), proyectiles (rotados), efectos de llama, jugador, arma sostenida (con rotación de retroceso), overlay de iluminación y HUD.
 - `MenuRenderer` — renderiza el menú principal y la pantalla de settings del menú.
 - `TextRenderer` — texto con outline, centrado.
 - `GameTheme` — colores y strokes de tema.
 
 **`training`** — Modo entrenamiento
 - `TrainingMode` — coordinador del modo training. Construye la arena (procedural con semilla aleatoria), gestiona spawn de dianas, lleva el score (aciertos, fallos, precisión), controla el tutorial visible mediante `TutorialPhase` y renderiza su propio HUD. Vive en el hilo del game loop.
-- `TrainingTutorialController` — estado de fase y animaciones auxiliares del tutorial de entrenamiento.
+- `TrainingTutorialController` — estado de fase del tutorial de entrenamiento.
 - `TutorialPhase` — enum del flujo visible del tutorial: apuntado inicial, dianas, aviso de timer y modo normal.
 - `TrainingControls` — control del conteo de enemigos por tecla.
 
@@ -141,14 +141,12 @@ MENU ──(click Play)───────────────────
 MENU ──(click Settings)──────────────────→ MENU_SETTINGS
 MENU_SETTINGS ──(Escape / Back)──────────→ MENU
 PLAYING ──(Escape)───────────────────────→ SETTINGS
-PLAYING ──(HP <= 0)──────────────────────→ DEAD
+PLAYING ──(HP <= 0)──────────────────────→ MENU
 SETTINGS ──(Resume)──────────────────────→ PLAYING
 SETTINGS ──(Main Menu)───────────────────→ MENU
-DEAD ──(click Restart)───────────────────→ PLAYING (via restartTraining())
-DEAD ──(click Exit)──────────────────────→ MENU (via exitTrainingToMenu())
 ```
 
-> **Nota importante**: el enum `State` tiene 6 valores incluyendo `TRAINING`, pero en `updateGame()` no hay una rama para ese estado. El modo training corre **dentro de `PLAYING`** — el flag `trainingActive` diferencia el comportamiento internamente.
+El modo training corre dentro de `PLAYING` como `LevelType.TRAINING`.
 
 | Estado | Qué actualiza | Qué renderiza |
 |---|---|---|
@@ -156,15 +154,12 @@ DEAD ──(click Exit)───────────────────
 | `MENU_SETTINGS` | `updateMenuSettings()` — sliders | `menuRenderer.draw()` + panel settings |
 | `PLAYING` | `updatePlaying()` — movimiento, enemigos, proyectiles | Mundo completo + HUD training |
 | `SETTINGS` | `updateSettings()` — sliders y botones de pausa | Mundo + overlay semitransparente |
-| `DEAD` | `trainingMode.update()` sigue corriendo para mostrar pantalla de muerte | Mundo + HUD de muerte |
 
-**Transición a muerte** (`updatePlaying()`, línea 574):
+**Transición por muerte** (`updatePlaying()`):
 ```java
-if (this.player.getCurrentHP() <= 0.0) {
-    this.player.die();
-    this.state = State.DEAD;
-    this.audio.stopLoop();
-    this.audio.playOnce(DEATH_SOUND, 0f);
+if (this.session.player().getCurrentHP() <= 0.0) {
+    this.session.player().die();
+    returnToMenu();
     return;
 }
 ```
@@ -241,7 +236,7 @@ while (!this.shuttingDown && Thread.currentThread() == this.gameThread) {
 2. Procesa F11 (fullscreen), debug menu
 3. Decrementa ticks de muzzle flash, hit marker, facing lock
 4. Despacha al método del estado actual: `updateMenu()` / `updatePlaying()` / etc.
-5. Si training activo: `trainingMode.update(player, input, projectileSystem)`
+5. Si training activo: `trainingMode.update(input, projectileSystem)`
 6. Actualiza mensajes de HUD, música, cursor
 
 **Orden de `updatePlaying()` en cada ciclo:**
@@ -250,7 +245,7 @@ while (!this.shuttingDown && Thread.currentThread() == this.gameThread) {
 3. Lee WASD, mueve jugador, verifica colisión con mapa
 4. Aplica knockback al jugador
 5. `enemySystem.update()` — mueve enemigos, spawn, colisiones entre enemigos
-6. Verifica HP del jugador → si <= 0, transición a DEAD
+6. Verifica HP del jugador → si <= 0, vuelve al menú
 7. `updateToolUse()` → disparo si hay clic/hold
 8. `updateProjectiles()` → mueve proyectiles, detecta impactos
 

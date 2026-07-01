@@ -14,34 +14,24 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
   private boolean rightPressed;
   private boolean upPressed;
   private boolean downPressed;
-  private boolean interactHeld;
-  private boolean mapHeld;
   private boolean escapeHeld;
   private boolean equipmentHeld;
   private boolean fullscreenHeld;
   private boolean primaryHeld;
-  private boolean secondaryHeld;
-  private boolean interactQueued;
-  private boolean mapToggleQueued;
   private boolean escapeQueued;
   private boolean equipmentToggleQueued;
   private boolean fullscreenToggleQueued;
   private boolean primaryClickQueued;
-  private boolean secondaryClickQueued;
-  private int toolbarSelectionQueued = -1;
   private boolean trainingIncQueued;
   private boolean trainingDecQueued;
   private boolean trainingResetQueued;
-  private boolean trainingBackToMenuQueued;
   private boolean trainingIncHeld;
   private boolean trainingDecHeld;
   private boolean trainingResetHeld;
-  private boolean trainingBackToMenuHeld;
   private boolean zoomInHeld;
   private boolean zoomOutHeld;
   private int mouseX;
   private int mouseY;
-  private int wheelRotationSteps;
   private int zoomWheelRotationSteps;
   private int zoomKeySteps;
 
@@ -67,20 +57,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
  {
     this.primaryHeld = false;
     this.primaryClickQueued = false;
-  }
-
-  public boolean consumeInteractPressed()
- {
-    boolean value = this.interactQueued;
-    this.interactQueued = false;
-    return value;
-  }
-
-  public boolean consumeMapToggle()
- {
-    boolean value = this.mapToggleQueued;
-    this.mapToggleQueued = false;
-    return value;
   }
 
   public boolean consumeEscapePressed()
@@ -111,20 +87,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
     return value;
   }
 
-  public boolean consumeSecondaryClick()
- {
-    boolean value = this.secondaryClickQueued;
-    this.secondaryClickQueued = false;
-    return value;
-  }
-
-  public int consumeToolbarSelection()
- {
-    int value = this.toolbarSelectionQueued;
-    this.toolbarSelectionQueued = -1;
-    return value;
-  }
-
   public boolean consumeTrainingIncrement()
  {
     boolean value = this.trainingIncQueued;
@@ -146,23 +108,9 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
     return value;
   }
 
-  public boolean consumeTrainingBackToMenu()
- {
-    boolean value = this.trainingBackToMenuQueued;
-    this.trainingBackToMenuQueued = false;
-    return value;
-  }
-
   public boolean isPrimaryHeld()
  {
     return this.primaryHeld;
-  }
-
-  public int consumeWheelSteps()
- {
-    int steps = this.wheelRotationSteps;
-    this.wheelRotationSteps = 0;
-    return steps;
   }
 
   public int consumeZoomWheelSteps()
@@ -225,20 +173,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
       case KeyEvent.VK_S:
         this.downPressed = true;
         break;
-      case KeyEvent.VK_E:
-        if (!this.interactHeld)
-        {
-          this.interactQueued = true;
-          this.interactHeld = true;
-        }
-        break;
-      case KeyEvent.VK_M:
-        if (!this.mapHeld)
-        {
-          this.mapToggleQueued = true;
-          this.mapHeld = true;
-        }
-        break;
       case KeyEvent.VK_ESCAPE:
         if (!this.escapeHeld)
         {
@@ -252,20 +186,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
           this.equipmentToggleQueued = true;
           this.equipmentHeld = true;
         }
-        break;
-      case KeyEvent.VK_1:
-      case KeyEvent.VK_2:
-      case KeyEvent.VK_3:
-      case KeyEvent.VK_4:
-      case KeyEvent.VK_5:
-      case KeyEvent.VK_6:
-      case KeyEvent.VK_7:
-      case KeyEvent.VK_8:
-      case KeyEvent.VK_9:
-        this.toolbarSelectionQueued = e.getKeyCode() - KeyEvent.VK_1;
-        break;
-      case KeyEvent.VK_0:
-        this.toolbarSelectionQueued = 9;
         break;
       case GameConfig.CAMERA_ZOOM_IN_KEY:
       case GameConfig.CAMERA_ZOOM_IN_KEY_ALT:
@@ -305,13 +225,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
           this.trainingResetHeld = true;
         }
         break;
-      case KeyEvent.VK_B:
-        if (!this.trainingBackToMenuHeld)
-        {
-          this.trainingBackToMenuQueued = true;
-          this.trainingBackToMenuHeld = true;
-        }
-        break;
       default:
         break;
     }
@@ -333,12 +246,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
         break;
       case KeyEvent.VK_S:
         this.downPressed = false;
-        break;
-      case KeyEvent.VK_E:
-        this.interactHeld = false;
-        break;
-      case KeyEvent.VK_M:
-        this.mapHeld = false;
         break;
       case KeyEvent.VK_ESCAPE:
         this.escapeHeld = false;
@@ -368,9 +275,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
       case GameConfig.TRAINING_PANEL_RESET_KEY:
         this.trainingResetHeld = false;
         break;
-      case KeyEvent.VK_B:
-        this.trainingBackToMenuHeld = false;
-        break;
       default:
         break;
     }
@@ -389,11 +293,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
       this.primaryClickQueued = true;
       this.primaryHeld = true;
     }
-    else if (e.getButton() == MouseEvent.BUTTON3 && !this.secondaryHeld)
-    {
-      this.secondaryClickQueued = true;
-      this.secondaryHeld = true;
-    }
     updateMousePosition(e);
   }
 
@@ -403,10 +302,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
     if (e.getButton() == MouseEvent.BUTTON1)
     {
       this.primaryHeld = false;
-    }
-    else if (e.getButton() == MouseEvent.BUTTON3)
-    {
-      this.secondaryHeld = false;
     }
     updateMousePosition(e);
   }
@@ -429,10 +324,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
     if (e.isControlDown())
     {
       this.zoomWheelRotationSteps += e.getWheelRotation();
-    }
-    else
-    {
-      this.wheelRotationSteps += e.getWheelRotation();
     }
   }
 

@@ -24,14 +24,8 @@ public final class TrainingHudRenderer
   private static final int SIDE_STAT_BASELINE_Y = 40;
   private static final int PRECISION_TITLE_BASELINE_Y = 36;
   private static final int PRECISION_VALUE_LINE_GAP = 44;
-  private static final int DEATH_BOX_WIDTH = 360;
-  private static final int DEATH_BOX_HEIGHT = 170;
-  private static final int DEATH_BOX_Y_OFFSET_FROM_CENTER = 60;
-  private static final int DEATH_BOX_TITLE_BASELINE_Y = 32;
   private static final float BOX_BG_ALPHA = 0.88f;
   private static final Color BOX_BG_COLOR = new Color(15, 15, 18);
-  private static final Color DEATH_BOX_BORDER_COLOR = new Color(220, 60, 60);
-  private static final Color DEATH_TITLE_COLOR = new Color(255, 90, 90);
   private static final Color BODY_COLOR = Color.WHITE;
   private static final int FINAL_BOX_WIDTH = 460;
   private static final int FINAL_BOX_HEIGHT = 290;
@@ -41,11 +35,8 @@ public final class TrainingHudRenderer
   private static final int FINAL_BOX_FINAL_SCORE_Y = 160;
   private static final int END_BUTTON_WIDTH = 220;
   private static final int END_BUTTON_HEIGHT = 38;
-  private static final int DEATH_RESTART_BUTTON_Y = 56;
-  private static final int DEATH_EXIT_BUTTON_Y = 108;
   private static final int FINAL_RESTART_BUTTON_Y = 188;
   private static final int FINAL_EXIT_BUTTON_Y = 236;
-  private static final String DEATH_TITLE_TEXT = "Moriste";
   private static final String RESTART_BUTTON_TEXT = "Reiniciar";
   private static final String EXIT_BUTTON_TEXT = "Salir";
   private static final String FINAL_TITLE_TEXT = "Entrenamiento terminado";
@@ -65,10 +56,6 @@ public final class TrainingHudRenderer
       return;
     }
     drawHint(g2, snapshot);
-    if (snapshot.deathPromptVisible())
-    {
-      drawDeathPrompt(g2);
-    }
   }
 
   private void drawStats(Graphics2D g2, TrainingHudSnapshot snapshot)
@@ -99,19 +86,6 @@ public final class TrainingHudRenderer
     TextRenderer.drawCentered(g2, HINT_FONT, snapshot.hintText(), Color.WHITE,
       snapshot.hintCenterX(), snapshot.hintBaselineY(), TEXT_STYLE);
     g2.setComposite(previousComposite);
-  }
-
-  private void drawDeathPrompt(Graphics2D g2)
-  {
-    int boxX = deathBoxX();
-    int boxY = deathBoxY();
-    drawTranslucentBox(g2, boxX, boxY, DEATH_BOX_WIDTH, DEATH_BOX_HEIGHT, DEATH_BOX_BORDER_COLOR);
-    TextRenderer.drawCentered(g2, TITLE_FONT, DEATH_TITLE_TEXT, DEATH_TITLE_COLOR,
-      boxX + DEATH_BOX_WIDTH / 2, boxY + DEATH_BOX_TITLE_BASELINE_Y, TEXT_STYLE);
-    drawEndButton(g2, RESTART_BUTTON_TEXT, endButtonX(boxX, DEATH_BOX_WIDTH),
-      boxY + DEATH_RESTART_BUTTON_Y);
-    drawEndButton(g2, EXIT_BUTTON_TEXT, endButtonX(boxX, DEATH_BOX_WIDTH),
-      boxY + DEATH_EXIT_BUTTON_Y);
   }
 
   private void drawFinalScreen(Graphics2D g2, TrainingHudSnapshot snapshot)
@@ -170,16 +144,6 @@ public final class TrainingHudRenderer
     FontMetrics metrics = g2.getFontMetrics();
     int textY = y + (END_BUTTON_HEIGHT + metrics.getAscent()) / 2 - BUTTON_TEXT_BASELINE_FUDGE;
     TextRenderer.draw(g2, TITLE_FONT, text, BODY_COLOR, textX, textY, TEXT_STYLE);
-  }
-
-  private static int deathBoxX()
-  {
-    return (GameConfig.SCREEN_WIDTH - DEATH_BOX_WIDTH) / 2;
-  }
-
-  private static int deathBoxY()
-  {
-    return GameConfig.SCREEN_HEIGHT / 2 + DEATH_BOX_Y_OFFSET_FROM_CENTER;
   }
 
   private static int finalBoxX()
