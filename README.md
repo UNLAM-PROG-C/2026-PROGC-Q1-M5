@@ -1,17 +1,103 @@
-### Este repo se utilizara durante la cursada de Programación Concurrente
+# Sheriffsss - Proyecto de Programación Concurrente
 
-Al menos 3 miembros deberán aprobar los code-reviews antes de que se mergeen al Branch destino.
+Este repositorio contiene tanto la información de la cátedra de Programación Concurrente como el juego **Sheriffsss**, un shooter top-down 2D desarrollado en Java Swing/AWT.
 
-Al realizar el commit se realizará la validación, si cumple con los criterios establecidos, determinados por la cátedra.
+---
 
-Las validaciones serán:
+## 🎮 De qué trata el juego (Sheriffsss)
 
-1. Codding-Standard de google según lenguaje con modificaciones, adaptaciones marcadas por la catedra.
+**Sheriffsss** es un juego top-down centrado en un modo de entrenamiento en arena cerrada. Te pones en la piel de un sheriff en el Lejano Oeste. El juego cuenta con mecánicas de combate, puntería, uso de distintas armas, un ciclo dinámico de día/noche, y efectos de iluminación. Incluye un tutorial guiado concurrente (en un hilo separado) para que aprendas el movimiento y disparo. 
 
-2. Uso de patrones de diseño.
+**Características principales:**
+- Control de cantidad de dianas de entrenamiento.
+- HUD (Interfaz) con estadísticas: aciertos, fallos, precisión, temporizador y resultado.
+- Diferentes tipos de armas seleccionables.
+- Opciones avanzadas de debug e interfaz de configuración gráfica in-game.
 
-3. NO números mágicos.
+---
 
-4. Métodos/funciones de no más de 15 líneas.
+## 🛠️ Requisitos y Dependencias
 
+El juego ha sido construido utilizando las bibliotecas estándar de Java, por lo que **no requiere dependencias externas** adicionales ni motores de juegos complejos para funcionar.
+
+- **Java Development Kit (JDK):** Versión 17 o superior.
+- **Sistema Operativo:** Compatible con Windows, macOS y Linux.
+
+Para verificar si tienes la versión correcta de Java, ejecuta en tu terminal:
+```bash
+java -version
+```
+
+---
+
+## 🚀 Instalación y Compilación
+
+El código principal del juego se encuentra en la carpeta `TP-Integrador/Sheriffsss`. Desde ahí, cuentas con scripts automatizados para compilar y lanzar el juego según tu sistema operativo.
+
+### En Linux / macOS
+Abre una terminal, dirígete a la carpeta del juego y usa el script `.sh`:
+
+```bash
+cd TP-Integrador/Sheriffsss
+
+# Para compilar y ejecutar el juego automáticamente:
+./compile-and-run.sh
+
+# Si solo deseas compilar sin ejecutar:
+./compile-and-run.sh --compile-only
+```
+
+### En Windows
+Puedes compilar y correr el juego usando PowerShell o la línea de comandos (CMD). Desde la carpeta `TP-Integrador\Sheriffsss`:
+
+```powershell
+# Usando PowerShell
+.\compile-and-run.ps1
+
+# Usando CMD tradicional
+compile-and.run.bat
+```
+
+### Ejecutar el JAR directamente
+Si el juego ya ha sido compilado previamente, se generará un archivo `.jar` en la subcarpeta `dist-jar/`. Puedes ejecutarlo de la siguiente manera:
+
+```bash
+java -jar dist-jar/Sheriffsss.jar
+```
+
+---
+
+## 🕹️ Cómo jugar (Controles)
+
+### Movimiento y Acción
+| Tecla / Botón | Acción |
+|---------------|--------|
+| `W`, `A`, `S`, `D` | Mover al sheriff |
+| `Click Izquierdo` | Disparar en dirección al cursor |
+| `Click Derecho` | Acción secundaria |
+| `E` | Interactuar |
+| `TAB` | Abrir / cerrar el inventario (panel de armas) |
+| `1` al `9`, `0` | Seleccionar arma rápidamente desde el inventario |
+| `Scroll Mouse` | Alternar arma seleccionada |
+| `ESC` | Pausa y menú de configuración |
+
+### Cámara y Visualización
+| Tecla / Botón | Acción |
+|---------------|--------|
+| `+`, `=`, `Numpad +` | Acercar la cámara (Zoom In) |
+| `-`, `Numpad -` | Alejar la cámara (Zoom Out) |
+| `Ctrl + Scroll` | Hacer zoom dinámico con el mouse |
+| `F11` | Alternar Pantalla Completa |
+| `Alt + Enter` | Pantalla Completa (método alternativo) |
+
+### Modo Entrenamiento
+| Tecla | Acción |
+|-------|--------|
+| `PgUp` | Incrementar la cantidad de dianas |
+| `PgDown`| Disminuir la cantidad de dianas |
+| `R` | Resetear la arena actual |
+| `K` | Saltar el tutorial actual |
+| `B` | Volver al menú principal |
+
+*Nota: La configuración de resolución, volumen y pantalla completa se guarda automáticamente en `saves/game.cfg`.*
 
