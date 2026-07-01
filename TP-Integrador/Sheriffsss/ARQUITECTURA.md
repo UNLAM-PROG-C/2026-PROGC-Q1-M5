@@ -49,17 +49,16 @@
 - `GameTheme` — colores y strokes de tema.
 
 **`training`** — Modo entrenamiento
-- `TrainingMode` — coordinador del modo training. Construye la arena (procedural con semilla aleatoria), gestiona spawn de dianas, lleva el score (aciertos, fallos, precisión), renderiza su propio HUD. Vive en el hilo del game loop.
-- `TutorialThread` — hilo dedicado al tutorial (ver sección de concurrencia).
-- `TutorialStep` — record inmutable: evento esperado, duración mínima/máxima.
-- `TutorialEventType` — enum: `FIRST_MOVEMENT`, `FIRST_SHOT`, `FIRST_KILL`.
+- `TrainingMode` — coordinador del modo training. Construye la arena (procedural con semilla aleatoria), gestiona spawn de dianas, lleva el score (aciertos, fallos, precisión), controla el tutorial visible mediante `TutorialPhase` y renderiza su propio HUD. Vive en el hilo del game loop.
+- `TrainingTutorialController` — estado de fase y animaciones auxiliares del tutorial de entrenamiento.
+- `TutorialPhase` — enum del flujo visible del tutorial: apuntado inicial, dianas, aviso de timer y modo normal.
 - `TrainingControls` — control del conteo de enemigos por tecla.
 
 ---
 
 ## 2. Concurrencia — dónde y por qué
 
-El juego usa **3 hilos propios** más el EDT de Swing y un hilo de audio implícito del sistema.
+El juego usa **2 hilos propios** más el EDT de Swing y un hilo de audio implícito del sistema.
 
 ### Hilo 1: `SheriffsssGameLoop`
 Creado en `Game.startGame()`:
@@ -69,12 +68,7 @@ this.gameThread.start();
 ```
 Corre el game loop completo: `updateGame()` + `repaint()` a 60 FPS. El campo `gameThread` es **`volatile`** para que el `null` que escribe `shutdown()` sea visible inmediatamente en el loop.
 
-### Hilo 2: `SheriffsssTutorial`
-Creado en el constructor de `TrainingMode`. Es un hilo **daemon**. Ejecuta los pasos del tutorial con `Thread.sleep(step.getMinDurationMs())`. Cuando `TrainingMode.shutdown()` lo interrumpe, el `sleep()` lanza `InterruptedException` → el hilo sale limpiamente en el bloque `finally { finished.set(true); }`.
-
-**Comunicación sin locks**: usa `AtomicBoolean skipRequested` y `AtomicBoolean finished`. No comparte estructuras mutables con el game loop — diseño explícitamente documentado.
-
-### Hilo 3: `SheriffsssGameShutdown` (shutdown hook)
+### Hilo 2: `SheriffsssGameShutdown` (shutdown hook)
 ```java
 Runtime.getRuntime().addShutdownHook(new Thread(game::shutdown, "SheriffsssGameShutdown"));
 ```
@@ -195,7 +189,6 @@ Main
       ├── ProjectileSystem
       │    └── Projectile[] (creados en spawn)
       └── TrainingMode  (creado al iniciar training)
-           └── TutorialThread  (hilo daemon)
 ```
 
 **Dependencias clave:**
@@ -210,7 +203,7 @@ Main
 - **Facade** — `Game` expone solo getters de lectura a `GameRenderer` y `TrainingMode`.
 - **Strategy** — `EnemyBehavior` (STATIC, JUMPING, CHASING): `Enemy.effectiveBehavior()` despacha al código correcto.
 - **Object Pool** — `AudioManager` reutiliza `Clip` objects (hasta `MAX_OVERLAPPING_SFX_CLIPS = 12` por sonido).
-- **Immutable data objects** — `TutorialStep`, `ItemDefinition` (enum), `ProjectileType` (enum): datos de configuración que no mutan.
+- **Immutable data objects** — `ItemDefinition` (enum), `ProjectileType` (enum): datos de configuración que no mutan.
 - **Separación update / render** — `updateGame()` nunca pinta; `GameRenderer.render()` nunca escribe estado del mundo.
 
 ---
@@ -268,10 +261,10 @@ while (!this.shuttingDown && Thread.currentThread() == this.gameThread) {
 | Pregunta probable | Respuesta corta |
 |---|---|
 | ¿Dónde está el game loop? | `Game.run()` línea 252, delta accumulator a 60 FPS |
-| ¿Cuántos hilos hay? | 3 propios + EDT de Swing + hilo de audio del sistema |
+| ¿Cuántos hilos hay? | 2 propios + EDT de Swing + hilo de audio del sistema |
 | ¿Por qué `synchronized` en `AudioManager`? | Los callbacks de `LineListener` corren en un hilo de audio del sistema, concurrente con el game loop |
 | ¿Por qué `volatile` en `shuttingDown`? | Para que el valor escrito por el shutdown hook sea visible inmediatamente en el game loop sin sincronización completa |
-| ¿Cómo se comunica el tutorial con el game loop? | `AtomicBoolean` — sin locks, sin estado compartido mutable |
+| ¿Dónde vive el tutorial de training? | En el game loop, dentro de `TrainingMode` mediante `TutorialPhase` |
 | ¿Qué pasa cuando el jugador hace clic? | EDT → flag en `GameInput` → game loop lo consume en `updatePlaying()` → `attemptFireProjectileWeapon()` → `ProjectileSystem.spawn()` |
 | ¿Cómo funciona la colisión de proyectiles? | `Projectile.update()` avanza en pasos sub-pixel y consulta `GameMap.isProjectileBlockedAtWorld()` |
 | ¿Cómo se separan los enemigos entre sí? | `EnemySystem` hace O(n²) separación física por radio de colisión en cada tick |

@@ -32,12 +32,10 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
   private boolean trainingIncQueued;
   private boolean trainingDecQueued;
   private boolean trainingResetQueued;
-  private boolean trainingSkipTutorialQueued;
   private boolean trainingBackToMenuQueued;
   private boolean trainingIncHeld;
   private boolean trainingDecHeld;
   private boolean trainingResetHeld;
-  private boolean trainingSkipTutorialHeld;
   private boolean trainingBackToMenuHeld;
   private boolean zoomInHeld;
   private boolean zoomOutHeld;
@@ -145,13 +143,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
  {
     boolean value = this.trainingResetQueued;
     this.trainingResetQueued = false;
-    return value;
-  }
-
-  public boolean consumeTrainingSkipTutorial()
- {
-    boolean value = this.trainingSkipTutorialQueued;
-    this.trainingSkipTutorialQueued = false;
     return value;
   }
 
@@ -314,13 +305,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
           this.trainingResetHeld = true;
         }
         break;
-      case GameConfig.TRAINING_TUTORIAL_SKIP_KEY:
-        if (!this.trainingSkipTutorialHeld)
-        {
-          this.trainingSkipTutorialQueued = true;
-          this.trainingSkipTutorialHeld = true;
-        }
-        break;
       case KeyEvent.VK_B:
         if (!this.trainingBackToMenuHeld)
         {
@@ -383,9 +367,6 @@ public class GameInput implements KeyListener, MouseListener, MouseWheelListener
         break;
       case GameConfig.TRAINING_PANEL_RESET_KEY:
         this.trainingResetHeld = false;
-        break;
-      case GameConfig.TRAINING_TUTORIAL_SKIP_KEY:
-        this.trainingSkipTutorialHeld = false;
         break;
       case KeyEvent.VK_B:
         this.trainingBackToMenuHeld = false;

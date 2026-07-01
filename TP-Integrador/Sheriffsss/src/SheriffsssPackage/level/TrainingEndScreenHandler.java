@@ -31,20 +31,17 @@ public final class TrainingEndScreenHandler
   private final GameInput input;
   private final TrainingControls controls;
   private final Game game;
-  private final TutorialThread tutorialThread;
   private final Runnable resetArenaCallback;
 
   public TrainingEndScreenHandler(
       GameInput input,
       TrainingControls controls,
       Game game,
-      TutorialThread tutorialThread,
       Runnable resetArenaCallback)
       {
     this.input = input;
     this.controls = controls;
     this.game = game;
-    this.tutorialThread = tutorialThread;
     this.resetArenaCallback = resetArenaCallback;
   }
 
@@ -75,10 +72,6 @@ public final class TrainingEndScreenHandler
     if (this.input.consumeTrainingReset())
     {
       this.resetArenaCallback.run();
-    }
-    if (this.input.consumeTrainingSkipTutorial())
-    {
-      this.tutorialThread.skip();
     }
   }
 
@@ -123,7 +116,6 @@ public final class TrainingEndScreenHandler
   {
     this.input.consumeTrainingIncrement();
     this.input.consumeTrainingDecrement();
-    this.input.consumeTrainingSkipTutorial();
   }
 
   private static int deathBoxX()
