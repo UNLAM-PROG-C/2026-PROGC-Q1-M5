@@ -1,5 +1,6 @@
 package SheriffsssPackage.render;
 
+import SheriffsssPackage.GlobalConstants;
 import SheriffsssPackage.context.GameConfig;
 
 
@@ -61,6 +62,6 @@ public class CombatFloatingText
 
   public int getAlpha()
   {
-    return Math.max(0, 255 - this.ageTicks * 255 / LIFETIME_TICKS);
+    return Math.max(0, GlobalConstants.MAX_ALPHA - this.ageTicks * GlobalConstants.MAX_ALPHA / LIFETIME_TICKS);
   }
 }

@@ -56,8 +56,15 @@ public final class GameConfig
   public static final double CAMERA_MAX_ZOOM = 2.0;
   public static final double CAMERA_ZOOM_STEP = 0.1;
   public static final double CAMERA_ZOOM_HELD_STEP = 0.025;
+  public static final int MAP_WIDTH_TILES = 500;
+  public static final int MAP_HEIGHT_TILES = 500;
   public static final int RENDER_PADDING_TILES = 2;
   public static final double PLAYER_SPEED = 2.5;
+  public static final int TOOL_RANGE_PIXELS = 92;
+  public static final int DROP_PICKUP_RADIUS_PIXELS = 48;
+  public static final double DROP_ATTRACT_SPEED_PIXELS = 7.5;
+  public static final int INVENTORY_DROP_PICKUP_DELAY_TICKS = TARGET_FPS;
+  public static final int INVENTORY_DROP_OFFSET_PIXELS = DROP_PICKUP_RADIUS_PIXELS + 24;
   public static final int MAX_LIGHT_RADIUS_TILES = 7;
   public static int SCREEN_CENTER_X = SCREEN_WIDTH / 2;
   public static int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
@@ -67,6 +74,7 @@ public final class GameConfig
   public static final int SETTINGS_PANEL_Y = 96;
   public static final int SETTINGS_PANEL_WIDTH = 400;
   public static final int SETTINGS_PANEL_HEIGHT = 550;
+  public static final int SETTINGS_SLIDER_X_OFFSET = 90;
   public static int SETTINGS_SLIDER_X = 310;
   public static final int SETTINGS_SLIDER_WIDTH = 230;
   public static final int SETTINGS_MUSIC_SLIDER_Y = 190;
@@ -81,12 +89,23 @@ public final class GameConfig
   public static final int SETTINGS_MENU_BUTTON_Y = 490;
   public static final int SETTINGS_QUIT_BUTTON_Y = 538;
   public static final int TRAINING_SETTINGS_OVERLAY_Y_OFFSET = 48;
+  public static final int DEATH_SPECTATE_DELAY_TICKS = TARGET_FPS * 2;
+  public static final int DEATH_SPECTATE_BUTTON_X_OFFSET = 130;
+  public static final int DEATH_SPECTATE_BUTTON_Y_OFFSET = 92;
+  public static int DEATH_SPECTATE_BUTTON_X = SCREEN_CENTER_X - DEATH_SPECTATE_BUTTON_X_OFFSET;
+  public static int DEATH_SPECTATE_BUTTON_Y = SCREEN_CENTER_Y + DEATH_SPECTATE_BUTTON_Y_OFFSET;
+  public static final int DEATH_SPECTATE_BUTTON_WIDTH = 260;
+  public static final int DEATH_SPECTATE_BUTTON_HEIGHT = 48;
+  public static final int INFO_MESSAGE_TICKS = TARGET_FPS * 4;
   public static final int SPATIAL_SFX_FULL_VOLUME_RADIUS_PIXELS = TILE_SIZE * 8;
   public static final int SPATIAL_SFX_AUDIBLE_RADIUS_PIXELS = TILE_SIZE * 28;
+  public static final int ENEMY_ATTACK_TARGET_TOLERANCE_PIXELS = TILE_SIZE / 2;
+  public static final double DEFAULT_MUSIC_VOLUME = 0.5;
+  public static final double DEFAULT_SFX_VOLUME = 0.5;
   private static int windowResolutionIndex;
   private static boolean fullscreenPreferred;
-  private static double musicVolume = 0.5;
-  private static double sfxVolume = 0.5;
+  private static double musicVolume = DEFAULT_MUSIC_VOLUME;
+  private static double sfxVolume = DEFAULT_SFX_VOLUME;
 
   private GameConfig()
   {
@@ -101,8 +120,10 @@ public final class GameConfig
     PLAYER_DRAW_X = SCREEN_CENTER_X - TILE_SIZE / 2;
     PLAYER_DRAW_Y = SCREEN_CENTER_Y - TILE_SIZE / 2;
     SETTINGS_PANEL_X = SCREEN_CENTER_X - SETTINGS_PANEL_WIDTH / 2;
-    SETTINGS_SLIDER_X = SCREEN_CENTER_X - 90;
+    SETTINGS_SLIDER_X = SCREEN_CENTER_X - SETTINGS_SLIDER_X_OFFSET;
     SETTINGS_BUTTON_X = SCREEN_CENTER_X - SETTINGS_BUTTON_WIDTH / 2;
+    DEATH_SPECTATE_BUTTON_X = SCREEN_CENTER_X - DEATH_SPECTATE_BUTTON_WIDTH / 2;
+    DEATH_SPECTATE_BUTTON_Y = SCREEN_CENTER_Y + DEATH_SPECTATE_BUTTON_Y_OFFSET;
   }
 
   public static void loadDisplayPreferences()

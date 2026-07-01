@@ -1,5 +1,6 @@
 package SheriffsssPackage.session;
 
+import SheriffsssPackage.GlobalConstants;
 import SheriffsssPackage.context.AssetManager;
 import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.system.weapon.ItemDefinition;
@@ -11,8 +12,8 @@ public class Player
 {
   public static final int PLAYER_WIDTH = 64;
   public static final int PLAYER_HEIGHT = 64;
-  public static final int HITBOX_WIDTH = PLAYER_WIDTH / 2;
-  public static final int HITBOX_HEIGHT = PLAYER_HEIGHT / 2;
+  public static final int HITBOX_WIDTH = PLAYER_WIDTH / GlobalConstants.DIVISOR_HALF;
+  public static final int HITBOX_HEIGHT = PLAYER_HEIGHT / GlobalConstants.DIVISOR_HALF;
   private static final double KNOCKBACK_FRICTION = 0.80;
   private static final double MIN_KNOCKBACK_SPEED = 0.12;
   private static final double DEFAULT_MAX_HP = 100.0;
@@ -68,15 +69,15 @@ public class Player
   public double getCurrentHP()
  { return this.currentHP; }
   public int getFeetWorldY()
- { return this.y + PLAYER_HEIGHT / 2; }
+ { return this.y + PLAYER_HEIGHT / GlobalConstants.DIVISOR_HALF; }
   public int getHitboxWidth()
  { return HITBOX_WIDTH; }
   public int getHitboxHeight()
  { return HITBOX_HEIGHT; }
   public int getHitboxLeftWorldX()
- { return this.x - HITBOX_WIDTH / 2; }
+ { return this.x - HITBOX_WIDTH / GlobalConstants.DIVISOR_HALF; }
   public int getHitboxTopWorldY()
- { return this.y - HITBOX_HEIGHT / 2; }
+ { return this.y - HITBOX_HEIGHT / GlobalConstants.DIVISOR_HALF; }
   public int getHitboxRightWorldX()
  { return getHitboxLeftWorldX() + HITBOX_WIDTH - 1; }
   public int getHitboxBottomWorldY()
