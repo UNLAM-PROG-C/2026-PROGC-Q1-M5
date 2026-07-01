@@ -1,6 +1,6 @@
 package SheriffsssPackage.render;
 
-import SheriffsssPackage.MagicConstants;
+import SheriffsssPackage.GlobalConstants;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -59,7 +59,7 @@ public final class TextRenderer
   public static int centeredX(Graphics2D g2, Font font, String text, int centerX)
  {
     g2.setFont(font);
-    return centerX - g2.getFontMetrics().stringWidth(text) / MagicConstants.DIVISOR_HALF;
+    return centerX - g2.getFontMetrics().stringWidth(text) / GlobalConstants.DIVISOR_HALF;
   }
 
   private static void drawSoftShadow(Graphics2D g2, String text, int x, int y, int offset)
@@ -67,15 +67,15 @@ public final class TextRenderer
     int shadowX = x + offset;
     int shadowY = y + offset;
     g2.setColor(SHADOW_SOFT);
-    g2.drawString(text, shadowX - MagicConstants.TEXT_SHADOW_OFFSET_MAJOR, shadowY);
-    g2.drawString(text, shadowX + MagicConstants.TEXT_SHADOW_OFFSET_MAJOR, shadowY);
-    g2.drawString(text, shadowX, shadowY - MagicConstants.TEXT_SHADOW_OFFSET_MAJOR);
-    g2.drawString(text, shadowX, shadowY + MagicConstants.TEXT_SHADOW_OFFSET_MAJOR);
+    g2.drawString(text, shadowX - GlobalConstants.TEXT_SHADOW_OFFSET_MAJOR, shadowY);
+    g2.drawString(text, shadowX + GlobalConstants.TEXT_SHADOW_OFFSET_MAJOR, shadowY);
+    g2.drawString(text, shadowX, shadowY - GlobalConstants.TEXT_SHADOW_OFFSET_MAJOR);
+    g2.drawString(text, shadowX, shadowY + GlobalConstants.TEXT_SHADOW_OFFSET_MAJOR);
     g2.setColor(SHADOW_MID);
-    g2.drawString(text, shadowX - MagicConstants.TEXT_SHADOW_OFFSET_MINOR, shadowY);
-    g2.drawString(text, shadowX + MagicConstants.TEXT_SHADOW_OFFSET_MINOR, shadowY);
-    g2.drawString(text, shadowX, shadowY - MagicConstants.TEXT_SHADOW_OFFSET_MINOR);
-    g2.drawString(text, shadowX, shadowY + MagicConstants.TEXT_SHADOW_OFFSET_MINOR);
+    g2.drawString(text, shadowX - GlobalConstants.TEXT_SHADOW_OFFSET_MINOR, shadowY);
+    g2.drawString(text, shadowX + GlobalConstants.TEXT_SHADOW_OFFSET_MINOR, shadowY);
+    g2.drawString(text, shadowX, shadowY - GlobalConstants.TEXT_SHADOW_OFFSET_MINOR);
+    g2.drawString(text, shadowX, shadowY + GlobalConstants.TEXT_SHADOW_OFFSET_MINOR);
     g2.setColor(SHADOW_CORE);
     g2.drawString(text, shadowX, shadowY);
   }
@@ -83,9 +83,9 @@ public final class TextRenderer
   private static void drawOutline(Graphics2D g2, String text, int x, int y)
  {
     g2.setColor(OUTLINE_COLOR);
-    g2.drawString(text, x - MagicConstants.TEXT_SHADOW_OFFSET_MINOR, y);
-    g2.drawString(text, x + MagicConstants.TEXT_SHADOW_OFFSET_MINOR, y);
-    g2.drawString(text, x, y - MagicConstants.TEXT_SHADOW_OFFSET_MINOR);
-    g2.drawString(text, x, y + MagicConstants.TEXT_SHADOW_OFFSET_MINOR);
+    g2.drawString(text, x - GlobalConstants.TEXT_SHADOW_OFFSET_MINOR, y);
+    g2.drawString(text, x + GlobalConstants.TEXT_SHADOW_OFFSET_MINOR, y);
+    g2.drawString(text, x, y - GlobalConstants.TEXT_SHADOW_OFFSET_MINOR);
+    g2.drawString(text, x, y + GlobalConstants.TEXT_SHADOW_OFFSET_MINOR);
   }
 }

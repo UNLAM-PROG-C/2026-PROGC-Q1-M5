@@ -1,6 +1,6 @@
 package SheriffsssPackage;
 
-public class MagicConstants
+public class GlobalConstants
 {
   // Valores normalizados [0.0 - 1.0]
   public static final double MIN_VALUE = 0.0;
@@ -43,7 +43,7 @@ public class MagicConstants
   public static final int MOVEMENT_RESET = 0;
   public static final double ACCURACY_MAX_DEFAULT = 1.0;
 
-  private MagicConstants()
+  private GlobalConstants()
   {
   }
 }

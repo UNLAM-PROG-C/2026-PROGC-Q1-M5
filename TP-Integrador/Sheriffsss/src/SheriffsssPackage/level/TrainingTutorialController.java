@@ -1,6 +1,6 @@
 package SheriffsssPackage.level;
 
-import SheriffsssPackage.MagicConstants;
+import SheriffsssPackage.GlobalConstants;
 import SheriffsssPackage.system.MusicController;
 
 public class TrainingTutorialController
@@ -93,7 +93,7 @@ public class TrainingTutorialController
 
   public void setHintText(String text)
   {
-    this.hintAlphaTicks = MagicConstants.MAX_ALPHA;
+    this.hintAlphaTicks = GlobalConstants.MAX_ALPHA;
     this.isHintFullyFaded = false;
   }
 

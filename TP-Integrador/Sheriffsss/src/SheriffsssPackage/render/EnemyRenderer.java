@@ -1,6 +1,6 @@
 package SheriffsssPackage.render;
 
-import SheriffsssPackage.MagicConstants;
+import SheriffsssPackage.GlobalConstants;
 import SheriffsssPackage.context.GameConfig;
 import SheriffsssPackage.level.TrainingModeConstants;
 import SheriffsssPackage.system.enemy.Debuff;
@@ -163,7 +163,7 @@ public class EnemyRenderer
 
   private String formatHealthValue(double health)
   {
-    return Math.abs(health - Math.round(health)) < MagicConstants.EPSILON
+    return Math.abs(health - Math.round(health)) < GlobalConstants.EPSILON
       ? Integer.toString((int) Math.round(health))
       : String.format(java.util.Locale.US, "%.1f", health);
   }

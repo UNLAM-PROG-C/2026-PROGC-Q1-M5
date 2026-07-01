@@ -282,7 +282,7 @@ public class Game extends JPanel implements Runnable, GameView
   public void run()
   {
     double drawInterval = GameConfig.FRAME_INTERVAL_NS;
-    double delta = MagicConstants.MIN_VALUE;
+    double delta = GlobalConstants.MIN_VALUE;
     long lastTime = System.nanoTime();
 
     while (!this.shuttingDown && Thread.currentThread() == this.gameThread)
@@ -291,12 +291,12 @@ public class Game extends JPanel implements Runnable, GameView
       delta += (currentTime - lastTime) / drawInterval;
       lastTime = currentTime;
 
-      while (delta >= MagicConstants.DELTA_FRAME_THRESHOLD)
+      while (delta >= GlobalConstants.DELTA_FRAME_THRESHOLD)
       {
         updateGame();
         repaint();
         this.frameCount++;
-        delta -= MagicConstants.DELTA_FRAME_DECREMENT;
+        delta -= GlobalConstants.DELTA_FRAME_DECREMENT;
       }
     }
   }
@@ -556,8 +556,8 @@ public class Game extends JPanel implements Runnable, GameView
     int moveY = this.input.getMoveY();
     if (isTrainingWaitingForFirstShot())
     {
-      moveX = MagicConstants.MOVEMENT_RESET;
-      moveY = MagicConstants.MOVEMENT_RESET;
+      moveX = GlobalConstants.MOVEMENT_RESET;
+      moveY = GlobalConstants.MOVEMENT_RESET;
     }
     this.session.player().setTakingDamage(false);
     this.playerMovementSystem.update(
@@ -569,7 +569,7 @@ public class Game extends JPanel implements Runnable, GameView
     this.dayNightCycle.tick();
     this.enemySystem.update(this.session.map(), this.session.player());
 
-    if (this.session.player().getCurrentHP() <= MagicConstants.MIN_VALUE)
+    if (this.session.player().getCurrentHP() <= GlobalConstants.MIN_VALUE)
     {
       this.session.player().die();
       returnToMenu();
@@ -977,7 +977,7 @@ public class Game extends JPanel implements Runnable, GameView
   {
     if (this.session.player() == null)
     {
-      return MagicConstants.ACCURACY_MAX_DEFAULT;
+      return GlobalConstants.ACCURACY_MAX_DEFAULT;
     }
     ItemDefinition weapon = this.session.player().getEquipment().getEquippedWeapon();
     return this.weaponUseSystem.resolveEffectiveAccuracy(
