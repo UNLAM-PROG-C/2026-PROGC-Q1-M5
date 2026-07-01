@@ -535,7 +535,6 @@ public class Game extends JPanel implements Runnable, GameView
       this.localToolAnimation.resetToolAnimation();
       return;
     }
-    this.input.consumeMapToggle();
     updateCameraZoomInput();
 
     this.primaryGameplayPressedThisFrame = false;
@@ -546,12 +545,6 @@ public class Game extends JPanel implements Runnable, GameView
       this.blockPrimaryGameplayUntilRelease = this.input.isPrimaryHeld();
     }
     this.primaryGameplayPressedThisFrame = primaryPressed;
-    this.input.consumeSecondaryClick();
-    this.input.consumeToolbarSelection();
-    this.input.consumeWheelSteps();
-
-    this.input.consumeInteractPressed();
-
     int moveX = this.input.getMoveX();
     int moveY = this.input.getMoveY();
     if (isTrainingWaitingForFirstShot())
@@ -1037,11 +1030,6 @@ public class Game extends JPanel implements Runnable, GameView
   public ShotFeedback getShotFeedback()
   {
     return this.shotFeedback;
-  }
-
-  public MusicController getMusicController()
-  {
-    return this.musicController;
   }
 
   private boolean isRootMenuButtonHovered()

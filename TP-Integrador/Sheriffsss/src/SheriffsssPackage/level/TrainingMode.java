@@ -110,8 +110,7 @@ public final class TrainingMode
         this.game != null ? this.game.getShotFeedback() : null);
     this.sessionTimer = new TrainingSessionTimer(GameConfig.TARGET_FPS * SESSION_DURATION_SECONDS,
         this.game != null ? this.game.getAudio() : null);
-    this.tutorialController = new TrainingTutorialController(
-        this.game != null ? this.game.getMusicController() : null);
+    this.tutorialController = new TrainingTutorialController();
     this.endScreenHandler = new TrainingEndScreenHandler(input, this.controls, this.game,
         this::resetArena);
   }
@@ -259,10 +258,10 @@ public final class TrainingMode
     if (phase == TutorialPhase.TARGETS)
     {
       this.targetHintTicks++;
-      if (isHintFullyFaded())
+      if (isDisplayedHintFullyFaded())
       {
         setPhase(TutorialPhase.NORMAL);
-        startTargetLifetime();
+        this.scoreTracker.setTargetLifetimeRunning(true);
         return;
       }
       if (this.targetHintHit && this.targetHintTicks >= TARGET_HINT_MIN_TICKS)
@@ -276,10 +275,10 @@ public final class TrainingMode
     else if (phase == TutorialPhase.TIMER_NOTICE)
     {
       this.targetHintTicks++;
-      if (isHintFullyFaded() || this.targetHintTicks >= TIMER_NOTICE_TICKS)
+      if (isDisplayedHintFullyFaded() || this.targetHintTicks >= TIMER_NOTICE_TICKS)
       {
         setPhase(TutorialPhase.NORMAL);
-        startTargetLifetime();
+        this.scoreTracker.setTargetLifetimeRunning(true);
       }
     }
   }
@@ -288,12 +287,6 @@ public final class TrainingMode
   {
     this.tutorialController.setPhase(phase);
     this.scoreTracker.setTutorialPhase(phase);
-  }
-
-  private void startTargetLifetime()
-  {
-    this.scoreTracker.setTargetLifetimeRunning(true);
-    this.tutorialController.startTargetLifetime();
   }
 
   private void updateHintAlpha()
@@ -307,7 +300,7 @@ public final class TrainingMode
     this.displayedHintAlpha = Math.max(targetAlpha, this.displayedHintAlpha - HINT_ALPHA_FADE_STEP);
   }
 
-  private boolean isHintFullyFaded()
+  private boolean isDisplayedHintFullyFaded()
   {
     float targetAlpha = Math.max(0.0f, HINT_START_ALPHA - this.hintFadeShotSteps * HINT_SHOT_ALPHA_STEP);
     return targetAlpha <= 0.0f && this.displayedHintAlpha <= 0.0f;

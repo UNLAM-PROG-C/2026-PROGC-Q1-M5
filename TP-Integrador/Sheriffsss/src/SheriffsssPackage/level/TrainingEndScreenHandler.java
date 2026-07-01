@@ -48,14 +48,14 @@ public final class TrainingEndScreenHandler
   public void handleDeadInput()
   {
     drainPanelInputWhileDead();
-    drainEndActionKeys();
+    drainResetKey();
     handleEndScreenClick(deathBoxX(), deathBoxY(), DEATH_BOX_WIDTH, DEATH_RESTART_BUTTON_Y, DEATH_EXIT_BUTTON_Y);
   }
 
   public void handleFinalInput()
   {
     drainPanelInputWhileDead();
-    drainEndActionKeys();
+    drainResetKey();
     handleEndScreenClick(finalBoxX(), finalBoxY(), FINAL_BOX_WIDTH, FINAL_RESTART_BUTTON_Y, FINAL_EXIT_BUTTON_Y);
   }
 
@@ -75,10 +75,9 @@ public final class TrainingEndScreenHandler
     }
   }
 
-  private void drainEndActionKeys()
+  private void drainResetKey()
   {
     this.input.consumeTrainingReset();
-    this.input.consumeTrainingBackToMenu();
   }
 
   private void handleEndScreenClick(
